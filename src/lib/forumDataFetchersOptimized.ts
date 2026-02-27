@@ -38,8 +38,8 @@ export async function fetchCategories(currentUserId?: string, page: number = 0, 
                 created_at, last_reply_at, last_reply_by_id,
                 reply_count, view_count, is_pinned, is_locked, is_hot,
                 has_unread, tags, upvotes, downvotes,
-                author:forum_users!threads_author_id_fkey(id, username, avatar, custom_avatar, banner, custom_banner, post_count, reputation, join_date, is_online, rank, role),
-                last_reply_by:forum_users!threads_last_reply_by_id_fkey(id, username, avatar, custom_avatar, banner, custom_banner, post_count, reputation, join_date, is_online, rank, role)
+                author:forum_users!threads_author_id_fkey(id, username, avatar, custom_avatar, post_count, reputation, join_date, is_online, rank, role),
+                last_reply_by:forum_users!threads_last_reply_by_id_fkey(id, username, avatar, custom_avatar, post_count, reputation, join_date, is_online, rank, role)
             `)
             .order('is_pinned', { ascending: false })
             .order('last_reply_at', { ascending: false })
@@ -88,7 +88,7 @@ export async function fetchCategories(currentUserId?: string, page: number = 0, 
                 id: threadAuthor.id,
                 username: threadAuthor.username,
                 avatar: threadAuthor.custom_avatar || threadAuthor.avatar,
-                banner: threadAuthor.custom_banner || threadAuthor.banner || undefined,
+                banner: undefined, // Removed from main category fetch for speed
                 postCount: threadAuthor.post_count,
                 reputation: threadAuthor.reputation,
                 joinDate: threadAuthor.join_date,
@@ -104,7 +104,7 @@ export async function fetchCategories(currentUserId?: string, page: number = 0, 
                 id: lastReplyBy.id,
                 username: lastReplyBy.username,
                 avatar: lastReplyBy.custom_avatar || lastReplyBy.avatar,
-                banner: lastReplyBy.custom_banner || lastReplyBy.banner || undefined,
+                banner: undefined, // Removed from main category fetch for speed
                 postCount: lastReplyBy.post_count,
                 reputation: lastReplyBy.reputation,
                 joinDate: lastReplyBy.join_date,

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import ForumHeader from '@/components/forum/ForumHeader';
 import CategoryCardHome from '@/components/forum/CategoryCardHome';
 import SidebarStatsPanel from '@/components/forum/SidebarStatsPanel';
@@ -20,23 +20,25 @@ function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const filteredCategories = searchQuery.trim()
-    ? categories.filter(
-      (cat) =>
-        cat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        cat.description.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    : categories;
+  const filteredCategories = useMemo(() => {
+    return searchQuery.trim()
+      ? categories.filter(
+        (cat) =>
+          cat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          cat.description.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+      : categories;
+  }, [categories, searchQuery]);
 
-  const stickyCategories = filteredCategories.filter((cat) => cat.isSticky);
-  const regularCategories = filteredCategories.filter((cat) => !cat.isSticky);
+  const stickyCategories = useMemo(() => filteredCategories.filter((cat) => cat.isSticky), [filteredCategories]);
+  const regularCategories = useMemo(() => filteredCategories.filter((cat) => !cat.isSticky), [filteredCategories]);
 
   return (
     <div className="min-h-screen bg-forum-bg pb-20 lg:pb-0">
       <ForumHeader
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        onMobileMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        onMobileMenuToggle={useCallback(() => setIsMobileMenuOpen(prev => !prev), [])}
         isMobileMenuOpen={isMobileMenuOpen}
       />
 

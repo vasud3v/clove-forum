@@ -128,8 +128,8 @@ export default function RecentActivityFeed() {
 
     fetchRecentActivity();
 
-    // Refresh every 30 seconds
-    const interval = setInterval(fetchRecentActivity, 30000);
+    // Refresh every 60 seconds (increased from 30s)
+    const interval = setInterval(fetchRecentActivity, 60000);
 
     return () => clearInterval(interval);
   }, []);

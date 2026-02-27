@@ -38,14 +38,32 @@ export default function OnlineUsers() {
 
     fetchOnlineUsers();
 
-    // Subscribe to real-time updates for all events
+    // Subscribe to real-time updates for only online status changes
     const channel = supabase
       .channel('online-users-updates')
       .on(
         'postgres_changes',
-        { event: '*', schema: 'public', table: 'forum_users' },
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'forum_users',
+          filter: 'is_online=eq.true'
+        },
         () => {
-          // Refetch all online users on any change
+          // Refetch online users when someone comes online
+          fetchOnlineUsers();
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'forum_users',
+          filter: 'is_online=eq.false'
+        },
+        () => {
+          // Refetch online users when someone goes offline
           fetchOnlineUsers();
         }
       )

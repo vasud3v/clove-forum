@@ -1,19 +1,21 @@
-import { Suspense } from "react";
+import { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
-import Home from "./components/home";
-import CategoryThreadsPage from "./components/forum/CategoryThreadsPage";
-import ThreadDetailPage from "./components/forum/ThreadDetailPage";
-import UserProfilePage from "./components/forum/UserProfilePage";
-import LoginPage from "./components/auth/LoginPage";
-import SignupPage from "./components/auth/SignupPage";
-import WhatsNewPage from "./components/forum/WhatsNewPage";
-import MembersPage from "./components/forum/MembersPage";
-import ForumRulesPage from "./components/forum/ForumRulesPage";
-import SearchPage from "./components/forum/SearchPage";
-import PostBookmarksPage from "./components/forum/PostBookmarksPage";
-import WatchedThreadsPage from "./components/forum/WatchedThreadsPage";
-import AdminDashboard from "./components/forum/AdminDashboard";
-import AnalyticsDashboard from "./components/forum/AnalyticsDashboard";
+
+const Home = lazy(() => import("./components/home"));
+const CategoryThreadsPage = lazy(() => import("./components/forum/CategoryThreadsPage"));
+const ThreadDetailPage = lazy(() => import("./components/forum/ThreadDetailPage"));
+const UserProfilePage = lazy(() => import("./components/forum/UserProfilePage"));
+const LoginPage = lazy(() => import("./components/auth/LoginPage"));
+const SignupPage = lazy(() => import("./components/auth/SignupPage"));
+const WhatsNewPage = lazy(() => import("./components/forum/WhatsNewPage"));
+const MembersPage = lazy(() => import("./components/forum/MembersPage"));
+const ForumRulesPage = lazy(() => import("./components/forum/ForumRulesPage"));
+const SearchPage = lazy(() => import("./components/forum/SearchPage"));
+const PostBookmarksPage = lazy(() => import("./components/forum/PostBookmarksPage"));
+const WatchedThreadsPage = lazy(() => import("./components/forum/WatchedThreadsPage"));
+const AdminDashboard = lazy(() => import("./components/forum/AdminDashboard"));
+const AnalyticsDashboard = lazy(() => import("./components/forum/AnalyticsDashboard"));
+
 import { ForumProvider } from "@/context/ForumContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { NotificationProvider } from "@/context/NotificationContext";

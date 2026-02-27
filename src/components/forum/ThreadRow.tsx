@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Pin,
@@ -20,7 +20,7 @@ interface ThreadRowProps {
   thread: Thread;
 }
 
-export default function ThreadRow({ thread }: ThreadRowProps) {
+function ThreadRow({ thread }: ThreadRowProps) {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
   const [isVoting, setIsVoting] = useState(false);
@@ -240,3 +240,5 @@ export default function ThreadRow({ thread }: ThreadRowProps) {
     </div>
   );
 }
+
+export default memo(ThreadRow);

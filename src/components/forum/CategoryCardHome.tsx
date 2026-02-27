@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   MessageSquare,
@@ -105,7 +105,7 @@ function TopicRow({ topic, isLast, onNavigate }: { topic: Topic; isLast: boolean
   );
 }
 
-export default function CategoryCardHome({ category }: CategoryCardHomeProps) {
+function CategoryCardHome({ category }: CategoryCardHomeProps) {
   const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(true);
   const Icon = iconMap[category.icon] || MessageSquare;
@@ -259,3 +259,5 @@ export default function CategoryCardHome({ category }: CategoryCardHomeProps) {
     </div>
   );
 }
+
+export default memo(CategoryCardHome);
