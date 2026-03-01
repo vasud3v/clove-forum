@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Bell,
-    Check,
     CheckCheck,
     MessageCircle,
     AtSign,
@@ -11,6 +10,10 @@ import {
     Settings,
     Trash2,
     X,
+    Heart,
+    Award,
+    UserPlus,
+    UserCheck,
 } from 'lucide-react';
 import { useNotifications, NotificationType } from '@/context/NotificationContext';
 
@@ -18,6 +21,10 @@ const notificationIcons: Record<NotificationType, typeof MessageCircle> = {
     reply: MessageCircle,
     mention: AtSign,
     upvote: ThumbsUp,
+    reaction: Heart,
+    best_answer: Award,
+    follow: UserCheck,
+    follow_request: UserPlus,
     milestone: Trophy,
     system: Settings,
 };
@@ -26,13 +33,17 @@ const notificationColors: Record<NotificationType, string> = {
     reply: 'text-cyan-400',
     mention: 'text-forum-pink',
     upvote: 'text-emerald-400',
+    reaction: 'text-orange-400',
+    best_answer: 'text-amber-400',
+    follow: 'text-purple-400',
+    follow_request: 'text-blue-400',
     milestone: 'text-amber-400',
     system: 'text-forum-muted',
 };
 
 export default function NotificationCenter() {
     const navigate = useNavigate();
-    const { notifications, unreadCount, markAsRead, markAllAsRead, clearNotifications } =
+    const { notifications, unreadCount, markAsRead, markAllAsRead, clearNotifications, deleteNotification } =
         useNotifications();
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -113,27 +124,54 @@ export default function NotificationCenter() {
                                 const Icon = notificationIcons[notif.type];
                                 const color = notificationColors[notif.type];
                                 return (
-                                    <button
+                                    <div
                                         key={notif.id}
-                                        className={`transition-forum flex w-full items-start gap-3 px-4 py-3 text-left hover:bg-forum-hover border-b border-forum-border/10 ${!notif.read ? 'bg-forum-pink/[0.02]' : ''
+                                        className={`transition-forum flex w-full items-start gap-3 px-4 py-3 text-left hover:bg-forum-hover border-b border-forum-border/10 group relative ${!notif.isRead ? 'bg-forum-pink/[0.02]' : ''
                                             }`}
-                                        onClick={() => {
-                                            markAsRead(notif.id);
-                                            if (notif.link) {
-                                                navigate(notif.link);
-                                                setIsOpen(false);
-                                            }
-                                        }}
                                     >
-                                        <div className={`mt-0.5 flex-shrink-0 ${color}`}>
-                                            <Icon size={14} />
-                                        </div>
-                                        <div className="flex-1 min-w-0">
+                                        {/* Actor avatar or type icon */}
+                                        <button
+                                            className="mt-0.5 flex-shrink-0 cursor-pointer"
+                                            onClick={() => {
+                                                markAsRead(notif.id);
+                                                if (notif.link) {
+                                                    navigate(notif.link);
+                                                    setIsOpen(false);
+                                                }
+                                            }}
+                                        >
+                                            {notif.actorAvatar ? (
+                                                <img
+                                                    src={notif.actorAvatar}
+                                                    alt={notif.actorName || ''}
+                                                    className="h-7 w-7 rounded-full object-cover ring-1 ring-forum-border"
+                                                />
+                                            ) : (
+                                                <div className={`${color}`}>
+                                                    <Icon size={14} />
+                                                </div>
+                                            )}
+                                        </button>
+
+                                        {/* Content */}
+                                        <button
+                                            className="flex-1 min-w-0 text-left cursor-pointer"
+                                            onClick={() => {
+                                                markAsRead(notif.id);
+                                                if (notif.link) {
+                                                    navigate(notif.link);
+                                                    setIsOpen(false);
+                                                }
+                                            }}
+                                        >
                                             <div className="flex items-center gap-2 mb-0.5">
+                                                <div className={`${color} flex-shrink-0`}>
+                                                    <Icon size={10} />
+                                                </div>
                                                 <span className="text-[10px] font-mono font-semibold text-forum-text">
                                                     {notif.title}
                                                 </span>
-                                                {!notif.read && (
+                                                {!notif.isRead && (
                                                     <div className="h-1.5 w-1.5 rounded-full bg-forum-pink animate-dot-pulse flex-shrink-0" />
                                                 )}
                                             </div>
@@ -143,8 +181,20 @@ export default function NotificationCenter() {
                                             <span className="text-[8px] font-mono text-forum-muted/60 mt-1 block">
                                                 {formatTimeAgo(notif.createdAt)}
                                             </span>
-                                        </div>
-                                    </button>
+                                        </button>
+
+                                        {/* Delete button */}
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                deleteNotification(notif.id);
+                                            }}
+                                            className="transition-forum opacity-0 group-hover:opacity-100 rounded p-1 text-forum-muted hover:text-red-400 hover:bg-red-500/10 flex-shrink-0 mt-0.5"
+                                            title="Delete notification"
+                                        >
+                                            <X size={11} />
+                                        </button>
+                                    </div>
                                 );
                             })
                         ) : (

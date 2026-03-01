@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { Image as ImageIcon, Upload, X, Loader2, ExternalLink, Video } from 'lucide-react';
+import { uploadMedia } from '@/lib/uploadMedia';
 
 interface ImageUploadButtonProps {
   onImageInsert: (markdownImage: string) => void;
@@ -8,8 +9,7 @@ interface ImageUploadButtonProps {
   mode?: 'image' | 'video' | 'both'; // New prop to specify upload mode
 }
 
-// Upload proxy server URL
-const UPLOAD_PROXY_URL = 'http://localhost:3001/api/upload-image';
+
 
 export default function ImageUploadButton({
   onImageInsert,
@@ -47,7 +47,7 @@ export default function ImageUploadButton({
   const uploadFile = async (file: File) => {
     const isVideo = file.type.startsWith('video/');
     const isImage = file.type.startsWith('image/');
-    
+
     // Validate file type based on mode
     if (mode === 'image' && !isImage) {
       alert('Please select an image file');
@@ -72,26 +72,11 @@ export default function ImageUploadButton({
     setIsUploading(true);
 
     try {
-      // Create FormData and append the file directly
-      const formData = new FormData();
-      formData.append('image', file);
+      const result = await uploadMedia(file);
 
-      // Upload via proxy server
-      const response = await fetch(UPLOAD_PROXY_URL, {
-        method: 'POST',
-        body: formData,
-      });
-
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(result.error || 'Upload failed');
-      }
-
-      // Get the file URL from response
       const fileUrl = result.url;
       const altText = file.name.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' ');
-      
+
       // Insert appropriate markdown based on file type
       if (isVideo) {
         // For videos, use HTML5 video tag with src directly on video element (not nested source)
@@ -100,7 +85,7 @@ export default function ImageUploadButton({
         // For images, use markdown image syntax
         onImageInsert(`\n![${altText}](${fileUrl})\n`);
       }
-      
+
       setShowDropdown(false);
     } catch (error: any) {
       console.error('Failed to upload file:', error);

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { toast } from '@/components/forum/Toast';
+import { CreateNotificationData } from '@/hooks/forum/useNotifications';
 
 export interface FollowStatus {
   isFollowing: boolean;
@@ -9,7 +10,13 @@ export interface FollowStatus {
   status: 'none' | 'pending' | 'accepted' | 'rejected';
 }
 
-export function useFollowSystem(targetUserId: string, currentUserId: string) {
+export function useFollowSystem(
+  targetUserId: string,
+  currentUserId: string,
+  createNotification?: (data: CreateNotificationData) => Promise<void>,
+  currentUserName?: string,
+  currentUserAvatar?: string,
+) {
   const [followStatus, setFollowStatus] = useState<FollowStatus>({
     isFollowing: false,
     isPending: false,
@@ -20,9 +27,9 @@ export function useFollowSystem(targetUserId: string, currentUserId: string) {
 
   useEffect(() => {
     if (!currentUserId || !targetUserId || currentUserId === targetUserId) return;
-    
+
     fetchFollowStatus();
-    
+
     // Subscribe to follow changes
     const channel = supabase
       .channel(`follow-${currentUserId}-${targetUserId}`)
@@ -76,13 +83,13 @@ export function useFollowSystem(targetUserId: string, currentUserId: string) {
 
   const followUser = async () => {
     if (!currentUserId || !targetUserId) return;
-    
+
     // Check if user is authenticated (not a guest)
     if (currentUserId === 'guest') {
       toast.error('Please log in to follow users');
       return;
     }
-    
+
     setLoading(true);
     try {
       // Check if target user is private
@@ -110,10 +117,28 @@ export function useFollowSystem(targetUserId: string, currentUserId: string) {
         throw error;
       }
 
-      const message = status === 'pending' 
+      const message = status === 'pending'
         ? `Follow request sent to ${targetUser?.username}`
         : `Now following ${targetUser?.username}`;
       toast.success(message);
+
+      // Notify target user
+      if (createNotification) {
+        createNotification({
+          userId: targetUserId,
+          type: status === 'pending' ? 'follow_request' : 'follow',
+          title: status === 'pending' ? 'Follow Request' : 'New Follower',
+          message: status === 'pending'
+            ? `${currentUserName || 'Someone'} sent you a follow request`
+            : `${currentUserName || 'Someone'} started following you`,
+          link: `/user/${currentUserId}`,
+          actorId: currentUserId,
+          actorName: currentUserName,
+          actorAvatar: currentUserAvatar,
+          targetType: 'user',
+          targetId: targetUserId,
+        });
+      }
 
       fetchFollowStatus();
     } catch (error: any) {
@@ -125,13 +150,13 @@ export function useFollowSystem(targetUserId: string, currentUserId: string) {
 
   const unfollowUser = async () => {
     if (!currentUserId || !targetUserId) return;
-    
+
     // Check if user is authenticated (not a guest)
     if (currentUserId === 'guest') {
       toast.error('Please log in to unfollow users');
       return;
     }
-    
+
     setLoading(true);
     try {
       const { error } = await supabase

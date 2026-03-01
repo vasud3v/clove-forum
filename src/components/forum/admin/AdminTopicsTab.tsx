@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Plus, Edit3, Trash2, Check, X, FolderTree, Upload, Image as ImageIcon, Link as LinkIcon, Award } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { toast } from '@/components/forum/Toast';
+import { uploadImageFile } from '@/lib/uploadMedia';
 
 // Available badge options
 const BADGE_OPTIONS = [
@@ -184,30 +185,30 @@ export default function AdminTopicsTab({ onRefresh, onLogAction }: Props) {
   const handleDelete = async (id: string) => {
     try {
       const topic = topics.find(t => t.id === id);
-      
+
       if (!topic) {
         toast.error('Topic not found');
         setDeleteConfirm(null);
         return;
       }
-      
+
       const message = `Delete topic "${topic.name}"?\n\nThis will also delete:\n- ${topic.threadCount || 0} threads\n- ${topic.postCount || 0} posts\n\nThis action cannot be undone!`;
-      
+
       if (!confirm(message)) {
         setDeleteConfirm(null);
         return;
       }
 
       console.log('[AdminTopicsTab] Deleting topic:', id);
-      
+
       // Show loading state
       toast.info('Deleting topic...');
-      
+
       const { error } = await supabase.from('topics').delete().eq('id', id);
-      
+
       if (error) {
         console.error('[AdminTopicsTab] Delete error:', error);
-        
+
         // Check for specific error types
         if (error.message?.includes('Failed to fetch') || error.message?.includes('network')) {
           toast.error('Network error. Please check your connection and try again.');
@@ -218,15 +219,15 @@ export default function AdminTopicsTab({ onRefresh, onLogAction }: Props) {
         } else {
           toast.error(`Delete failed: ${error.message}`);
         }
-        
+
         setDeleteConfirm(null);
         return;
       }
-      
+
       console.log('[AdminTopicsTab] Topic deleted successfully');
-      
+
       try {
-        await onLogAction('topic_delete', 'topic', id, { 
+        await onLogAction('topic_delete', 'topic', id, {
           name: topic.name,
           deletedThreads: topic.threadCount,
           deletedPosts: topic.postCount
@@ -235,23 +236,23 @@ export default function AdminTopicsTab({ onRefresh, onLogAction }: Props) {
         console.warn('[AdminTopicsTab] Failed to log action:', logError);
         // Don't fail the delete if logging fails
       }
-      
+
       toast.success('Topic deleted successfully');
       setDeleteConfirm(null);
-      
+
       // Reload data
       await loadData();
       onRefresh();
-      
+
     } catch (err: any) {
       console.error('[AdminTopicsTab] Delete failed:', err);
-      
+
       if (err.message?.includes('Failed to fetch') || err.message?.includes('network')) {
         toast.error('Network error. Please check your connection and try again.');
       } else {
         toast.error(err.message || 'Failed to delete topic');
       }
-      
+
       setDeleteConfirm(null);
     }
   };
@@ -299,25 +300,11 @@ export default function AdminTopicsTab({ onRefresh, onLogAction }: Props) {
     setUploadingIcon(true);
 
     try {
-      // Create FormData for upload
-      const formData = new FormData();
-      formData.append('icon', file);
+      // Upload directly to ImgBB (works on any hosting)
+      const imageUrl = await uploadImageFile(file);
 
-      // Upload to local server
-      const response = await fetch('http://localhost:3001/api/upload-icon', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Upload failed');
-      }
-
-      const data = await response.json();
-      
-      // Set the icon path
-      setFormData(p => ({ ...p, icon: data.path }));
+      // Set the icon URL
+      setFormData(p => ({ ...p, icon: imageUrl }));
       toast.success('Icon uploaded successfully!');
 
     } catch (err: any) {
@@ -339,21 +326,21 @@ export default function AdminTopicsTab({ onRefresh, onLogAction }: Props) {
         <FolderTree size={14} className="text-forum-pink" />
         {isEditing ? 'Edit Topic' : 'Create New Topic'}
       </h3>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div>
           <label className="text-[9px] font-mono text-forum-muted uppercase tracking-wider">Name *</label>
-          <input 
-            value={formData.name} 
+          <input
+            value={formData.name}
             onChange={e => setFormData(p => ({ ...p, name: e.target.value }))}
-            className="mt-1 w-full rounded-md border border-forum-border bg-forum-bg px-3 py-1.5 text-[11px] font-mono text-forum-text outline-none focus:border-forum-pink" 
-            placeholder="Topic name" 
+            className="mt-1 w-full rounded-md border border-forum-border bg-forum-bg px-3 py-1.5 text-[11px] font-mono text-forum-text outline-none focus:border-forum-pink"
+            placeholder="Topic name"
           />
         </div>
         <div>
           <label className="text-[9px] font-mono text-forum-muted uppercase tracking-wider">Category *</label>
-          <select 
-            value={formData.categoryId} 
+          <select
+            value={formData.categoryId}
             onChange={e => setFormData(p => ({ ...p, categoryId: e.target.value }))}
             className="mt-1 w-full rounded-md border border-forum-border bg-forum-bg px-3 py-1.5 text-[11px] font-mono text-forum-text outline-none focus:border-forum-pink"
           >
@@ -367,11 +354,11 @@ export default function AdminTopicsTab({ onRefresh, onLogAction }: Props) {
 
       <div>
         <label className="text-[9px] font-mono text-forum-muted uppercase tracking-wider">Description</label>
-        <textarea 
-          value={formData.description} 
+        <textarea
+          value={formData.description}
           onChange={e => setFormData(p => ({ ...p, description: e.target.value }))}
-          className="mt-1 w-full rounded-md border border-forum-border bg-forum-bg px-3 py-1.5 text-[11px] font-mono text-forum-text outline-none focus:border-forum-pink resize-none h-16" 
-          placeholder="Topic description" 
+          className="mt-1 w-full rounded-md border border-forum-border bg-forum-bg px-3 py-1.5 text-[11px] font-mono text-forum-text outline-none focus:border-forum-pink resize-none h-16"
+          placeholder="Topic description"
         />
       </div>
 
@@ -387,11 +374,10 @@ export default function AdminTopicsTab({ onRefresh, onLogAction }: Props) {
               key={badge.value}
               type="button"
               onClick={() => setFormData(p => ({ ...p, badge: badge.value }))}
-              className={`transition-forum rounded-md px-2 py-1.5 text-[9px] font-mono font-bold border ${
-                formData.badge === badge.value
+              className={`transition-forum rounded-md px-2 py-1.5 text-[9px] font-mono font-bold border ${formData.badge === badge.value
                   ? badge.color || 'border-forum-pink bg-forum-pink/10 text-forum-pink'
                   : 'border-forum-border text-forum-muted hover:border-forum-pink/30'
-              }`}
+                }`}
             >
               {badge.label}
             </button>
@@ -402,17 +388,16 @@ export default function AdminTopicsTab({ onRefresh, onLogAction }: Props) {
       {/* Icon Upload/URL Section */}
       <div>
         <label className="text-[9px] font-mono text-forum-muted uppercase tracking-wider mb-2 block">Topic Icon</label>
-        
+
         {/* Mode Toggle */}
         <div className="flex items-center gap-2 mb-3">
           <button
             type="button"
             onClick={() => setIconInputMode('upload')}
-            className={`transition-forum flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[9px] font-mono border ${
-              iconInputMode === 'upload'
+            className={`transition-forum flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[9px] font-mono border ${iconInputMode === 'upload'
                 ? 'border-forum-pink bg-forum-pink/10 text-forum-pink'
                 : 'border-forum-border text-forum-muted hover:border-forum-pink/30'
-            }`}
+              }`}
           >
             <Upload size={10} />
             Upload
@@ -420,11 +405,10 @@ export default function AdminTopicsTab({ onRefresh, onLogAction }: Props) {
           <button
             type="button"
             onClick={() => setIconInputMode('url')}
-            className={`transition-forum flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[9px] font-mono border ${
-              iconInputMode === 'url'
+            className={`transition-forum flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[9px] font-mono border ${iconInputMode === 'url'
                 ? 'border-forum-pink bg-forum-pink/10 text-forum-pink'
                 : 'border-forum-border text-forum-muted hover:border-forum-pink/30'
-            }`}
+              }`}
           >
             <LinkIcon size={10} />
             URL
@@ -436,9 +420,9 @@ export default function AdminTopicsTab({ onRefresh, onLogAction }: Props) {
           {formData.icon ? (
             <div className="relative group flex-shrink-0">
               <div className="w-20 h-20 rounded-lg overflow-hidden flex items-center justify-center">
-                <img 
-                  src={formData.icon} 
-                  alt="Topic icon" 
+                <img
+                  src={formData.icon}
+                  alt="Topic icon"
                   className="w-full h-full object-contain transition-opacity duration-300"
                   onLoad={(e) => {
                     e.currentTarget.style.opacity = '1';
@@ -507,10 +491,10 @@ export default function AdminTopicsTab({ onRefresh, onLogAction }: Props) {
                 </button>
               </div>
             )}
-            
+
             <div className="bg-forum-bg border border-forum-border/50 rounded-md px-2 py-1.5">
               <p className="text-[8px] font-mono text-forum-muted leading-relaxed">
-                <strong className="text-forum-text">Recommended:</strong> Square images (64x64 to 512x512px). 
+                <strong className="text-forum-text">Recommended:</strong> Square images (64x64 to 512x512px).
                 Supports PNG, JPG, GIF, WebP. Max 2MB.
                 {iconInputMode === 'upload' ? (
                   <span className="block mt-1 text-emerald-400">
@@ -531,15 +515,15 @@ export default function AdminTopicsTab({ onRefresh, onLogAction }: Props) {
       </div>
 
       <div className="flex items-center gap-2 pt-2">
-        <button 
-          onClick={isEditing ? handleUpdate : handleCreate} 
+        <button
+          onClick={isEditing ? handleUpdate : handleCreate}
           disabled={isSubmitting || !formData.name.trim() || !formData.categoryId}
           className="transition-forum rounded-md bg-forum-pink px-4 py-2 text-[10px] font-mono font-bold text-white hover:bg-forum-pink/90 disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {isSubmitting ? 'Saving...' : isEditing ? 'Update Topic' : 'Create Topic'}
         </button>
-        <button 
-          onClick={resetForm} 
+        <button
+          onClick={resetForm}
           className="transition-forum rounded-md border border-forum-border px-4 py-2 text-[10px] font-mono text-forum-muted hover:text-forum-text"
         >
           Cancel
@@ -548,8 +532,8 @@ export default function AdminTopicsTab({ onRefresh, onLogAction }: Props) {
     </div>
   );
 
-  const filteredTopics = filterCategory === 'all' 
-    ? topics 
+  const filteredTopics = filterCategory === 'all'
+    ? topics
     : topics.filter(t => t.categoryId === filterCategory);
 
   if (loading) {
@@ -564,18 +548,18 @@ export default function AdminTopicsTab({ onRefresh, onLogAction }: Props) {
     <div className="space-y-3">
       <div className="flex items-center gap-2 flex-wrap">
         {!showCreateForm && !editingId && (
-          <button 
+          <button
             onClick={() => setShowCreateForm(true)}
             className="transition-forum flex items-center gap-1.5 rounded-md bg-forum-pink px-4 py-2 text-[10px] font-mono font-bold text-white hover:bg-forum-pink/90"
           >
             <Plus size={12} /> Create Topic
           </button>
         )}
-        
+
         <div className="flex items-center gap-2 ml-auto">
           <label className="text-[9px] font-mono text-forum-muted uppercase tracking-wider">Filter:</label>
-          <select 
-            value={filterCategory} 
+          <select
+            value={filterCategory}
             onChange={e => setFilterCategory(e.target.value)}
             className="rounded-md border border-forum-border bg-forum-bg px-3 py-1.5 text-[10px] font-mono text-forum-text outline-none focus:border-forum-pink"
           >
@@ -607,8 +591,8 @@ export default function AdminTopicsTab({ onRefresh, onLogAction }: Props) {
                 {/* Topic Icon */}
                 {topic.icon ? (
                   <div className="relative w-12 h-12 rounded-lg flex-shrink-0 overflow-hidden flex items-center justify-center">
-                    <img 
-                      src={topic.icon} 
+                    <img
+                      src={topic.icon}
                       alt={topic.name}
                       className="w-full h-full object-contain transition-opacity duration-300"
                       onLoad={(e) => {
@@ -632,7 +616,7 @@ export default function AdminTopicsTab({ onRefresh, onLogAction }: Props) {
                     <FolderTree size={18} className="text-forum-muted" />
                   </div>
                 )}
-                
+
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-[11px] font-mono font-semibold text-forum-text">{topic.name}</span>
@@ -655,8 +639,8 @@ export default function AdminTopicsTab({ onRefresh, onLogAction }: Props) {
                   </div>
                 </div>
                 <div className="flex items-center gap-1 flex-shrink-0">
-                  <button 
-                    onClick={() => startEdit(topic)} 
+                  <button
+                    onClick={() => startEdit(topic)}
                     className="transition-forum rounded p-1.5 text-forum-muted hover:text-blue-400 hover:bg-blue-500/10"
                     title="Edit topic"
                   >
@@ -664,15 +648,15 @@ export default function AdminTopicsTab({ onRefresh, onLogAction }: Props) {
                   </button>
                   {deleteConfirm === topic.id ? (
                     <div className="flex items-center gap-1">
-                      <button 
-                        onClick={() => handleDelete(topic.id)} 
+                      <button
+                        onClick={() => handleDelete(topic.id)}
                         className="transition-forum rounded p-1.5 text-red-400 bg-red-500/10"
                         title="Confirm delete"
                       >
                         <Check size={12} />
                       </button>
-                      <button 
-                        onClick={() => setDeleteConfirm(null)} 
+                      <button
+                        onClick={() => setDeleteConfirm(null)}
                         className="transition-forum rounded p-1.5 text-forum-muted hover:text-forum-text"
                         title="Cancel"
                       >
@@ -680,8 +664,8 @@ export default function AdminTopicsTab({ onRefresh, onLogAction }: Props) {
                       </button>
                     </div>
                   ) : (
-                    <button 
-                      onClick={() => setDeleteConfirm(topic.id)} 
+                    <button
+                      onClick={() => setDeleteConfirm(topic.id)}
                       className="transition-forum rounded p-1.5 text-forum-muted hover:text-red-400 hover:bg-red-500/10"
                       title="Delete topic"
                     >

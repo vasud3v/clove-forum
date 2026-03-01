@@ -20,6 +20,7 @@ import { useWatches } from '@/hooks/forum/useWatches';
 import { usePostBookmarks } from '@/hooks/forum/usePostBookmarks';
 import { useReputation } from '@/hooks/forum/useReputation';
 import { useUserProfileSync } from '@/hooks/forum/useUserProfileSync';
+import { useNotifications } from '@/context/NotificationContext';
 
 // ============================================================================
 // Context Type
@@ -142,6 +143,9 @@ export function ForumProvider({ children }: { children: ReactNode }) {
     pageSize, setPageSize, availablePageSizes,
   } = useForumUser();
 
+  // --- Notifications (from parent NotificationProvider) ---
+  const { createNotification } = useNotifications();
+
   // --- Reputation ---
   // (declared early so setReputationEvents can be passed to useCategories and usePosts)
   const reputation = useReputation({
@@ -150,6 +154,7 @@ export function ForumProvider({ children }: { children: ReactNode }) {
     getThread: () => null, // Will be connected below via useCategories
     setPostsMap: () => { }, // Will be connected below
     setError,
+    createNotification,
   });
 
   // --- Categories & Stats ---
@@ -177,6 +182,7 @@ export function ForumProvider({ children }: { children: ReactNode }) {
     setReputationEvents: reputation.setReputationEvents,
     subscribeToThreadPosts: realtime.subscribeToThreadPosts,
     setError, clearError,
+    createNotification,
   });
 
   // --- Polls ---
@@ -188,6 +194,7 @@ export function ForumProvider({ children }: { children: ReactNode }) {
     setCategoriesState: categories.setCategoriesState,
     setPostsMap: posts.setPostsMap,
     setError,
+    createNotification,
   });
 
   // --- Watches ---
@@ -211,6 +218,7 @@ export function ForumProvider({ children }: { children: ReactNode }) {
     getThread: categories.getThread,
     setPostsMap: posts.setPostsMap,
     setError,
+    createNotification,
   });
 
   // --- User Profile Sync ---
@@ -226,9 +234,9 @@ export function ForumProvider({ children }: { children: ReactNode }) {
       postCount: updates.post_count,
       reputation: updates.reputation,
     });
-    
+
     // Update threads with new user data
-    categories.setCategoriesState(prev => 
+    categories.setCategoriesState(prev =>
       prev.map(cat => ({
         ...cat,
         threads: cat.threads?.map(thread => {

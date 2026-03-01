@@ -34,13 +34,13 @@ export default function MobileBottomNav() {
             active: false,
             isAction: true,
         },
-        {
+        ...(isAuthenticated ? [{
             icon: Bell,
             label: 'Alerts',
             href: '#alerts',
             active: false,
             badge: unreadCount,
-        },
+        }] : []),
         {
             icon: User,
             label: 'Profile',
@@ -64,8 +64,8 @@ export default function MobileBottomNav() {
                                 }
                             }}
                             className={`relative flex flex-col items-center justify-center gap-0.5 w-14 h-full transition-forum ${item.active
-                                    ? 'text-forum-pink'
-                                    : 'text-forum-muted hover:text-forum-text'
+                                ? 'text-forum-pink'
+                                : 'text-forum-muted hover:text-forum-text'
                                 }`}
                         >
                             {item.isAction ? (

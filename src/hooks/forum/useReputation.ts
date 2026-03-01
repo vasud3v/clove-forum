@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef } from 'react';
 import { User, ReputationEvent, ReputationActionType, REPUTATION_POINTS, PostData, Thread } from '@/types/forum';
 import { supabase, ForumError, handleSupabaseError } from '@/lib/supabase';
+import { CreateNotificationData } from '@/hooks/forum/useNotifications';
 
 const REPUTATION_ACTION_DESCRIPTIONS: Record<ReputationActionType, string> = {
     post_upvoted: 'Post was upvoted',
@@ -21,6 +22,7 @@ interface UseReputationParams {
     getThread: (threadId: string) => Thread | null;
     setPostsMap: React.Dispatch<React.SetStateAction<Record<string, PostData[]>>>;
     setError: (key: string, error: ForumError, operation: string) => void;
+    createNotification?: (data: CreateNotificationData) => Promise<void>;
 }
 
 export function useReputation({
@@ -30,6 +32,7 @@ export function useReputation({
     getThread,
     setPostsMap,
     setError,
+    createNotification,
 }: UseReputationParams) {
     const [reputationEvents, setReputationEvents] = useState<Record<string, ReputationEvent[]>>({});
     const [bestAnswers, setBestAnswers] = useState<Record<string, string>>({});
@@ -246,6 +249,22 @@ export function useReputation({
                     triggeredBy: currentUser.username, createdAt: now,
                 }, ...(prev[post.author.id] || [])],
             }));
+
+            // Notify post author about best answer
+            if (createNotification && post.author.id !== currentUser.id) {
+                createNotification({
+                    userId: post.author.id,
+                    type: 'best_answer',
+                    title: '🏆 Best Answer!',
+                    message: `Your post was marked as the best answer in "${thread?.title || 'a thread'}"`,
+                    link: `/thread/${threadId}`,
+                    actorId: currentUser.id,
+                    actorName: currentUser.username,
+                    actorAvatar: currentUser.avatar,
+                    targetType: 'post',
+                    targetId: postId,
+                });
+            }
         } catch (error) {
             setBestAnswers(prev => {
                 if (previousBestAnswerId) return { ...prev, [threadId]: previousBestAnswerId };
@@ -262,7 +281,7 @@ export function useReputation({
             setError('markBestAnswer', forumError, 'markBestAnswer');
             throw forumError;
         }
-    }, [postsMap, bestAnswers, getThread, currentUser, isAuthenticated, setPostsMap, setError]);
+    }, [postsMap, bestAnswers, getThread, currentUser, isAuthenticated, setPostsMap, setError, createNotification]);
 
     const getBestAnswerPostId = useCallback((threadId: string): string | null => {
         return bestAnswers[threadId] || null;

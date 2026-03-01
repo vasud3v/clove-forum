@@ -1,30 +1,28 @@
-import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import { createContext, useContext, ReactNode } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import {
+    useNotificationsHook,
+    Notification,
+    NotificationType,
+    CreateNotificationData,
+} from '@/hooks/forum/useNotifications';
+
+// Re-export types for consumers
+export type { Notification, NotificationType, CreateNotificationData };
 
 // ============================================================================
-// Types
+// Context Type
 // ============================================================================
-
-export type NotificationType = 'reply' | 'mention' | 'upvote' | 'milestone' | 'system';
-
-export interface Notification {
-    id: string;
-    type: NotificationType;
-    title: string;
-    message: string;
-    link?: string;
-    read: boolean;
-    createdAt: string;
-    actorName?: string;
-    actorAvatar?: string;
-}
 
 interface NotificationContextType {
     notifications: Notification[];
     unreadCount: number;
+    loading: boolean;
     markAsRead: (id: string) => void;
     markAllAsRead: () => void;
-    addNotification: (notification: Omit<Notification, 'id' | 'read' | 'createdAt'>) => void;
+    deleteNotification: (id: string) => void;
     clearNotifications: () => void;
+    createNotification: (data: CreateNotificationData) => Promise<void>;
 }
 
 // ============================================================================
@@ -42,103 +40,35 @@ export function useNotifications() {
 }
 
 // ============================================================================
-// Sample Data
-// ============================================================================
-
-const sampleNotifications: Notification[] = [
-    {
-        id: 'n1',
-        type: 'reply',
-        title: 'New Reply',
-        message: 'null_ptr replied to your thread "Best practices for async/await"',
-        link: '/thread/t1',
-        read: false,
-        createdAt: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
-        actorName: 'null_ptr',
-    },
-    {
-        id: 'n2',
-        type: 'upvote',
-        title: 'Post Upvoted',
-        message: 'Your post received 10 upvotes! +100 Rep',
-        link: '/thread/t2',
-        read: false,
-        createdAt: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
-    },
-    {
-        id: 'n3',
-        type: 'mention',
-        title: 'You were mentioned',
-        message: 'pixel_witch mentioned you in "CSS Dark Arts: Glassmorphism Guide"',
-        link: '/thread/t3',
-        read: false,
-        createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
-        actorName: 'pixel_witch',
-    },
-    {
-        id: 'n4',
-        type: 'milestone',
-        title: 'Milestone Reached!',
-        message: 'Congratulations! You reached 1,000 reputation points 🎉',
-        read: true,
-        createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-    },
-    {
-        id: 'n5',
-        type: 'system',
-        title: 'Welcome to Clove',
-        message: 'Welcome to the community! Check out our rules and start posting.',
-        link: '/rules',
-        read: true,
-        createdAt: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(),
-    },
-];
-
-// ============================================================================
 // Provider
 // ============================================================================
 
 export function NotificationProvider({ children }: { children: ReactNode }) {
-    const [notifications, setNotifications] = useState<Notification[]>(sampleNotifications);
+    const { user } = useAuth();
+    const userId = user?.id || null;
 
-    const unreadCount = notifications.filter((n) => !n.read).length;
-
-    const markAsRead = useCallback((id: string) => {
-        setNotifications((prev) =>
-            prev.map((n) => (n.id === id ? { ...n, read: true } : n))
-        );
-    }, []);
-
-    const markAllAsRead = useCallback(() => {
-        setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
-    }, []);
-
-    const addNotification = useCallback(
-        (notification: Omit<Notification, 'id' | 'read' | 'createdAt'>) => {
-            const newNotification: Notification = {
-                ...notification,
-                id: `n-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-                read: false,
-                createdAt: new Date().toISOString(),
-            };
-            setNotifications((prev) => [newNotification, ...prev]);
-        },
-        []
-    );
-
-    const clearNotifications = useCallback(() => {
-        setNotifications([]);
-    }, []);
+    const {
+        notifications,
+        unreadCount,
+        loading,
+        markAsRead,
+        markAllAsRead,
+        deleteNotification,
+        clearAll,
+        createNotification,
+    } = useNotificationsHook(userId);
 
     return (
         <NotificationContext.Provider
             value={{
                 notifications,
                 unreadCount,
+                loading,
                 markAsRead,
                 markAllAsRead,
-                addNotification,
-                clearNotifications,
+                deleteNotification,
+                clearNotifications: clearAll,
+                createNotification,
             }}
         >
             {children}

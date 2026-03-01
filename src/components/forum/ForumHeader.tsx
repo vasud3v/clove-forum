@@ -176,7 +176,7 @@ export default function ForumHeader({
             </button>
 
             {/* Notifications */}
-            <NotificationCenter />
+            {isAuthenticated && <NotificationCenter />}
 
             {/* User avatar / Auth buttons */}
             {isAuthenticated ? (

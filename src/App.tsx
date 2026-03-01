@@ -62,11 +62,11 @@ function AppContent() {
 function App() {
   return (
     <AuthProvider>
-      <ForumProvider>
-        <NotificationProvider>
+      <NotificationProvider>
+        <ForumProvider>
           <AppContent />
-        </NotificationProvider>
-      </ForumProvider>
+        </ForumProvider>
+      </NotificationProvider>
     </AuthProvider>
   );
 }

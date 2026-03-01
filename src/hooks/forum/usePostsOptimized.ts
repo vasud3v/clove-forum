@@ -2,6 +2,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { User, Category, ForumStats, Reaction, PostData, ReputationEvent, ReputationActionType, REPUTATION_POINTS } from '@/types/forum';
 import { supabase, ForumError, handleSupabaseError, withRetry } from '@/lib/supabase';
 import { fetchPostsForThread } from '@/lib/forumDataFetchersOptimized';
+import { CreateNotificationData } from '@/hooks/forum/useNotifications';
 
 interface UsePostsParams {
     currentUser: User;
@@ -13,6 +14,7 @@ interface UsePostsParams {
     subscribeToThreadPosts: (threadId: string) => void;
     setError: (key: string, error: ForumError, operation: string) => void;
     clearError: (key: string) => void;
+    createNotification?: (data: CreateNotificationData) => Promise<void>;
 }
 
 export function usePosts({
@@ -25,6 +27,7 @@ export function usePosts({
     subscribeToThreadPosts,
     setError,
     clearError,
+    createNotification,
 }: UsePostsParams) {
     const [postsMap, setPostsMap] = useState<Record<string, PostData[]>>({});
     const [loadingPosts, setLoadingPosts] = useState<Record<string, boolean>>({});
@@ -136,7 +139,7 @@ export function usePosts({
         }
 
         const trimmedContent = content.trim();
-        
+
         if (!trimmedContent) {
             throw new ForumError('Empty content', 'VALIDATION_ERROR', 'Post content cannot be empty', false);
         }
@@ -198,6 +201,45 @@ export function usePosts({
                 }, ...(prev[currentUser.id] || [])],
             }));
 
+            // --- Notify thread author about the reply ---
+            if (createNotification) {
+                // Find the thread to get the author ID and title
+                const threadInfo = await supabase.from('threads').select('author_id, title').eq('id', threadId).single();
+                if (threadInfo.data && threadInfo.data.author_id !== currentUser.id) {
+                    createNotification({
+                        userId: threadInfo.data.author_id,
+                        type: 'reply',
+                        title: 'New Reply',
+                        message: `${currentUser.username} replied to your thread "${threadInfo.data.title}"`,
+                        link: `/thread/${threadId}`,
+                        actorId: currentUser.id,
+                        actorName: currentUser.username,
+                        actorAvatar: currentUser.avatar,
+                        targetType: 'thread',
+                        targetId: threadId,
+                    });
+                }
+
+                // If replying to a specific post, notify that post's author too
+                if (replyTo) {
+                    const parentPost = (postsMap[threadId] || []).find(p => p.id === replyTo);
+                    if (parentPost && parentPost.author.id !== currentUser.id && parentPost.author.id !== threadInfo.data?.author_id) {
+                        createNotification({
+                            userId: parentPost.author.id,
+                            type: 'reply',
+                            title: 'Reply to Your Post',
+                            message: `${currentUser.username} replied to your post`,
+                            link: `/thread/${threadId}`,
+                            actorId: currentUser.id,
+                            actorName: currentUser.username,
+                            actorAvatar: currentUser.avatar,
+                            targetType: 'post',
+                            targetId: replyTo,
+                        });
+                    }
+                }
+            }
+
             return optimisticPost;
         } catch (error) {
             setPostsMap((prev) => ({ ...prev, [threadId]: (prev[threadId] || []).filter(p => p.id !== postId) }));
@@ -213,7 +255,7 @@ export function usePosts({
             setError('addPost', forumError, 'Add post');
             throw forumError;
         }
-    }, [currentUser, isAuthenticated, setCategoriesState, setStatsState, setReputationEvents, setError]);
+    }, [currentUser, isAuthenticated, postsMap, setCategoriesState, setStatsState, setReputationEvents, setError, createNotification]);
 
     const editPost = useCallback(async (postId: string, newContent: string) => {
         if (!isAuthenticated || !currentUser?.id) {
@@ -221,7 +263,7 @@ export function usePosts({
         }
 
         const trimmedContent = newContent.trim();
-        
+
         if (!trimmedContent) {
             throw new ForumError('Empty content', 'VALIDATION_ERROR', 'Post content cannot be empty', false);
         }
@@ -351,6 +393,22 @@ export function usePosts({
                                 }, ...(prev[reactionPostAuthorId!] || [])],
                             }));
                         }
+
+                        // Notify post author about the reaction
+                        if (createNotification) {
+                            createNotification({
+                                userId: reactionPostAuthorId!,
+                                type: 'reaction',
+                                title: `${emoji} Reaction`,
+                                message: `${currentUser.username} reacted ${emoji} to your post`,
+                                link: `/thread/${Object.keys(postsMap).find(tid => postsMap[tid]?.some(p => p.id === postId)) || ''}`,
+                                actorId: currentUser.id,
+                                actorName: currentUser.username,
+                                actorAvatar: currentUser.avatar,
+                                targetType: 'post',
+                                targetId: postId,
+                            });
+                        }
                     }
                 } else {
                     const { error } = await supabase.from('post_reactions').delete()
@@ -371,7 +429,7 @@ export function usePosts({
                 setError('togglePostReaction', forumError, 'Toggle reaction');
             }
         })();
-    }, [postsMap, currentUser.id, currentUser.username, isAuthenticated, setReputationEvents, setError]);
+    }, [postsMap, currentUser.id, currentUser.username, currentUser.avatar, isAuthenticated, setReputationEvents, setError, createNotification]);
 
     const resetPosts = useCallback(() => {
         setPostsMap({});
@@ -413,8 +471,8 @@ export function usePosts({
             }))
         );
 
-        setStatsState((prev) => ({ 
-            ...prev, 
+        setStatsState((prev) => ({
+            ...prev,
             totalPosts: Math.max(0, prev.totalPosts - 1),
         }));
 
@@ -427,7 +485,7 @@ export function usePosts({
                 .select('reply_count')
                 .eq('id', postThreadId)
                 .single();
-            
+
             if (!fetchError && currentThread) {
                 await supabase
                     .from('threads')
@@ -453,8 +511,8 @@ export function usePosts({
                 }))
             );
 
-            setStatsState((prev) => ({ 
-                ...prev, 
+            setStatsState((prev) => ({
+                ...prev,
                 totalPosts: prev.totalPosts + 1,
             }));
 

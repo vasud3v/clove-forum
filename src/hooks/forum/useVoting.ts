@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { Category, User } from '@/types/forum';
 import { PostData } from '@/types/forum';
 import { supabase, ForumError, handleSupabaseError } from '@/lib/supabase';
+import { CreateNotificationData } from '@/hooks/forum/useNotifications';
 
 interface UseVotingParams {
     currentUser: User;
@@ -9,6 +10,7 @@ interface UseVotingParams {
     setCategoriesState: React.Dispatch<React.SetStateAction<Category[]>>;
     setPostsMap: React.Dispatch<React.SetStateAction<Record<string, PostData[]>>>;
     setError: (key: string, error: ForumError, operation: string) => void;
+    createNotification?: (data: CreateNotificationData) => Promise<void>;
 }
 
 export function useVoting({
@@ -17,6 +19,7 @@ export function useVoting({
     setCategoriesState,
     setPostsMap,
     setError,
+    createNotification,
 }: UseVotingParams) {
     const [threadVotes, setThreadVotes] = useState<Record<string, 'up' | 'down'>>({});
     const [postVotes, setPostVotes] = useState<Record<string, 'up' | 'down'>>({});
@@ -77,6 +80,25 @@ export function useVoting({
                     const downvotes = voteCounts.filter(v => v.direction === 'down').length;
                     await supabase.from('threads').update({ upvotes, downvotes }).eq('id', threadId);
                 }
+
+                // Notify thread author on upvote (only new upvotes, not removals or downvotes)
+                if (direction === 'up' && previousVote !== 'up' && createNotification) {
+                    const { data: thread } = await supabase.from('threads').select('author_id, title').eq('id', threadId).single();
+                    if (thread && thread.author_id !== currentUser.id) {
+                        createNotification({
+                            userId: thread.author_id,
+                            type: 'upvote',
+                            title: 'Thread Upvoted',
+                            message: `${currentUser.username} upvoted your thread "${thread.title}"`,
+                            link: `/thread/${threadId}`,
+                            actorId: currentUser.id,
+                            actorName: currentUser.username,
+                            actorAvatar: currentUser.avatar,
+                            targetType: 'thread',
+                            targetId: threadId,
+                        });
+                    }
+                }
             } catch (error) {
                 setThreadVotes((prev) => {
                     const next = { ...prev };
@@ -97,7 +119,7 @@ export function useVoting({
                 setError('voteThread', forumError, 'Vote on thread');
             }
         })();
-    }, [threadVotes, currentUser.id, isAuthenticated, setCategoriesState, setError]);
+    }, [threadVotes, currentUser.id, currentUser.username, currentUser.avatar, isAuthenticated, setCategoriesState, setError, createNotification]);
 
     const getThreadVote = useCallback((threadId: string): 'up' | 'down' | null => {
         return threadVotes[threadId] || null;
@@ -158,6 +180,25 @@ export function useVoting({
                     const downvotes = voteCounts.filter(v => v.direction === 'down').length;
                     await supabase.from('posts').update({ upvotes, downvotes }).eq('id', postId);
                 }
+
+                // Notify post author on upvote (only new upvotes)
+                if (direction === 'up' && previousVote !== 'up' && createNotification) {
+                    const { data: post } = await supabase.from('posts').select('author_id, thread_id').eq('id', postId).single();
+                    if (post && post.author_id !== currentUser.id) {
+                        createNotification({
+                            userId: post.author_id,
+                            type: 'upvote',
+                            title: 'Post Upvoted',
+                            message: `${currentUser.username} upvoted your post`,
+                            link: `/thread/${post.thread_id}`,
+                            actorId: currentUser.id,
+                            actorName: currentUser.username,
+                            actorAvatar: currentUser.avatar,
+                            targetType: 'post',
+                            targetId: postId,
+                        });
+                    }
+                }
             } catch (error) {
                 setPostVotes((prev) => {
                     const next = { ...prev };
@@ -181,7 +222,7 @@ export function useVoting({
                 setError('votePost', forumError, 'Vote on post');
             }
         })();
-    }, [postVotes, currentUser.id, isAuthenticated, setPostsMap, setError]);
+    }, [postVotes, currentUser.id, currentUser.username, currentUser.avatar, isAuthenticated, setPostsMap, setError, createNotification]);
 
     const getPostVote = useCallback((postId: string): 'up' | 'down' | null => {
         return postVotes[postId] || null;
