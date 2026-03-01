@@ -38,7 +38,6 @@ jobs:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
           VITE_IMGBB_API_KEY: ${{ secrets.VITE_IMGBB_API_KEY }}
-          VITE_BASE_PATH: /clove-forum/
         run: npm run build
 
       - name: Verify build output
