@@ -8,6 +8,7 @@ import {
   Tag,
 } from 'lucide-react';
 import { useForumContext } from '@/context/ForumContext';
+import { supabase } from '@/lib/supabase';
 import { AdvancedEditor } from './editor/AdvancedEditor';
 import { 
   validateThreadCreation, 
@@ -32,6 +33,7 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
   const [selectedTopic, setSelectedTopic] = useState('');
   const [content, setContent] = useState('');
   const [tagsInput, setTagsInput] = useState('');
+  const [thumbnail, setThumbnail] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -82,6 +84,33 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
       console.log('[NewThreadModal] Topics for selected category:', cat?.topics);
     }
   }, [isOpen, categories, selectedCategory, currentUser]);
+
+  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setErrors({ ...errors, thumbnail: 'Please select an image file' });
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setErrors({ ...errors, thumbnail: 'Image must be less than 5MB' });
+      return;
+    }
+
+    try {
+      const { uploadToImgBB } = await import('@/lib/avatarUpload');
+      const timestamp = Date.now();
+      const imageName = `thread-thumbnail-${timestamp}`;
+      const imageUrl = await uploadToImgBB(file, imageName);
+      setThumbnail(imageUrl);
+      setErrors({ ...errors, thumbnail: undefined });
+    } catch (error) {
+      console.error('Error uploading thumbnail:', error);
+      setErrors({ ...errors, thumbnail: 'Failed to upload thumbnail' });
+    }
+  };
 
   const handleSubmit = async () => {
     // Clear previous errors
@@ -146,6 +175,18 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
         selectedTopic || undefined // topicId
       );
 
+      // Update thread with thumbnail if provided
+      if (thumbnail) {
+        const { error: thumbnailError } = await supabase
+          .from('threads')
+          .update({ thumbnail })
+          .eq('id', newThread.id);
+        
+        if (thumbnailError) {
+          console.error('Failed to update thumbnail:', thumbnailError);
+        }
+      }
+
       // Show success feedback
       setShowSuccess(true);
       setTimeout(() => {
@@ -199,6 +240,7 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
     setSelectedTopic('');
     setContent('');
     setTagsInput('');
+    setThumbnail('');
     setErrors({});
     onClose();
   };
@@ -428,6 +470,45 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
                 })}
               </div>
             )}
+          </div>
+
+          {/* Thumbnail */}
+          <div>
+            <label className="mb-1.5 block text-[10px] font-mono font-bold text-forum-muted uppercase tracking-wider">
+              Thread Thumbnail <span className="text-forum-muted/40 font-normal">(optional)</span>
+            </label>
+            <div className="flex items-center gap-3">
+              {thumbnail && (
+                <img
+                  src={thumbnail}
+                  alt="Thread thumbnail"
+                  className="h-16 w-16 rounded-md object-cover border border-forum-border"
+                />
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleThumbnailUpload}
+                className="flex-1 text-[11px] font-mono text-forum-text file:mr-4 file:py-2 file:px-3 file:rounded file:border-0 file:text-[11px] file:font-medium file:bg-forum-bg file:text-forum-text hover:file:bg-forum-hover file:cursor-pointer file:transition-forum"
+              />
+              {thumbnail && (
+                <button
+                  type="button"
+                  onClick={() => setThumbnail('')}
+                  className="px-3 py-2 text-[11px] font-mono text-forum-muted hover:text-forum-pink transition-colors"
+                >
+                  Remove
+                </button>
+              )}
+            </div>
+            {errors.thumbnail && (
+              <p className="mt-1 text-[10px] text-red-400 font-mono flex items-center gap-1">
+                <AlertCircle size={10} /> {errors.thumbnail}
+              </p>
+            )}
+            <p className="mt-1 text-[9px] text-forum-muted/60 font-mono">
+              Upload a thumbnail for thread list preview (max 5MB)
+            </p>
           </div>
 
           {/* Content */}
