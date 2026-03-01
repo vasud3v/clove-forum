@@ -52,11 +52,12 @@ export default function ThreadHeader({
       <div className="hud-panel overflow-hidden">
         {/* Banner Image */}
         {thread.banner && !bannerError && (
-          <div className="relative w-full bg-forum-bg/50">
+          <div className="relative h-48 overflow-hidden bg-gradient-to-br from-forum-bg via-forum-card to-forum-bg">
             <img
               src={thread.banner}
               alt="Thread banner"
-              className="w-full h-auto max-h-96 object-contain"
+              className="w-full h-full object-cover object-center"
+              style={{ objectPosition: 'center 35%' }}
               onError={(e) => {
                 console.error('Banner image failed to load:', thread.banner);
                 setBannerError(true);
@@ -64,6 +65,8 @@ export default function ThreadHeader({
               }}
               onLoad={() => console.log('Banner loaded successfully:', thread.banner)}
             />
+            {/* Subtle vignette effect for professional look */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/20 pointer-events-none" />
           </div>
         )}
         
