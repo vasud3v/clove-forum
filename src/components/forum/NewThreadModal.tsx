@@ -25,10 +25,18 @@ interface NewThreadModalProps {
 export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: NewThreadModalProps) {
   const navigate = useNavigate();
   const { categories, createThread } = useForumContext();
+  
+  // All useState hooks MUST come first
   const [title, setTitle] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(defaultCategoryId || '');
   const [selectedTopic, setSelectedTopic] = useState('');
+  const [content, setContent] = useState('');
+  const [tagsInput, setTagsInput] = useState('');
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
+  // All useEffect hooks come after useState
   // Sync selectedCategory when defaultCategoryId prop changes
   useEffect(() => {
     if (defaultCategoryId) {
@@ -41,11 +49,16 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
     setSelectedTopic('');
   }, [selectedCategory]);
   
-  const [content, setContent] = useState('');
-  const [tagsInput, setTagsInput] = useState('');
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
+  // Debug: Log categories to check if topics are loaded (development only)
+  useEffect(() => {
+    if (isOpen && import.meta.env.DEV) {
+      console.log('[NewThreadModal] Categories:', categories);
+      console.log('[NewThreadModal] Selected category:', selectedCategory);
+      const cat = categories.find(c => c.id === selectedCategory);
+      console.log('[NewThreadModal] Selected category data:', cat);
+      console.log('[NewThreadModal] Topics for selected category:', cat?.topics);
+    }
+  }, [isOpen, categories, selectedCategory]);
 
   const handleSubmit = async () => {
     // Clear previous errors
@@ -161,18 +174,6 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
     setErrors({});
     onClose();
   };
-
-  // Debug: Log categories to check if topics are loaded (development only)
-  // MUST be before early return to follow Rules of Hooks
-  useEffect(() => {
-    if (isOpen && import.meta.env.DEV) {
-      console.log('[NewThreadModal] Categories:', categories);
-      console.log('[NewThreadModal] Selected category:', selectedCategory);
-      const cat = categories.find(c => c.id === selectedCategory);
-      console.log('[NewThreadModal] Selected category data:', cat);
-      console.log('[NewThreadModal] Topics for selected category:', cat?.topics);
-    }
-  }, [isOpen, categories, selectedCategory]);
 
   if (!isOpen) return null;
 
