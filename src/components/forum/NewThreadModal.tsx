@@ -164,6 +164,17 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
 
   if (!isOpen) return null;
 
+  // Debug: Log categories to check if topics are loaded (development only)
+  useEffect(() => {
+    if (isOpen && import.meta.env.DEV) {
+      console.log('[NewThreadModal] Categories:', categories);
+      console.log('[NewThreadModal] Selected category:', selectedCategory);
+      const cat = categories.find(c => c.id === selectedCategory);
+      console.log('[NewThreadModal] Selected category data:', cat);
+      console.log('[NewThreadModal] Topics for selected category:', cat?.topics);
+    }
+  }, [isOpen, categories, selectedCategory]);
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
@@ -279,7 +290,7 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
           </div>
 
           {/* Topic (Subcategory) - Only show if selected category has topics */}
-          {selectedCategory && categories.find(c => c.id === selectedCategory)?.topics && (
+          {selectedCategory && categories.find(c => c.id === selectedCategory)?.topics && categories.find(c => c.id === selectedCategory)!.topics!.length > 0 ? (
             <div>
               <label className="mb-1.5 block text-[10px] font-mono font-bold text-forum-muted uppercase tracking-wider">
                 Topic <span className="text-forum-muted/40 font-normal">(optional)</span>
@@ -315,7 +326,14 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
                 </p>
               )}
             </div>
-          )}
+          ) : selectedCategory ? (
+            <div className="rounded border border-forum-border/50 bg-forum-hover/30 px-4 py-3">
+              <p className="text-[10px] text-forum-muted/60 font-mono flex items-center gap-2">
+                <AlertCircle size={12} className="text-forum-muted/40" />
+                No topics available for this category. Your thread will be posted directly to the category.
+              </p>
+            </div>
+          ) : null}
 
           {/* Tags */}
           <div>

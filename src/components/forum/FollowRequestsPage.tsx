@@ -5,6 +5,8 @@ import { Card } from '@/components/ui/card';
 import { Check, X, User } from 'lucide-react';
 import { toast } from '@/components/forum/Toast';
 import { Link } from 'react-router-dom';
+import { useNotifications } from '@/context/NotificationContext';
+import { useAuth } from '@/context/AuthContext';
 
 interface FollowRequest {
   follower_id: string;
@@ -22,6 +24,9 @@ export function FollowRequestsPage() {
   const [requests, setRequests] = useState<FollowRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState<string>('');
+  const [currentUserData, setCurrentUserData] = useState<{ username: string; avatar: string } | null>(null);
+  const { createNotification } = useNotifications();
+  const { user } = useAuth();
 
   useEffect(() => {
     fetchCurrentUser();
@@ -30,6 +35,18 @@ export function FollowRequestsPage() {
   useEffect(() => {
     if (currentUserId) {
       fetchFollowRequests();
+      
+      // Fetch current user data for notifications
+      supabase
+        .from('forum_users')
+        .select('username, avatar')
+        .eq('id', currentUserId)
+        .single()
+        .then(({ data }) => {
+          if (data) {
+            setCurrentUserData(data);
+          }
+        });
       
       // Subscribe to changes
       const channel = supabase
@@ -98,6 +115,22 @@ export function FollowRequestsPage() {
       if (error) throw error;
 
       toast.success('Follow request accepted');
+
+      // Send notification to the follower that their request was accepted
+      if (currentUserData) {
+        await createNotification({
+          userId: followerId,
+          type: 'follow',
+          title: 'Follow Request Accepted',
+          message: `${currentUserData.username} accepted your follow request`,
+          link: `/profile/${currentUserData.username}`,
+          actorId: currentUserId,
+          actorName: currentUserData.username,
+          actorAvatar: currentUserData.avatar,
+          targetType: 'user',
+          targetId: currentUserId,
+        });
+      }
 
       fetchFollowRequests();
     } catch (error: any) {
