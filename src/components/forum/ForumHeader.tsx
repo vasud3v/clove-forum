@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Search, Menu, X, Home, MessageSquare, Users, HelpCircle, LogIn, LogOut, Shield, BarChart3, Bookmark, Bell } from 'lucide-react';
+import { Search, Menu, X, Home, MessageSquare, Users, HelpCircle, LogIn, LogOut, Shield, BarChart3, Bookmark, Bell, Mail, UserPlus, LifeBuoy } from 'lucide-react';
 import CloveLogo from '@/components/forum/CloveLogo';
 import NotificationCenter from '@/components/forum/NotificationCenter';
 import RoleBadge from '@/components/forum/RoleBadge';
@@ -37,9 +37,12 @@ export default function ForumHeader({
     { label: "What's New", icon: MessageSquare, active: location.pathname === '/whats-new', href: '/whats-new' },
     { label: 'Members', icon: Users, active: location.pathname === '/members', href: '/members' },
     { label: 'Rules', icon: HelpCircle, active: location.pathname === '/rules', href: '/rules' },
+    { label: 'Support', icon: LifeBuoy, active: location.pathname === '/support', href: '/support' },
     ...(isAuthenticated ? [
       { label: 'Watched', icon: Bell, active: location.pathname === '/watched', href: '/watched' },
-      { label: 'Bookmarks', icon: Bookmark, active: location.pathname === '/bookmarks', href: '/bookmarks' }
+      { label: 'Bookmarks', icon: Bookmark, active: location.pathname === '/bookmarks', href: '/bookmarks' },
+      { label: 'Messages', icon: Mail, active: location.pathname === '/messages', href: '/messages' },
+      { label: 'Following', icon: UserPlus, active: location.pathname === '/following-feed', href: '/following-feed' }
     ] : []),
     ...(isStaff ? [
       { label: 'Analytics', icon: BarChart3, active: location.pathname === '/analytics', href: '/analytics' },
@@ -110,11 +113,11 @@ export default function ForumHeader({
                 >
                   <img
                     src={currentUser.avatar}
-                    alt={user?.user_metadata?.username || currentUser.username}
+                    alt={currentUser.username}
                     className="h-7 w-7 rounded object-cover ring-1 ring-forum-pink/30"
                   />
                   <span className="hidden text-[11px] font-medium text-forum-text font-mono sm:block">
-                    {user?.user_metadata?.username || currentUser.username}
+                    {currentUser.username}
                   </span>
                 </button>
                 <button

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Pin, Lock, Trash2, ArrowRight, Star, Archive, Plus, Search, Check, X, MessageSquare, Eye, Clock } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { toast } from '@/components/forum/Toast';
+import NewThreadModal from '@/components/forum/NewThreadModal';
 
 interface AdminThread {
   id: string;
@@ -41,9 +42,7 @@ export default function AdminThreadsTab({ threads, categories, currentUserId, on
   const [selectedThreads, setSelectedThreads] = useState<Set<string>>(new Set());
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [moveTarget, setMoveTarget] = useState<{ threadId: string; categoryId: string } | null>(null);
-  const [showCreateForm, setShowCreateForm] = useState(false);
-  const [createForm, setCreateForm] = useState({ title: '', content: '', categoryId: '', tags: '' });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   const filtered = threads.filter(t => {
     const matchesSearch = !searchQuery || t.title.toLowerCase().includes(searchQuery.toLowerCase()) || t.authorName.toLowerCase().includes(searchQuery.toLowerCase());
@@ -71,12 +70,29 @@ export default function AdminThreadsTab({ threads, categories, currentUserId, on
 
   const handleDelete = async (threadId: string) => {
     try {
+      const thread = threads.find(t => t.id === threadId);
+      
+      // Count posts that will be deleted
+      const { count: postCount } = await supabase
+        .from('posts')
+        .select('*', { count: 'exact', head: true })
+        .eq('thread_id', threadId);
+
+      const message = `Delete thread "${thread?.title}"?\n\nThis will also delete ${postCount || 0} posts/replies.\n\nThis action cannot be undone!`;
+      
+      if (!confirm(message)) return;
+
       await supabase.from('threads').delete().eq('id', threadId);
-      await onLogAction('thread_delete', 'thread', threadId);
-      toast.success('Thread deleted');
+      await onLogAction('thread_delete', 'thread', threadId, { 
+        title: thread?.title,
+        deletedPosts: postCount
+      });
+      toast.success('Thread and all its posts deleted');
       setDeleteConfirm(null);
       onRefresh();
-    } catch { toast.error('Failed to delete'); }
+    } catch { 
+      toast.error('Failed to delete thread'); 
+    }
   };
 
   const handleMove = async () => {
@@ -100,44 +116,37 @@ export default function AdminThreadsTab({ threads, categories, currentUserId, on
       if (action === 'lock') updateData.is_locked = true;
       if (action === 'unlock') updateData.is_locked = false;
       if (action === 'delete') {
+        // Count total posts that will be deleted
+        const { count: totalPosts } = await supabase
+          .from('posts')
+          .select('*', { count: 'exact', head: true })
+          .in('thread_id', ids);
+
+        const message = `Delete ${ids.length} threads?\n\nThis will also delete ${totalPosts || 0} posts/replies.\n\nThis action cannot be undone!`;
+        
+        if (!confirm(message)) return;
+
         for (const id of ids) await supabase.from('threads').delete().eq('id', id);
+        toast.success(`Deleted ${ids.length} threads and ${totalPosts || 0} posts`);
       } else {
         for (const id of ids) await supabase.from('threads').update(updateData).eq('id', id);
+        toast.success(`Bulk ${action} completed (${ids.length} threads)`);
       }
-      toast.success(`Bulk ${action} completed (${ids.length} threads)`);
       setSelectedThreads(new Set());
       onRefresh();
     } catch { toast.error('Bulk action failed'); }
   };
 
-  const handleCreate = async () => {
-    if (!createForm.title.trim() || !createForm.categoryId || !createForm.content.trim()) return;
-    setIsSubmitting(true);
-    try {
-      const threadId = `t-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-      const { error: threadError } = await supabase.from('threads').insert({
-        id: threadId, title: createForm.title.trim(), excerpt: createForm.content.slice(0, 200),
-        author_id: currentUserId, category_id: createForm.categoryId,
-        tags: createForm.tags ? createForm.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
-      });
-      if (threadError) throw threadError;
-      const { error: postError } = await supabase.from('posts').insert({
-        thread_id: threadId, content: createForm.content.trim(), author_id: currentUserId,
-      });
-      if (postError) throw postError;
-      await onLogAction('thread_create', 'thread', threadId, { title: createForm.title });
-      toast.success('Thread created');
-      setCreateForm({ title: '', content: '', categoryId: '', tags: '' });
-      setShowCreateForm(false);
-      onRefresh();
-    } catch (err: any) { toast.error(err.message || 'Failed to create'); } finally { setIsSubmitting(false); }
+  const handleCreateModalClose = () => {
+    setShowCreateModal(false);
+    onRefresh(); // Refresh the thread list when modal closes
   };
 
   return (
     <div className="space-y-3">
       {/* Controls Bar */}
       <div className="flex flex-wrap items-center gap-2">
-        <button onClick={() => setShowCreateForm(!showCreateForm)} className="transition-forum flex items-center gap-1.5 rounded-md bg-forum-pink px-3 py-1.5 text-[10px] font-mono font-bold text-white hover:bg-forum-pink/90">
+        <button onClick={() => setShowCreateModal(true)} className="transition-forum flex items-center gap-1.5 rounded-md border border-forum-pink bg-transparent px-3 py-1.5 text-[10px] font-mono font-bold text-forum-pink hover:bg-forum-pink/10">
           <Plus size={12} /> Create Thread
         </button>
         <div className="relative flex-1 max-w-xs">
@@ -152,29 +161,11 @@ export default function AdminThreadsTab({ threads, categories, currentUserId, on
         </select>
       </div>
 
-      {/* Create Form */}
-      {showCreateForm && (
-        <div className="hud-panel p-4 space-y-3">
-          <h3 className="text-[12px] font-mono font-bold text-forum-text">Create New Thread</h3>
-          <input value={createForm.title} onChange={e => setCreateForm(p => ({ ...p, title: e.target.value }))} placeholder="Thread title"
-            className="w-full rounded-md border border-forum-border bg-forum-bg px-3 py-1.5 text-[11px] font-mono text-forum-text outline-none focus:border-forum-pink" />
-          <select value={createForm.categoryId} onChange={e => setCreateForm(p => ({ ...p, categoryId: e.target.value }))}
-            className="w-full rounded-md border border-forum-border bg-forum-bg px-3 py-1.5 text-[11px] font-mono text-forum-text outline-none focus:border-forum-pink">
-            <option value="">Select category</option>
-            {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-          </select>
-          <textarea value={createForm.content} onChange={e => setCreateForm(p => ({ ...p, content: e.target.value }))} placeholder="Thread content..."
-            className="w-full rounded-md border border-forum-border bg-forum-bg px-3 py-2 text-[11px] font-mono text-forum-text outline-none focus:border-forum-pink resize-none h-24" />
-          <input value={createForm.tags} onChange={e => setCreateForm(p => ({ ...p, tags: e.target.value }))} placeholder="Tags (comma separated)"
-            className="w-full rounded-md border border-forum-border bg-forum-bg px-3 py-1.5 text-[10px] font-mono text-forum-text outline-none focus:border-forum-pink" />
-          <div className="flex gap-2">
-            <button onClick={handleCreate} disabled={isSubmitting} className="transition-forum rounded-md bg-forum-pink px-4 py-1.5 text-[10px] font-mono font-bold text-white hover:bg-forum-pink/90 disabled:opacity-40">
-              {isSubmitting ? 'Creating...' : 'Create'}
-            </button>
-            <button onClick={() => setShowCreateForm(false)} className="transition-forum rounded-md border border-forum-border px-4 py-1.5 text-[10px] font-mono text-forum-muted hover:text-forum-text">Cancel</button>
-          </div>
-        </div>
-      )}
+      {/* Advanced Thread Creation Modal */}
+      <NewThreadModal 
+        isOpen={showCreateModal} 
+        onClose={handleCreateModalClose}
+      />
 
       {/* Bulk Actions */}
       {selectedThreads.size > 0 && (

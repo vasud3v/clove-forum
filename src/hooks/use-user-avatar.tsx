@@ -12,6 +12,6 @@ export function useUserAvatar(userId: string, username: string, baseAvatar?: str
   return useMemo(() => {
     const profileCustom = getUserProfile(userId);
     const avatarUrl = profileCustom.avatar || baseAvatar;
-    return getUserAvatar(avatarUrl, username);
+    return avatarUrl || getUserAvatar('', username);
   }, [userId, username, baseAvatar, getUserProfile]);
 }

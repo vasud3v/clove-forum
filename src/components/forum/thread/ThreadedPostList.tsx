@@ -2,7 +2,7 @@ import { memo, useMemo, useState } from 'react';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { PostData } from '@/types/forum';
 import PostCard from '../post/PostCard';
-import { buildPostTree, flattenTree } from '@/lib/threadTree';
+import { buildPostTree, flattenTree, countDescendants } from '@/lib/threadTree';
 
 interface ThreadedPostListProps {
   posts: PostData[];
@@ -19,6 +19,7 @@ interface ThreadedPostListProps {
   activeReplyFormId?: string | null;
   onInlineReply?: (postId: string, content: string) => Promise<void>;
   inlineReplySubmitting?: boolean;
+  onAddToMultiQuote?: (post: PostData) => void;
 }
 
 const ThreadedPostList = memo(({
@@ -36,6 +37,7 @@ const ThreadedPostList = memo(({
   activeReplyFormId,
   onInlineReply,
   inlineReplySubmitting = false,
+  onAddToMultiQuote,
 }: ThreadedPostListProps) => {
   const [collapsedNodes, setCollapsedNodes] = useState<Set<string>>(new Set());
 
@@ -130,6 +132,9 @@ const ThreadedPostList = memo(({
               activeReplyFormId={activeReplyFormId}
               onInlineReply={onInlineReply}
               inlineReplySubmitting={inlineReplySubmitting}
+              replyCount={childCount}
+              allPosts={posts}
+              onAddToMultiQuote={onAddToMultiQuote}
             />
           </div>
         );

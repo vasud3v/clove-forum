@@ -111,7 +111,9 @@ export function usePosts({
 
         const postId = crypto.randomUUID();
         const now = new Date().toISOString();
-        const fullContent = quotedPost ? `> **@${quotedPost.author}** wrote:\n> ${quotedPost.content}\n\n${trimmedContent}` : trimmedContent;
+        // Don't add quote to content - it will be shown in UI via QuotedReplyBox
+        // Just store the clean reply content
+        const fullContent = trimmedContent;
 
         const optimisticPost: PostData = {
             id: postId, threadId, content: fullContent, author: currentUser,

@@ -1,11 +1,11 @@
-import { Reply, Quote, X, Eye, Edit3 } from 'lucide-react';
-import { useState, useCallback } from 'react';
+import { Reply, Quote, X, Eye, Edit3, Maximize2 } from 'lucide-react';
+import { useState, useCallback, useEffect } from 'react';
 import ImageUploadButton from '@/components/forum/ImageUploadButton';
-import MarkdownToolbar from '../editor/MarkdownToolbar';
-import EmojiPicker from '../editor/EmojiPicker';
-import MentionAutocomplete from '../editor/MentionAutocomplete';
 import PostContentRenderer from '../PostContentRenderer';
 import { useDraftAutoSave } from '@/hooks/forum/useDraftAutoSave';
+import { AdvancedEditor } from '../editor/AdvancedEditor';
+import QuickReplyTemplates from './QuickReplyTemplates';
+import CharacterCounter from './CharacterCounter';
 
 interface ReplyEditorProps {
   isLocked: boolean;
@@ -15,7 +15,7 @@ interface ReplyEditorProps {
   onClearQuote: () => void;
   onSubmitReply: () => void;
   isSubmitting: boolean;
-  replyBoxRef: React.RefObject<HTMLTextAreaElement | null>;
+  replyBoxRef?: React.RefObject<HTMLTextAreaElement | null>;
   threadId?: string;
 }
 
@@ -31,92 +31,13 @@ export default function ReplyEditor({
   threadId,
 }: ReplyEditorProps) {
   const [previewMode, setPreviewMode] = useState<'write' | 'preview'>('write');
-  const [mentionQuery, setMentionQuery] = useState<string | null>(null);
-  const [mentionPosition, setMentionPosition] = useState({ top: 0, left: 0 });
+  const MAX_CHARS = 50000;
 
   const { draftRestored, clearDraft } = useDraftAutoSave(
     threadId ? `reply-${threadId}` : 'reply-new',
     replyText,
     onReplyTextChange,
   );
-
-  const handleInsert = (text: string) => {
-    const textarea = replyBoxRef.current;
-    if (textarea) {
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      const before = replyText.slice(0, start);
-      const after = replyText.slice(end);
-      onReplyTextChange(before + text + after);
-      // Restore cursor after the inserted text
-      requestAnimationFrame(() => {
-        textarea.focus();
-        textarea.selectionStart = textarea.selectionEnd = start + text.length;
-      });
-    } else {
-      onReplyTextChange(replyText + text);
-    }
-  };
-
-  const handleTextChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newText = e.target.value;
-    onReplyTextChange(newText);
-
-    // Check for @ mention trigger
-    const cursorPos = e.target.selectionStart;
-    const textBeforeCursor = newText.slice(0, cursorPos);
-    const match = textBeforeCursor.match(/@(\w*)$/);
-
-    if (match) {
-      const query = match[1];
-      setMentionQuery(query);
-
-      // Calculate position for autocomplete dropdown
-      const rect = e.target.getBoundingClientRect();
-      setMentionPosition({
-        top: rect.top - 200, // Position above textarea
-        left: rect.left + 20,
-      });
-    } else {
-      setMentionQuery(null);
-    }
-  }, [onReplyTextChange]);
-
-  const handleMentionSelect = useCallback((username: string) => {
-    const textarea = replyBoxRef.current;
-    if (!textarea) return;
-
-    const cursorPos = textarea.selectionStart;
-    const textBeforeCursor = replyText.slice(0, cursorPos);
-    const textAfterCursor = replyText.slice(cursorPos);
-
-    // Replace the @query with @username
-    const atIndex = textBeforeCursor.lastIndexOf('@');
-    const newText = textBeforeCursor.slice(0, atIndex) + `@${username} ` + textAfterCursor;
-
-    onReplyTextChange(newText);
-    setMentionQuery(null);
-
-    // Restore focus and cursor position
-    requestAnimationFrame(() => {
-      textarea.focus();
-      const newCursorPos = atIndex + username.length + 2; // +2 for @ and space
-      textarea.selectionStart = textarea.selectionEnd = newCursorPos;
-    });
-  }, [replyText, onReplyTextChange, replyBoxRef]);
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    // Don't handle Ctrl+Enter if mention autocomplete is open
-    if (mentionQuery !== null) return;
-
-    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-      e.preventDefault();
-      if (replyText.trim() && !isSubmitting) {
-        onSubmitReply();
-        clearDraft();
-      }
-    }
-  };
 
   const handleSubmit = () => {
     onSubmitReply();
@@ -125,6 +46,7 @@ export default function ReplyEditor({
 
   const handleDiscard = () => {
     onClearQuote();
+    onReplyTextChange('');
     clearDraft();
   };
 
@@ -181,56 +103,14 @@ export default function ReplyEditor({
 
       <div className="p-4">
         {previewMode === 'write' ? (
-          <>
-            {/* Toolbar */}
-            <MarkdownToolbar onInsert={handleInsert}>
-              <ImageUploadButton
-                onImageInsert={handleInsert}
-                className="transition-forum rounded p-1.5 text-forum-muted hover:text-forum-pink hover:bg-forum-pink/5"
-                iconSize={12}
-              />
-              <EmojiPicker onSelect={handleInsert} iconSize={12} />
-            </MarkdownToolbar>
-
-            {/* Quote preview */}
-            {replyText.startsWith('>') && (
-              <div className="mb-2 rounded-md border-l-2 border-forum-pink/30 bg-forum-bg/50 px-3 py-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-[8px] font-mono text-forum-muted flex items-center gap-1">
-                    <Quote size={8} className="text-forum-pink/60" />{' '}
-                    Quoting
-                  </span>
-                  <button
-                    onClick={onClearQuote}
-                    className="text-forum-muted hover:text-forum-text transition-forum"
-                  >
-                    <X size={10} />
-                  </button>
-                </div>
-              </div>
-            )}
-
-            <textarea
-              ref={replyBoxRef}
-              value={replyText}
-              onChange={handleTextChange}
-              onKeyDown={handleKeyDown}
-              placeholder="Write your reply... (Markdown supported, type @ to mention)"
-              className="w-full h-36 bg-forum-bg border border-forum-border/30 rounded-md px-3 py-2.5 text-[12px] font-mono text-forum-text placeholder:text-forum-muted/40 focus:outline-none focus:border-forum-pink/40 focus:ring-1 focus:ring-forum-pink/20 transition-forum resize-none"
-            />
-
-            {/* Mention Autocomplete */}
-            {mentionQuery !== null && (
-              <MentionAutocomplete
-                query={mentionQuery}
-                position={mentionPosition}
-                onSelect={handleMentionSelect}
-                onClose={() => setMentionQuery(null)}
-              />
-            )}
-          </>
+          <AdvancedEditor
+            value={replyText}
+            onChange={onReplyTextChange}
+            placeholder="Write your reply... (Rich text supported)"
+            minHeight="180px"
+          />
         ) : (
-          <div className="min-h-[144px] bg-forum-bg border border-forum-border/30 rounded-md px-3 py-2.5">
+          <div className="min-h-[180px] bg-forum-bg border border-forum-border/30 rounded-md px-3 py-2.5">
             {replyText.trim() ? (
               <PostContentRenderer content={replyText} />
             ) : (
@@ -241,14 +121,12 @@ export default function ReplyEditor({
           </div>
         )}
 
-        <div className="flex items-center justify-between mt-3">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-3 gap-2">
+          <div className="flex items-center gap-3 flex-wrap">
             <span className="text-[9px] font-mono text-forum-muted/50">
-              Supports Markdown, @mentions, and code blocks
+              Rich text editor with full formatting support
             </span>
-            <span className="text-[9px] font-mono text-forum-muted/30">
-              {replyText.length} chars
-            </span>
+            <CharacterCounter count={replyText.length} maxCount={MAX_CHARS} />
           </div>
           <div className="flex items-center gap-2">
             {replyText.trim() && (
@@ -262,7 +140,7 @@ export default function ReplyEditor({
             <button
               onClick={handleSubmit}
               className="transition-forum rounded-md bg-forum-pink px-4 py-2 text-[11px] font-mono font-semibold text-white hover:shadow-pink-glow active:scale-95 border border-forum-pink/50 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-2"
-              disabled={!replyText.trim() || isSubmitting}
+              disabled={!replyText.trim() || isSubmitting || replyText.length > 50000}
             >
               {isSubmitting ? (
                 <>

@@ -7,7 +7,6 @@ import ForumPagination from '@/components/forum/ForumPagination';
 import SidebarStatsPanel from '@/components/forum/SidebarStatsPanel';
 import OnlineUsers from '@/components/forum/OnlineUsers';
 import PopularTags from '@/components/forum/PopularTags';
-import FloatingActionButton from '@/components/forum/FloatingActionButton';
 import NewThreadModal from '@/components/forum/NewThreadModal';
 import { useForumContext } from '@/context/ForumContext';
 import { SortOption } from '@/types/forum';
@@ -232,9 +231,6 @@ export default function WhatsNewPage() {
           </div>
         </div>
       </div>
-
-      {/* Floating Action Button */}
-      <FloatingActionButton onClick={() => setIsModalOpen(true)} />
 
       {/* New Thread Modal */}
       <NewThreadModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />

@@ -5,6 +5,7 @@ import { useForumContext } from '@/context/ForumContext';
 import { supabase } from '@/lib/supabase';
 import { getUserAvatar } from '@/lib/avatar';
 import { User } from '@/types/forum';
+import { cache, CacheKeys, CacheTTL, withCache } from '@/lib/cache';
 
 export default function Leaderboard() {
   const navigate = useNavigate();
@@ -12,46 +13,48 @@ export default function Leaderboard() {
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    // Fetch top users from Supabase
+    // Fetch top users from Supabase with caching
     const fetchTopUsers = async () => {
-      const { data, error } = await supabase
-        .from('forum_users')
-        .select('*')
-        .order('reputation', { ascending: false })
-        .limit(10);
+      try {
+        const users = await withCache(
+          CacheKeys.leaderboard(10),
+          CacheTTL.MEDIUM, // 5 minutes cache
+          async () => {
+            const { data, error } = await supabase
+              .from('forum_users')
+              .select('*')
+              .order('reputation', { ascending: false })
+              .limit(10);
 
-      if (!error && data) {
-        setUsers(data.map(user => ({
-          id: user.id,
-          username: user.username,
-          avatar: getUserAvatar(user.custom_avatar || user.avatar, user.username),
-          postCount: user.post_count,
-          reputation: user.reputation,
-          joinDate: user.join_date,
-          isOnline: user.is_online,
-          rank: user.rank,
-          role: user.role || 'member',
-        })));
+            if (error) throw error;
+
+            return data?.map(user => ({
+              id: user.id,
+              username: user.username,
+              avatar: user.avatar,
+              postCount: user.post_count,
+              reputation: user.reputation,
+              joinDate: user.join_date,
+              isOnline: user.is_online,
+              rank: user.rank,
+              role: user.role || 'member',
+            })) || [];
+          }
+        );
+
+        setUsers(users);
+      } catch (error) {
+        console.error('Failed to fetch leaderboard:', error);
       }
     };
 
     fetchTopUsers();
 
-    // Subscribe to real-time updates for all events
-    const channel = supabase
-      .channel('leaderboard-users')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'forum_users' },
-        () => {
-          // Refetch all users on any change
-          fetchTopUsers();
-        }
-      )
-      .subscribe();
+    // Refresh every 5 minutes instead of realtime
+    const interval = setInterval(fetchTopUsers, 5 * 60 * 1000);
 
     return () => {
-      supabase.removeChannel(channel);
+      clearInterval(interval);
     };
   }, []);
 

@@ -5,6 +5,7 @@ import MobileBottomNav from '@/components/forum/MobileBottomNav';
 import { supabase } from '@/lib/supabase';
 import { useForumContext } from '@/context/ForumContext';
 import { usePermissions } from '@/hooks/usePermissions';
+import { getUserAvatar } from '@/lib/avatar';
 import {
     BarChart3,
     TrendingUp,
@@ -39,6 +40,7 @@ interface TopUser {
     id: string;
     username: string;
     avatar: string;
+    
     postCount: number;
     reputation: number;
 }
@@ -128,7 +130,7 @@ export default function AnalyticsDashboard() {
                 .from('threads')
                 .select(`
           id, title, view_count, reply_count,
-          author:forum_users!threads_author_id_fkey(username)
+          author:forum_users!threads_author_id_fkey(username, avatar)
         `)
                 .order('view_count', { ascending: false })
                 .limit(10);
@@ -158,6 +160,7 @@ export default function AnalyticsDashboard() {
                         id: u.id,
                         username: u.username,
                         avatar: u.avatar,
+                        
                         postCount: u.post_count,
                         reputation: u.reputation,
                     }))
@@ -355,7 +358,7 @@ export default function AnalyticsDashboard() {
                                         {i + 1}
                                     </span>
                                     <img
-                                        src={getUserProfile(user.id).avatar || user.avatar}
+                                        src={user.avatar}
                                         alt={user.username}
                                         className="h-7 w-7 rounded-md border border-forum-border object-cover"
                                     />

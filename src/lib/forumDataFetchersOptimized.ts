@@ -14,11 +14,8 @@ export type { Reaction, PostData, PollOption, PollData };
  * - Reduces database round trips from N+1 to 2
  */
 export async function fetchCategories(currentUserId?: string, page: number = 0, pageSize: number = 50): Promise<Category[]> {
-    const from = page * pageSize;
-    const to = from + pageSize - 1;
-
-    // Fetch categories, topics, and threads in parallel
-    const [categoriesResult, topicsResult, threadsResult] = await Promise.all([
+    // Fetch categories and topics first
+    const [categoriesResult, topicsResult] = await Promise.all([
         supabase
             .from('categories')
             .select('id, name, description, icon, thread_count, post_count, last_activity, is_sticky, is_important')
@@ -28,31 +25,42 @@ export async function fetchCategories(currentUserId?: string, page: number = 0, 
         
         supabase
             .from('topics')
-            .select('id, name, description, thread_count, post_count, last_activity, last_post_by, category_id')
+            .select(`
+                id, name, description, thread_count, post_count, last_activity, category_id, icon, badge,
+                last_post_by_user:forum_users!topics_last_post_by_fkey(username, avatar),
+                latest_thread_id, latest_thread_title,
+                latest_thread_author:forum_users!topics_latest_thread_author_fkey(username, avatar)
+            `)
             .order('name'),
-        
+    ]);
+
+    if (categoriesResult.error) throw categoriesResult.error;
+    if (topicsResult.error) throw topicsResult.error;
+
+    const categories = categoriesResult.data || [];
+    const allTopics = topicsResult.data || [];
+
+    // Fetch threads for each category (limited per category to avoid timeout)
+    const threadsPerCategory = 10;
+    const threadPromises = categories.map(cat =>
         supabase
             .from('threads')
             .select(`
                 id, title, excerpt, author_id, category_id, topic_id,
                 created_at, last_reply_at, last_reply_by_id,
                 reply_count, view_count, is_pinned, is_locked, is_hot,
-                has_unread, tags, upvotes, downvotes,
-                author:forum_users!threads_author_id_fkey(id, username, avatar, custom_avatar, banner, custom_banner, post_count, reputation, join_date, is_online, rank, role),
-                last_reply_by:forum_users!threads_last_reply_by_id_fkey(id, username, avatar, custom_avatar, banner, custom_banner, post_count, reputation, join_date, is_online, rank, role)
+                has_unread, tags, upvotes, downvotes, banner, thumbnail,
+                author:forum_users!threads_author_id_fkey(id, username, avatar, banner, post_count, reputation, join_date, is_online, rank, role),
+                last_reply_by:forum_users!threads_last_reply_by_id_fkey(id, username, avatar, banner, post_count, reputation, join_date, is_online, rank, role)
             `)
+            .eq('category_id', cat.id)
             .order('is_pinned', { ascending: false })
             .order('last_reply_at', { ascending: false })
-            .range(from, to)
-    ]);
+            .limit(threadsPerCategory)
+    );
 
-    if (categoriesResult.error) throw categoriesResult.error;
-    if (topicsResult.error) throw topicsResult.error;
-    if (threadsResult.error) throw threadsResult.error;
-
-    const categories = categoriesResult.data || [];
-    const allTopics = topicsResult.data || [];
-    const allThreads = threadsResult.data || [];
+    const threadResults = await Promise.all(threadPromises);
+    const allThreads = threadResults.flatMap(result => result.data || []);
 
     // Group topics by category
     const topicsByCategory = new Map<string, any[]>();
@@ -67,7 +75,14 @@ export async function fetchCategories(currentUserId?: string, page: number = 0, 
             threadCount: topic.thread_count,
             postCount: topic.post_count,
             lastActivity: topic.last_activity,
-            lastPostBy: topic.last_post_by || undefined,
+            lastPostBy: topic.last_post_by_user?.username || undefined,
+            lastPostAvatar: topic.last_post_by_user?.avatar || undefined,
+            latestThreadId: topic.latest_thread_id || undefined,
+            latestThreadTitle: topic.latest_thread_title || undefined,
+            latestThreadAuthor: topic.latest_thread_author?.username || undefined,
+            latestThreadAuthorAvatar: topic.latest_thread_author?.avatar || undefined,
+            icon: topic.icon || undefined,
+            badge: topic.badge || undefined,
         });
     }
 
@@ -87,8 +102,8 @@ export async function fetchCategories(currentUserId?: string, page: number = 0, 
             author: {
                 id: threadAuthor.id,
                 username: threadAuthor.username,
-                avatar: threadAuthor.custom_avatar || threadAuthor.avatar,
-                banner: threadAuthor.custom_banner || threadAuthor.banner || undefined,
+                avatar: threadAuthor.avatar,
+                banner: threadAuthor.banner || undefined,
                 postCount: threadAuthor.post_count,
                 reputation: threadAuthor.reputation,
                 joinDate: threadAuthor.join_date,
@@ -103,8 +118,8 @@ export async function fetchCategories(currentUserId?: string, page: number = 0, 
             lastReplyBy: {
                 id: lastReplyBy.id,
                 username: lastReplyBy.username,
-                avatar: lastReplyBy.custom_avatar || lastReplyBy.avatar,
-                banner: lastReplyBy.custom_banner || lastReplyBy.banner || undefined,
+                avatar: lastReplyBy.avatar,
+                banner: lastReplyBy.banner || undefined,
                 postCount: lastReplyBy.post_count,
                 reputation: lastReplyBy.reputation,
                 joinDate: lastReplyBy.join_date,
@@ -121,6 +136,8 @@ export async function fetchCategories(currentUserId?: string, page: number = 0, 
             tags: thread.tags || undefined,
             upvotes: thread.upvotes,
             downvotes: thread.downvotes,
+            banner: thread.banner || undefined,
+            thumbnail: thread.thumbnail || undefined,
         };
 
         if (!threadsByCategory.has(thread.category_id)) {
@@ -165,7 +182,7 @@ export async function fetchPostsForThread(
         .from('posts')
         .select(`
             id, thread_id, content, created_at, edited_at, likes, upvotes, downvotes, is_answer, reply_to, signature,
-            author:forum_users!posts_author_id_fkey(id, username, avatar, custom_avatar, banner, custom_banner, post_count, reputation, join_date, is_online, rank, role)
+            author:forum_users!posts_author_id_fkey(id, username, avatar, banner, post_count, reputation, join_date, is_online, rank, role)
         `)
         .eq('thread_id', threadId)
         .order('created_at', { ascending: true })
@@ -220,8 +237,8 @@ export async function fetchPostsForThread(
             author: {
                 id: postAuthor.id,
                 username: postAuthor.username,
-                avatar: postAuthor.custom_avatar || postAuthor.avatar,
-                banner: postAuthor.custom_banner || postAuthor.banner || undefined,
+                avatar: postAuthor.avatar,
+                banner: postAuthor.banner || undefined,
                 postCount: postAuthor.post_count,
                 reputation: postAuthor.reputation,
                 joinDate: postAuthor.join_date,

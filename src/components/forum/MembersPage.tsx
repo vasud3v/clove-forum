@@ -2,11 +2,11 @@ import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ForumHeader from '@/components/forum/ForumHeader';
 import SidebarStatsPanel from '@/components/forum/SidebarStatsPanel';
-import FloatingActionButton from '@/components/forum/FloatingActionButton';
 import NewThreadModal from '@/components/forum/NewThreadModal';
 import { useForumContext } from '@/context/ForumContext';
 import { supabase } from '@/lib/supabase';
 import { User } from '@/types/forum';
+import { getUserAvatar } from '@/lib/avatar';
 import {
   Home as HomeIcon,
   ChevronRight,
@@ -44,7 +44,8 @@ export default function MembersPage() {
         setUsers(data.map(user => ({
           id: user.id,
           username: user.username,
-          avatar: user.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=96&q=80',
+          avatar: user.avatar,
+          
           postCount: user.post_count,
           reputation: user.reputation,
           joinDate: user.join_date,
@@ -221,7 +222,7 @@ export default function MembersPage() {
                     {/* Avatar */}
                     <div className="relative flex-shrink-0">
                       <img
-                        src={getUserProfile(member.id).avatar || member.avatar}
+                        src={member.avatar}
                         alt={member.username}
                         className="h-10 w-10 rounded-lg object-cover border border-forum-border group-hover:border-forum-pink/30 transition-forum"
                       />
@@ -282,9 +283,6 @@ export default function MembersPage() {
           </div>
         </div>
       </div>
-
-      {/* Floating Action Button */}
-      <FloatingActionButton onClick={() => setIsModalOpen(true)} />
 
       {/* New Thread Modal */}
       <NewThreadModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />

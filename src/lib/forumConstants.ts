@@ -6,10 +6,17 @@ import {
   Code,
   Link as LinkIcon,
   List,
+  ListOrdered,
   Table,
   EyeOff,
   AtSign,
   Quote,
+  Minus,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  Underline,
+  Palette,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -47,18 +54,33 @@ export interface MarkdownAction {
 }
 
 export const MARKDOWN_TOOLBAR_ACTIONS: MarkdownAction[] = [
-  { icon: Bold, tooltip: 'Bold', insertText: '**bold**' },
-  { icon: Italic, tooltip: 'Italic', insertText: '*italic*' },
-  { icon: Strikethrough, tooltip: 'Strikethrough', insertText: '~~strikethrough~~' },
-  { icon: Heading, tooltip: 'Heading', insertText: '## Heading' },
-  { icon: null, iconLabel: '{}', tooltip: 'Inline Code', insertText: '`inline code`', separator: true },
-  { icon: LinkIcon, tooltip: 'Link', insertText: '[link text](url)' },
+  { icon: Bold, tooltip: 'Bold (Ctrl+B)', insertText: '**text**' },
+  { icon: Italic, tooltip: 'Italic (Ctrl+I)', insertText: '*text*' },
+  { icon: Underline, tooltip: 'Underline', insertText: '<u>text</u>' },
+  { icon: Strikethrough, tooltip: 'Strikethrough', insertText: '~~text~~' },
+  { icon: Palette, tooltip: 'Text Color', insertText: '<span style="color: #ff0000">text</span>' },
+  
+  { icon: Heading, tooltip: 'Heading 1', insertText: '# ', separator: true },
+  { icon: null, iconLabel: 'H2', tooltip: 'Heading 2', insertText: '## ' },
+  { icon: null, iconLabel: 'H3', tooltip: 'Heading 3', insertText: '### ' },
+  
+  { icon: LinkIcon, tooltip: 'Insert Link', insertText: '[text](url)', separator: true },
+  { icon: null, iconLabel: '{}', tooltip: 'Inline Code', insertText: '`code`' },
   { icon: Code, tooltip: 'Code Block', insertText: '\n```\ncode\n```\n' },
-  { icon: List, tooltip: 'List', insertText: '\n- item\n- item\n- item\n' },
+  
+  { icon: List, tooltip: 'Bullet List', insertText: '\n- item\n- item\n- item\n', separator: true },
+  { icon: ListOrdered, tooltip: 'Numbered List', insertText: '\n1. item\n2. item\n3. item\n' },
+  
+  { icon: Quote, tooltip: 'Blockquote', insertText: '> ', separator: true },
+  { icon: Minus, tooltip: 'Horizontal Line', insertText: '\n---\n' },
+  
+  { icon: AlignLeft, tooltip: 'Align Left', insertText: '<div align="left">text</div>', separator: true },
+  { icon: AlignCenter, tooltip: 'Align Center', insertText: '<div align="center">text</div>' },
+  { icon: AlignRight, tooltip: 'Align Right', insertText: '<div align="right">text</div>' },
+  
   { icon: Table, tooltip: 'Insert Table', insertText: '\n| Header 1 | Header 2 | Header 3 |\n|----------|----------|----------|\n| Cell 1   | Cell 2   | Cell 3   |\n| Cell 4   | Cell 5   | Cell 6   |\n', separator: true },
-  { icon: EyeOff, tooltip: 'Spoiler Tag', insertText: '\n[spoiler]Hidden content goes here[/spoiler]\n' },
-  { icon: AtSign, tooltip: 'Mention', insertText: '@' },
-  { icon: Quote, tooltip: 'Blockquote', insertText: '> ' },
+  { icon: EyeOff, tooltip: 'Spoiler Tag', insertText: '\n[spoiler]Hidden content[/spoiler]\n' },
+  { icon: AtSign, tooltip: 'Mention User', insertText: '@' },
 ];
 
 // ============================================================================

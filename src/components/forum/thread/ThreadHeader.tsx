@@ -1,14 +1,15 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Pin, Lock, Flame, Eye, MessageCircle, Clock,
   Share2, Bell, BellOff,
-  CheckCircle2, TrendingUp,
+  CheckCircle2, TrendingUp, Edit,
 } from 'lucide-react';
 import RoleBadge from '@/components/forum/RoleBadge';
 import { Thread, Category, UserRole } from '@/types/forum';
 import { formatDate, getRankColor, getRankIcon } from '@/lib/forumUtils';
 import { useForumContext } from '@/context/ForumContext';
+import EditThreadModal from '@/components/forum/EditThreadModal';
 
 interface ThreadHeaderProps {
   thread: Thread;
@@ -26,49 +27,70 @@ export default function ThreadHeader({
   onShare,
 }: ThreadHeaderProps) {
   const navigate = useNavigate();
-  const { getUserProfile } = useForumContext();
+  const { getUserProfile, currentUser } = useForumContext();
   const isSolved = thread.tags?.some((t) => t.toLowerCase() === 'solved');
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  
+  // Check if current user is the thread author
+  const isAuthor = currentUser.id === thread.author.id;
 
   return (
-    <div className="hud-panel overflow-hidden">
-      <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-forum-card to-forum-bg/50" />
-        <div className="relative px-5 py-5">
-          {/* Badges */}
-          <div className="flex items-center gap-2 flex-wrap mb-3">
-            {thread.isPinned && (
-              <span className="badge-shine inline-flex items-center gap-1.5 rounded-sm bg-gradient-to-r from-forum-pink/20 to-forum-pink/10 border border-forum-pink/40 px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-forum-pink badge-glow-pink">
-                <Pin size={11} className="drop-shadow-[0_0_3px_rgba(255,45,146,0.6)]" />
-                Pinned
-              </span>
-            )}
-            {thread.isLocked && (
-              <span className="badge-shine inline-flex items-center gap-1.5 rounded-sm bg-gradient-to-r from-amber-500/15 to-amber-500/5 border border-amber-500/35 px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-amber-400 badge-glow-amber">
-                <Lock size={11} className="drop-shadow-[0_0_3px_rgba(245,158,11,0.6)]" />
-                Locked
-              </span>
-            )}
-            {thread.isHot && (
-              <span className="badge-shine inline-flex items-center gap-1.5 rounded-sm bg-gradient-to-br from-orange-500/35 via-red-500/28 to-amber-500/18 border border-orange-500/65 px-3 py-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-orange-300 badge-glow-orange shadow-lg shadow-orange-500/35 hover:shadow-orange-500/55 transition-all duration-250">
-                <Flame size={12} className="animate-flame text-orange-300 drop-shadow-[0_0_5px_rgba(249,115,22,0.7)]" />
-                <span className="bg-gradient-to-r from-orange-300 via-red-300 to-orange-200 bg-clip-text text-transparent font-extrabold">
-                  Hot
-                </span>
-              </span>
-            )}
-            {isSolved && (
-              <span className="badge-shine inline-flex items-center gap-1.5 rounded-sm bg-gradient-to-r from-emerald-500/20 to-emerald-500/5 border border-emerald-500/40 px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-400 badge-glow-emerald">
-                <CheckCircle2 size={11} className="drop-shadow-[0_0_3px_rgba(52,211,153,0.6)]" />
-                Solved
-              </span>
-            )}
-            {thread.replyCount > 100 && (
-              <span className="badge-shine inline-flex items-center gap-1.5 rounded-sm bg-gradient-to-r from-cyan-500/15 to-blue-500/10 border border-cyan-500/35 px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-cyan-400 badge-glow-cyan">
-                <TrendingUp size={11} className="drop-shadow-[0_0_3px_rgba(34,211,238,0.6)]" />
-                Popular
-              </span>
-            )}
+    <>
+      <div className="hud-panel overflow-hidden">
+        {/* Banner Image */}
+        {thread.banner && (
+          <div className="relative h-48 overflow-hidden bg-forum-bg">
+            <img
+              src={thread.banner}
+              alt="Thread banner"
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                // Hide banner if image fails to load
+                e.currentTarget.parentElement!.style.display = 'none';
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-forum-card" />
           </div>
+        )}
+        
+        <div className="relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-forum-card to-forum-bg/50" />
+          <div className="relative px-5 py-5">
+            {/* Badges */}
+            <div className="flex items-center gap-2 flex-wrap mb-3">
+              {thread.isPinned && (
+                <span className="badge-shine inline-flex items-center gap-1.5 rounded-sm bg-gradient-to-r from-forum-pink/20 to-forum-pink/10 border border-forum-pink/40 px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-forum-pink badge-glow-pink">
+                  <Pin size={11} className="drop-shadow-[0_0_3px_rgba(255,45,146,0.6)]" />
+                  Pinned
+                </span>
+              )}
+              {thread.isLocked && (
+                <span className="badge-shine inline-flex items-center gap-1.5 rounded-sm bg-gradient-to-r from-amber-500/15 to-amber-500/5 border border-amber-500/35 px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-amber-400 badge-glow-amber">
+                  <Lock size={11} className="drop-shadow-[0_0_3px_rgba(245,158,11,0.6)]" />
+                  Locked
+                </span>
+              )}
+              {thread.isHot && (
+                <span className="badge-shine inline-flex items-center gap-1.5 rounded-sm bg-gradient-to-br from-orange-500/35 via-red-500/28 to-amber-500/18 border border-orange-500/65 px-3 py-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-orange-300 badge-glow-orange shadow-lg shadow-orange-500/35 hover:shadow-orange-500/55 transition-all duration-250">
+                  <Flame size={12} className="animate-flame text-orange-300 drop-shadow-[0_0_5px_rgba(249,115,22,0.7)]" />
+                  <span className="bg-gradient-to-r from-orange-300 via-red-300 to-orange-200 bg-clip-text text-transparent font-extrabold">
+                    Hot
+                  </span>
+                </span>
+              )}
+              {isSolved && (
+                <span className="badge-shine inline-flex items-center gap-1.5 rounded-sm bg-gradient-to-r from-emerald-500/20 to-emerald-500/5 border border-emerald-500/40 px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-400 badge-glow-emerald">
+                  <CheckCircle2 size={11} className="drop-shadow-[0_0_3px_rgba(52,211,153,0.6)]" />
+                  Solved
+                </span>
+              )}
+              {thread.replyCount > 100 && (
+                <span className="badge-shine inline-flex items-center gap-1.5 rounded-sm bg-gradient-to-r from-cyan-500/15 to-blue-500/10 border border-cyan-500/35 px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-cyan-400 badge-glow-cyan">
+                  <TrendingUp size={11} className="drop-shadow-[0_0_3px_rgba(34,211,238,0.6)]" />
+                  Popular
+                </span>
+              )}
+            </div>
 
           {/* Title */}
           <h1 className="text-[20px] font-bold text-forum-text font-mono leading-tight mb-3">
@@ -136,6 +158,16 @@ export default function ThreadHeader({
 
             {/* Actions */}
             <div className="flex items-center gap-1 ml-auto flex-wrap">
+              {isAuthor && (
+                <button
+                  onClick={() => setIsEditModalOpen(true)}
+                  className="transition-forum flex items-center gap-1 rounded-md px-2.5 py-1 text-[10px] font-mono text-forum-muted border border-forum-border/30 hover:text-forum-pink hover:bg-forum-pink/5 hover:border-forum-pink/25"
+                >
+                  <Edit size={11} />
+                  Edit
+                </button>
+              )}
+              
               <button
                 onClick={onToggleWatch}
                 className={`transition-forum flex items-center gap-1 rounded-md px-2.5 py-1 text-[10px] font-mono border ${isWatching
@@ -155,10 +187,18 @@ export default function ThreadHeader({
                 Share
               </button>
             </div>
+            </div>
           </div>
         </div>
         <div className="h-[1px] bg-gradient-to-r from-transparent via-forum-pink/40 to-transparent" />
       </div>
-    </div>
+      
+      {/* Edit Thread Modal */}
+      <EditThreadModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        threadId={thread.id}
+      />
+    </>
   );
 }

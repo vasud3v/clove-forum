@@ -75,11 +75,7 @@ export function generateAvatar(username: string, style: AvatarStyle = 'dicebear'
  * Get the appropriate avatar URL for a user
  * Returns custom avatar if set, otherwise generates one
  */
-export function getUserAvatar(
-  avatarUrl: string | undefined | null,
-  username: string,
-  style: AvatarStyle = 'dicebear'
-): string {
+export function getUserAvatar(avatarUrl: string, username: string, style: AvatarStyle = 'dicebear'): string {
   // If it's a data URL (uploaded image), use it directly
   if (avatarUrl && avatarUrl.startsWith('data:')) {
     return avatarUrl;
@@ -99,37 +95,4 @@ export function getUserAvatar(
 export function getAvatarStyle(): AvatarStyle {
   // Could be extended to read from user preferences
   return 'dicebear';
-}
-
-/**
- * Resolve user avatar with priority: custom_avatar > avatar > generated
- * Use this for consistent avatar resolution across the app
- * 
- * @param user - User object with avatar fields
- * @returns Resolved avatar URL
- * 
- * @example
- * const avatarUrl = resolveUserAvatar({
- *   custom_avatar: user.custom_avatar,
- *   avatar: user.avatar,
- *   username: user.username
- * });
- */
-export function resolveUserAvatar(user: {
-  custom_avatar?: string | null;
-  avatar?: string;
-  username: string;
-}): string {
-  // Priority 1: Custom uploaded avatar
-  if (user.custom_avatar) {
-    return user.custom_avatar;
-  }
-  
-  // Priority 2: Default avatar from database
-  if (user.avatar && !isDefaultAvatar(user.avatar)) {
-    return user.avatar;
-  }
-  
-  // Priority 3: Generate avatar from username
-  return generateAvatar(user.username);
 }

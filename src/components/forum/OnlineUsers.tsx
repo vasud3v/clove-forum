@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { getUserAvatar } from '@/lib/avatar';
 import { useForumContext } from '@/context/ForumContext';
 import { User } from '@/types/forum';
+import { cache, CacheKeys, CacheTTL, withCache } from '@/lib/cache';
 
 export default function OnlineUsers() {
   const navigate = useNavigate();
@@ -12,46 +13,68 @@ export default function OnlineUsers() {
   const [onlineUsers, setOnlineUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    // Fetch online users from Supabase
+    // Fetch online users from Supabase with caching
     const fetchOnlineUsers = async () => {
-      const { data, error } = await supabase
-        .from('forum_users')
-        .select('*')
-        .eq('is_online', true)
-        .order('reputation', { ascending: false })
-        .limit(20);
+      try {
+        const users = await withCache(
+          CacheKeys.onlineUsers(),
+          CacheTTL.SHORT, // 30 seconds cache
+          async () => {
+            const { data, error } = await supabase
+              .from('forum_users')
+              .select('*')
+              .eq('is_online', true)
+              .order('reputation', { ascending: false })
+              .limit(20);
 
-      if (!error && data) {
-        setOnlineUsers(data.map(user => ({
-          id: user.id,
-          username: user.username,
-          avatar: getUserAvatar(user.custom_avatar || user.avatar, user.username),
-          postCount: user.post_count,
-          reputation: user.reputation,
-          joinDate: user.join_date,
-          isOnline: user.is_online,
-          rank: user.rank,
-          role: user.role || 'member',
-        })));
+            if (error) throw error;
+            
+            return data?.map(user => ({
+              id: user.id,
+              username: user.username,
+              avatar: user.avatar,
+              postCount: user.post_count,
+              reputation: user.reputation,
+              joinDate: user.join_date,
+              isOnline: user.is_online,
+              rank: user.rank,
+              role: user.role || 'member',
+            })) || [];
+          }
+        );
+        
+        setOnlineUsers(users);
+      } catch (error) {
+        console.error('Failed to fetch online users:', error);
       }
     };
 
     fetchOnlineUsers();
 
-    // Subscribe to real-time updates for all events
+    // Poll every 30 seconds instead of realtime for better performance
+    const interval = setInterval(fetchOnlineUsers, 30000);
+
+    // Subscribe to realtime only for is_online changes (filtered)
     const channel = supabase
       .channel('online-users-updates')
       .on(
         'postgres_changes',
-        { event: '*', schema: 'public', table: 'forum_users' },
+        { 
+          event: 'UPDATE', 
+          schema: 'public', 
+          table: 'forum_users',
+          filter: 'is_online=eq.true'
+        },
         () => {
-          // Refetch all online users on any change
+          // Invalidate cache and refetch
+          cache.invalidate(CacheKeys.onlineUsers());
           fetchOnlineUsers();
         }
       )
       .subscribe();
 
     return () => {
+      clearInterval(interval);
       supabase.removeChannel(channel);
     };
   }, []);

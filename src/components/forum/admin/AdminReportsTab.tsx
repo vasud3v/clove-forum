@@ -20,10 +20,21 @@ const STATUS_COLORS: Record<ReportStatus, string> = {
 
 export default function AdminReportsTab({ reports, currentUserId, onRefresh, onLogAction, formatDate }: Props) {
   const [statusFilter, setStatusFilter] = useState<ReportStatus | 'all'>('pending');
+  const [reasonFilter, setReasonFilter] = useState<string>('all');
   const [actionModal, setActionModal] = useState<{ reportId: string; action: string } | null>(null);
+  const [selectedReports, setSelectedReports] = useState<Set<string>>(new Set());
+  const [viewDetails, setViewDetails] = useState<string | null>(null);
 
-  const filtered = reports.filter(r => statusFilter === 'all' || r.status === statusFilter);
+  const filtered = reports.filter(r => {
+    const matchesStatus = statusFilter === 'all' || r.status === statusFilter;
+    const matchesReason = reasonFilter === 'all' || r.reason === reasonFilter;
+    return matchesStatus && matchesReason;
+  });
+  
   const pendingCount = reports.filter(r => r.status === 'pending').length;
+  const reasons = Array.from(new Set(reports.map(r => r.reason)));
+
+  const toggleSelect = (id: string) => setSelectedReports(prev => { const next = new Set(prev); next.has(id) ? next.delete(id) : next.add(id); return next; });
 
   const handleResolve = async (reportId: string, action: string) => {
     try {
@@ -60,29 +71,70 @@ export default function AdminReportsTab({ reports, currentUserId, onRefresh, onL
     }
   };
 
+  const handleBulkAction = async (action: string) => {
+    if (selectedReports.size === 0) return;
+    if (!confirm(`${action} ${selectedReports.size} reports?`)) return;
+
+    try {
+      const ids = Array.from(selectedReports);
+      for (const id of ids) {
+        await handleResolve(id, action);
+      }
+      setSelectedReports(new Set());
+      toast.success(`Bulk ${action} completed`);
+    } catch {
+      toast.error('Bulk action failed');
+    }
+  };
+
   return (
     <div className="space-y-3">
-      {/* Status filter tabs */}
-      <div className="flex items-center gap-1">
-        {(['all', 'pending', 'resolved', 'dismissed'] as const).map(status => (
-          <button key={status} onClick={() => setStatusFilter(status)}
-            className={`transition-forum rounded-md px-3 py-1.5 text-[10px] font-mono font-medium capitalize ${
-              statusFilter === status
-                ? 'bg-forum-pink/10 text-forum-pink border border-forum-pink/20'
-                : 'text-forum-muted hover:text-forum-text hover:bg-forum-hover'
-            }`}>
-            {status} {status === 'pending' && pendingCount > 0 && (
-              <span className="ml-1 rounded-full bg-red-500 px-1.5 py-[1px] text-[8px] text-white">{pendingCount}</span>
-            )}
-          </button>
-        ))}
+      {/* Filters */}
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center gap-1">
+          {(['all', 'pending', 'resolved', 'dismissed'] as const).map(status => (
+            <button key={status} onClick={() => setStatusFilter(status)}
+              className={`transition-forum rounded-md px-3 py-1.5 text-[10px] font-mono font-medium capitalize ${
+                statusFilter === status
+                  ? 'bg-forum-pink/10 text-forum-pink border border-forum-pink/20'
+                  : 'text-forum-muted hover:text-forum-text hover:bg-forum-hover'
+              }`}>
+              {status} {status === 'pending' && pendingCount > 0 && (
+                <span className="ml-1 rounded-full bg-red-500 px-1.5 py-[1px] text-[8px] text-white">{pendingCount}</span>
+              )}
+            </button>
+          ))}
+        </div>
+        <select value={reasonFilter} onChange={e => setReasonFilter(e.target.value)}
+          className="rounded-md border border-forum-border bg-forum-bg px-3 py-1.5 text-[10px] font-mono text-forum-text outline-none focus:border-forum-pink">
+          <option value="all">All Reasons</option>
+          {reasons.map(r => <option key={r} value={r}>{r.replace('_', ' ')}</option>)}
+        </select>
       </div>
 
+      {/* Bulk Actions */}
+      {selectedReports.size > 0 && (
+        <div className="hud-panel px-4 py-2 flex items-center gap-2">
+          <span className="text-[10px] font-mono text-forum-text font-semibold">{selectedReports.size} selected</span>
+          <button onClick={() => handleBulkAction('resolved')} className="text-[9px] font-mono text-emerald-400 hover:underline">Resolve All</button>
+          <button onClick={() => handleBulkAction('dismiss')} className="text-[9px] font-mono text-forum-muted hover:underline">Dismiss All</button>
+          <button onClick={() => setSelectedReports(new Set())} className="text-[9px] font-mono text-red-400 hover:underline">Clear</button>
+        </div>
+      )}
+
       <div className="hud-panel overflow-hidden">
-        <div className="border-b border-forum-border px-4 py-3">
+        <div className="border-b border-forum-border px-4 py-3 flex items-center justify-between">
           <h3 className="text-[12px] font-mono font-bold text-forum-text flex items-center gap-2">
             <AlertTriangle size={13} className="text-forum-pink" /> Reports ({filtered.length})
           </h3>
+          {filtered.length > 0 && (
+            <label className="flex items-center gap-1.5 text-[9px] font-mono text-forum-muted cursor-pointer">
+              <input type="checkbox" checked={selectedReports.size === filtered.length} onChange={() => {
+                if (selectedReports.size === filtered.length) setSelectedReports(new Set());
+                else setSelectedReports(new Set(filtered.map(r => r.id)));
+              }} /> Select All
+            </label>
+          )}
         </div>
         <div className="divide-y divide-forum-border/20 max-h-[600px] overflow-y-auto">
           {filtered.length === 0 ? (
@@ -93,6 +145,9 @@ export default function AdminReportsTab({ reports, currentUserId, onRefresh, onL
           ) : filtered.map(report => (
             <div key={report.id} className="px-4 py-3 hover:bg-forum-hover/30 transition-forum">
               <div className="flex items-start gap-3">
+                {report.status === 'pending' && (
+                  <input type="checkbox" checked={selectedReports.has(report.id)} onChange={() => toggleSelect(report.id)} className="mt-1 flex-shrink-0" />
+                )}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <span className={`text-[8px] font-mono border rounded-sm px-1.5 py-[1px] capitalize ${STATUS_COLORS[report.status]}`}>{report.status}</span>

@@ -4,11 +4,11 @@ import ForumHeader from '@/components/forum/ForumHeader';
 import MobileBottomNav from '@/components/forum/MobileBottomNav';
 import SidebarStatsPanel from '@/components/forum/SidebarStatsPanel';
 import OnlineUsers from '@/components/forum/OnlineUsers';
-import FloatingActionButton from '@/components/forum/FloatingActionButton';
 import NewThreadModal from '@/components/forum/NewThreadModal';
 import { useForumContext } from '@/context/ForumContext';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
+import { getUserAvatar } from '@/lib/avatar';
 import { PostData } from '@/types/forum';
 import { Home as HomeIcon, ChevronRight, Bookmark, Inbox, Loader2, MessageCircle } from 'lucide-react';
 import { formatTimeAgo } from '@/lib/forumUtils';
@@ -77,7 +77,7 @@ export default function PostBookmarksPage() {
         const authorIds = [...new Set(posts.map(p => p.author_id))];
         const { data: authors } = await supabase
           .from('forum_users')
-          .select('*')
+          .select('id, username, avatar, banner, post_count, reputation, join_date, is_online, rank, role')
           .in('id', authorIds);
 
         // Fetch threads separately
@@ -104,6 +104,7 @@ export default function PostBookmarksPage() {
               id: author.id,
               username: author.username,
               avatar: author.avatar,
+              
               banner: author.banner || undefined,
               postCount: author.post_count,
               reputation: author.reputation,
@@ -124,6 +125,8 @@ export default function PostBookmarksPage() {
             },
             createdAt: p.created_at,
             updatedAt: p.updated_at,
+            likes: p.likes || 0,
+            isAnswer: p.is_answer || false,
             upvotes: p.upvotes,
             downvotes: p.downvotes,
             reactions: [],
@@ -261,7 +264,6 @@ export default function PostBookmarksPage() {
         </div>
       )}
 
-      <FloatingActionButton onClick={() => setIsModalOpen(true)} />
       <NewThreadModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       <MobileBottomNav />
     </div>

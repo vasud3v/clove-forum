@@ -1,5 +1,5 @@
 -- ============================================================================
--- Fix Post Delete RLS Policy
+-- Fix Post Delete RLS Policy (Optimized for Performance)
 -- ============================================================================
 -- Allow users to delete their own posts (not just staff)
 
@@ -9,9 +9,9 @@ CREATE POLICY "posts_delete"
 ON public.posts 
 FOR DELETE
 USING (
-  auth.uid()::text = author_id 
+  (SELECT auth.uid())::text = author_id 
   OR 
-  public.is_staff(auth.uid()::text)
+  public.is_staff((SELECT auth.uid())::text)
 );
 
 -- ============================================================================

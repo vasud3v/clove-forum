@@ -180,8 +180,8 @@ export function useRealtime({
                             return {
                                 ...prev,
                                 username: updatedUser.username,
-                                avatar: updatedUser.custom_avatar || updatedUser.avatar,
-                                banner: updatedUser.custom_banner || updatedUser.banner,
+                                avatar: updatedUser.avatar,
+                                banner: updatedUser.banner,
                                 postCount: updatedUser.post_count,
                                 reputation: updatedUser.reputation,
                                 isOnline: updatedUser.is_online,
@@ -204,7 +204,7 @@ export function useRealtime({
                                         author: {
                                             ...thread.author,
                                             username: updatedUser.username,
-                                            avatar: updatedUser.custom_avatar || updatedUser.avatar,
+                                            avatar: updatedUser.avatar,
                                             reputation: updatedUser.reputation,
                                             rank: updatedUser.rank,
                                         },
@@ -232,8 +232,8 @@ export function useRealtime({
                                         author: {
                                             ...post.author,
                                             username: updatedUser.username,
-                                            avatar: updatedUser.custom_avatar || updatedUser.avatar,
-                                            banner: updatedUser.custom_banner || updatedUser.banner,
+                                            avatar: updatedUser.avatar,
+                                            banner: updatedUser.banner,
                                             reputation: updatedUser.reputation,
                                             rank: updatedUser.rank,
                                         },

@@ -19,6 +19,8 @@ const ACTION_COLORS: Record<string, string> = {
   user_restrict: 'text-orange-400',
   category_create: 'text-emerald-400', category_edit: 'text-blue-400',
   category_delete: 'text-red-500', category_reorder: 'text-forum-muted',
+  topic_create: 'text-emerald-400', topic_edit: 'text-blue-400',
+  topic_delete: 'text-red-500',
   report_resolve: 'text-emerald-400', report_dismiss: 'text-forum-muted',
 };
 

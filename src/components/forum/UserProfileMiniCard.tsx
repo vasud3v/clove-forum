@@ -16,11 +16,11 @@ export default function UserProfileMiniCard({ user }: UserProfileMiniCardProps) 
     getUserProfile, 
     getCalculatedReputation, 
     getReputationChange24h,
-    getAllThreads,
-    isBookmarked
+    getAllThreads
   } = useForumContext();
   const profileCustom = getUserProfile(user.id);
-  const displayAvatar = getUserAvatar(profileCustom.avatar || user.avatar, user.username);
+  // Use custom profile data if available (for current user), otherwise use user prop data
+  const displayAvatar = user.avatar;
   const displayBanner = profileCustom.banner || user.banner;
   const calculatedRep = getCalculatedReputation(user.id);
   const repChange = getReputationChange24h(user.id);
@@ -28,7 +28,9 @@ export default function UserProfileMiniCard({ user }: UserProfileMiniCardProps) 
   // Calculate real counts
   const allThreads = getAllThreads();
   const myThreadsCount = allThreads.filter(t => t.author.id === user.id).length;
-  const bookmarksCount = allThreads.filter(t => isBookmarked(t.id)).length;
+  // Note: Bookmarks are for posts, not threads, so we can't easily count them here
+  // This would require fetching all posts which is expensive
+  const bookmarksCount = 0; // TODO: Implement post bookmarks count when needed
   
   // TODO: Implement badges and notifications systems
   const badgesCount = 0; // Will be implemented when badges system is added

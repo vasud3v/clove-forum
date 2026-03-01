@@ -19,6 +19,7 @@ import { useVoting } from '@/hooks/forum/useVoting';
 import { useWatches } from '@/hooks/forum/useWatches';
 import { usePostBookmarks } from '@/hooks/forum/usePostBookmarks';
 import { useReputation } from '@/hooks/forum/useReputation';
+import { useUserProfileSync } from '@/hooks/forum/useUserProfileSync';
 
 // ============================================================================
 // Context Type
@@ -45,7 +46,8 @@ interface ForumContextType {
   createThread: (
     title: string, categoryId: string, content: string,
     tags?: string[],
-    poll?: { question: string; options: string[]; isMultipleChoice: boolean; endsAt?: string }
+    poll?: { question: string; options: string[]; isMultipleChoice: boolean; endsAt?: string },
+    topicId?: string
   ) => Promise<Thread>;
 
   // Post operations
@@ -211,6 +213,61 @@ export function ForumProvider({ children }: { children: ReactNode }) {
     setError,
   });
 
+  // --- User Profile Sync ---
+  // Listen for profile changes and update cached post data
+  useUserProfileSync((userId, updates) => {
+    // Update posts with new user data
+    posts.updateUserInPosts(userId, {
+      avatar: updates.avatar || undefined,
+      banner: updates.banner || undefined,
+      username: updates.username,
+      rank: updates.rank,
+      role: updates.role,
+      postCount: updates.post_count,
+      reputation: updates.reputation,
+    });
+    
+    // Update threads with new user data
+    categories.setCategoriesState(prev => 
+      prev.map(cat => ({
+        ...cat,
+        threads: cat.threads?.map(thread => {
+          if (thread.author.id === userId) {
+            return {
+              ...thread,
+              author: {
+                ...thread.author,
+                ...(updates.avatar !== undefined && { avatar: updates.avatar || thread.author.avatar }),
+                ...(updates.banner !== undefined && { banner: updates.banner || thread.author.banner }),
+                ...(updates.username !== undefined && { username: updates.username }),
+                ...(updates.rank !== undefined && { rank: updates.rank }),
+                ...(updates.role !== undefined && { role: updates.role }),
+                ...(updates.post_count !== undefined && { postCount: updates.post_count }),
+                ...(updates.reputation !== undefined && { reputation: updates.reputation }),
+              }
+            };
+          }
+          if (thread.lastReplyBy.id === userId) {
+            return {
+              ...thread,
+              lastReplyBy: {
+                ...thread.lastReplyBy,
+                ...(updates.avatar !== undefined && { avatar: updates.avatar || thread.lastReplyBy.avatar }),
+                ...(updates.banner !== undefined && { banner: updates.banner || thread.lastReplyBy.banner }),
+                ...(updates.username !== undefined && { username: updates.username }),
+                ...(updates.rank !== undefined && { rank: updates.rank }),
+                ...(updates.role !== undefined && { role: updates.role }),
+                ...(updates.post_count !== undefined && { postCount: updates.post_count }),
+                ...(updates.reputation !== undefined && { reputation: updates.reputation }),
+              }
+            };
+          }
+          return thread;
+        })
+      }))
+    );
+  });
+
   // --- Logout cleanup ---
   useEffect(() => {
     if (!isAuthenticated) {
@@ -229,9 +286,10 @@ export function ForumProvider({ children }: { children: ReactNode }) {
   const createThreadWrapper = async (
     title: string, categoryId: string, content: string,
     tags?: string[],
-    poll?: { question: string; options: string[]; isMultipleChoice: boolean; endsAt?: string }
+    poll?: { question: string; options: string[]; isMultipleChoice: boolean; endsAt?: string },
+    topicId?: string
   ) => {
-    return categories.createThread(title, categoryId, content, tags, poll, polls.setPollsMap);
+    return categories.createThread(title, categoryId, content, tags, poll, polls.setPollsMap, topicId);
   };
 
   // --- Build context value ---

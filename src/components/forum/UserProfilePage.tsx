@@ -4,13 +4,15 @@ import ForumHeader from '@/components/forum/ForumHeader';
 import SidebarStatsPanel from '@/components/forum/SidebarStatsPanel';
 import OnlineUsers from '@/components/forum/OnlineUsers';
 import PopularTags from '@/components/forum/PopularTags';
-import FloatingActionButton from '@/components/forum/FloatingActionButton';
 import NewThreadModal from '@/components/forum/NewThreadModal';
+import EditProfileModal from '@/components/forum/EditProfileModal';
+import ImageAdjustModal from '@/components/forum/ImageAdjustModal';
 import { useForumContext } from '@/context/ForumContext';
 import { ReputationEvent, ReputationActionType } from '@/types/forum';
 import { supabase } from '@/lib/supabase';
 import { getUserAvatar } from '@/lib/avatar';
 import { User } from '@/types/forum';
+import { FollowButton } from './FollowButton';
 import {
   Home as HomeIcon,
   ChevronRight,
@@ -130,9 +132,13 @@ export default function UserProfilePage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<ProfileTab>('posts');
-  const [isEditing, setIsEditing] = useState(false);
-  const [editBio, setEditBio] = useState('');
   const [showAllHistory, setShowAllHistory] = useState(false);
+  const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
+  const [imageAdjustModal, setImageAdjustModal] = useState<{ isOpen: boolean; imageUrl: string; type: 'avatar' | 'banner' }>({
+    isOpen: false,
+    imageUrl: '',
+    type: 'avatar',
+  });
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -157,14 +163,17 @@ export default function UserProfilePage() {
         setUser({
           id: data.id,
           username: data.username,
-          avatar: getUserAvatar(data.custom_avatar || data.avatar, data.username),
-          banner: data.custom_banner || data.banner,
+          avatar: data.avatar,
+          banner: data.banner,
           postCount: data.post_count,
           reputation: data.reputation,
           joinDate: data.join_date,
           isOnline: data.is_online,
           rank: data.rank,
           role: data.role || 'member',
+          followerCount: data.follower_count || 0,
+          followingCount: data.following_count || 0,
+          isPrivate: data.is_private || false,
         });
       } else {
         console.error('Error fetching user:', error);
@@ -196,12 +205,15 @@ export default function UserProfilePage() {
               return {
                 ...prev,
                 username: updated.username,
-                avatar: getUserAvatar(updated.custom_avatar || updated.avatar, updated.username),
-                banner: updated.custom_banner || updated.banner,
+                avatar: updated.avatar,
+                banner: updated.banner,
                 postCount: updated.post_count,
                 reputation: updated.reputation,
                 isOnline: updated.is_online,
                 rank: updated.rank,
+                followerCount: updated.follower_count || 0,
+                followingCount: updated.following_count || 0,
+                isPrivate: updated.is_private || false,
               };
             });
           }
@@ -255,37 +267,8 @@ export default function UserProfilePage() {
     return getUserProfile(userId);
   }, [userId, getUserProfile]);
 
-  // Fetch profile customization from Supabase if not already in local state
-  // Only depend on userId to avoid infinite loops from callback identity changes
-  const supabaseFetchedRef = useRef<Set<string>>(new Set());
-  useEffect(() => {
-    if (!userId) return;
-    if (supabaseFetchedRef.current.has(userId)) return; // Already fetched for this user
-    const custom = getUserProfile(userId);
-    if (custom.avatar || custom.banner) return; // Already loaded from localStorage or context
-
-    supabaseFetchedRef.current.add(userId);
-
-    (async () => {
-      try {
-        const { data, error } = await supabase
-          .from('profile_customizations')
-          .select('custom_avatar, custom_banner')
-          .eq('user_id', userId)
-          .single();
-
-        if (!error && data && (data.custom_avatar || data.custom_banner)) {
-          updateUserProfile(userId, {
-            ...(data.custom_avatar ? { avatar: data.custom_avatar } : {}),
-            ...(data.custom_banner ? { banner: data.custom_banner } : {}),
-          });
-        }
-      } catch {
-        // Silently fail — will use defaults
-      }
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId]);
+  // Avatar and banner are now stored directly in forum_users table
+  // No need to fetch from profile_customizations
 
   const currentAvatar = profileCustom.avatar || user?.avatar || '';
   const currentBanner = profileCustom.banner || user?.banner || '';
@@ -310,12 +293,33 @@ export default function UserProfilePage() {
     const reader = new FileReader();
     reader.onload = () => {
       const dataUrl = reader.result as string;
-      updateUserProfile(userId, { [type]: dataUrl });
+      // Open the adjust modal instead of directly saving
+      setImageAdjustModal({
+        isOpen: true,
+        imageUrl: dataUrl,
+        type: type,
+      });
     };
     reader.readAsDataURL(file);
 
     // Reset input
     e.target.value = '';
+  };
+
+  const handleImageAdjustSave = async (adjustedImageUrl: string) => {
+    if (!userId) return;
+    
+    try {
+      // Upload to Supabase Storage instead of storing data URL
+      const { uploadAvatar } = await import('@/lib/avatarUpload');
+      const publicUrl = await uploadAvatar(userId, adjustedImageUrl, imageAdjustModal.type);
+      
+      // Update user profile with storage URL
+      updateUserProfile(userId, { [imageAdjustModal.type]: publicUrl });
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      alert('Failed to upload image. Please try again.');
+    }
   };
 
   const handleRemoveBanner = () => {
@@ -433,15 +437,33 @@ export default function UserProfilePage() {
     );
   }
 
-  const handleStartEdit = () => {
-    // TODO: Fetch bio from Supabase user profile when implemented
-    setEditBio('');
-    setIsEditing(true);
-  };
+  const handleProfileUpdateSuccess = async () => {
+    // Refresh user data after profile update
+    if (!userId) return;
+    
+    const { data, error } = await supabase
+      .from('forum_users')
+      .select('*')
+      .eq('id', userId)
+      .single();
 
-  const handleSaveEdit = () => {
-    // TODO: Save bio to Supabase user profile when implemented
-    setIsEditing(false);
+    if (!error && data) {
+      setUser({
+        id: data.id,
+        username: data.username,
+        avatar: data.avatar,
+        banner: data.banner,
+        postCount: data.post_count,
+        reputation: data.reputation,
+        joinDate: data.join_date,
+        isOnline: data.is_online,
+        rank: data.rank,
+        role: data.role || 'member',
+        followerCount: data.follower_count || 0,
+        followingCount: data.following_count || 0,
+        isPrivate: data.is_private || false,
+      });
+    }
   };
 
   const totalRepPoints = reputationBreakdown.reduce((sum, r) => sum + r.points, 0);
@@ -513,8 +535,8 @@ export default function UserProfilePage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-forum-card/80 via-transparent to-transparent" />
                 )}
 
-                {/* Banner upload controls (visible in edit mode) */}
-                {isOwnProfile && isEditing && (
+                {/* Banner upload controls (visible on hover for own profile) */}
+                {isOwnProfile && (
                   <div className="absolute inset-0 flex items-center justify-center gap-2 bg-forum-bg/40 opacity-0 group-hover/banner:opacity-100 transition-all duration-250 backdrop-blur-[2px]">
                     <button
                       onClick={() => bannerInputRef.current?.click()}
@@ -544,11 +566,11 @@ export default function UserProfilePage() {
 
                 {isOwnProfile && (
                   <button
-                    onClick={isEditing ? handleSaveEdit : handleStartEdit}
+                    onClick={() => setIsEditProfileModalOpen(true)}
                     className="absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded bg-forum-bg/80 border border-forum-pink/30 text-[10px] font-mono font-bold text-forum-pink hover:bg-forum-pink/10 transition-forum backdrop-blur-sm z-10"
                   >
-                    {isEditing ? <Check size={11} /> : <Edit3 size={11} />}
-                    {isEditing ? 'Save Profile' : 'Edit Profile'}
+                    <Edit3 size={11} />
+                    Edit Profile
                   </button>
                 )}
               </div>
@@ -569,8 +591,8 @@ export default function UserProfilePage() {
                         }`}
                       style={{ borderWidth: '3px', borderColor: '#0d0d12' }}
                     />
-                    {/* Avatar upload overlay (visible in edit mode) */}
-                    {isOwnProfile && isEditing && (
+                    {/* Avatar upload overlay (visible on hover for own profile) */}
+                    {isOwnProfile && (
                       <>
                         <div
                           onClick={() => avatarInputRef.current?.click()}
@@ -626,20 +648,10 @@ export default function UserProfilePage() {
 
                     {/* Bio */}
                     <div className="mt-2">
-                      {isEditing ? (
-                        <textarea
-                          value={editBio}
-                          onChange={(e) => setEditBio(e.target.value)}
-                          className="w-full bg-forum-bg border border-forum-pink/30 rounded px-3 py-2 text-[11px] font-mono text-forum-text resize-none focus:outline-none focus:border-forum-pink/60"
-                          rows={3}
-                          placeholder="Write something about yourself..."
-                        />
-                      ) : (
-                        <p className="text-[11px] font-mono text-forum-muted leading-relaxed max-w-2xl">
-                          {/* TODO: Fetch bio from Supabase user profile when implemented */}
-                          No bio yet.
-                        </p>
-                      )}
+                      <p className="text-[11px] font-mono text-forum-muted leading-relaxed max-w-2xl">
+                        {/* TODO: Fetch bio from Supabase user profile when implemented */}
+                        No bio yet.
+                      </p>
                     </div>
 
                     {/* Meta info */}
@@ -648,18 +660,34 @@ export default function UserProfilePage() {
                         <Calendar size={10} className="text-forum-pink/60" />
                         Joined {formatDate(user.joinDate)}
                       </span>
+                      <span className="flex items-center gap-1 text-[10px] font-mono text-forum-muted">
+                        <Users size={10} className="text-forum-pink/60" />
+                        {user.followerCount || 0} followers · {user.followingCount || 0} following
+                      </span>
                       {/* TODO: Add location and website fields to Supabase user profile */}
                     </div>
+
+                    {/* Follow Button */}
+                    {!isOwnProfile && (
+                      <div className="mt-4">
+                        <FollowButton
+                          targetUserId={user.id}
+                          currentUserId={currentUser.id}
+                          showMessageButton={true}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 {/* Stats row */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5">
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mt-5">
                   {[
                     { label: 'Posts', value: user.postCount.toLocaleString(), icon: MessageSquare, color: 'text-forum-pink' },
                     { label: 'Reputation', value: calculatedRep.toLocaleString(), icon: TrendingUp, color: 'text-cyan-400' },
                     { label: 'Threads', value: userThreads.length.toString(), icon: BookOpen, color: 'text-purple-400' },
-                    { label: 'Badges', value: userBadges.length.toString(), icon: Award, color: 'text-amber-400' },
+                    { label: 'Followers', value: (user.followerCount || 0).toString(), icon: Users, color: 'text-emerald-400' },
+                    { label: 'Following', value: (user.followingCount || 0).toString(), icon: Users, color: 'text-blue-400' },
                   ].map((stat) => (
                     <div
                       key={stat.label}
@@ -1179,11 +1207,28 @@ export default function UserProfilePage() {
         </div>
       </div>
 
-      {/* Floating Action Button */}
-      <FloatingActionButton onClick={() => setIsModalOpen(true)} />
-
       {/* New Thread Modal */}
       <NewThreadModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+
+      {/* Edit Profile Modal */}
+      {user && (
+        <EditProfileModal
+          isOpen={isEditProfileModalOpen}
+          onClose={() => setIsEditProfileModalOpen(false)}
+          currentUsername={user.username}
+          userId={user.id}
+          onSuccess={handleProfileUpdateSuccess}
+        />
+      )}
+
+      {/* Image Adjust Modal */}
+      <ImageAdjustModal
+        isOpen={imageAdjustModal.isOpen}
+        onClose={() => setImageAdjustModal({ ...imageAdjustModal, isOpen: false })}
+        imageUrl={imageAdjustModal.imageUrl}
+        type={imageAdjustModal.type}
+        onSave={handleImageAdjustSave}
+      />
     </div>
   );
 }

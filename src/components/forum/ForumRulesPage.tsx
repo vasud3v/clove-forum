@@ -4,7 +4,6 @@ import ForumHeader from '@/components/forum/ForumHeader';
 import ForumRules from '@/components/forum/ForumRules';
 import SidebarStatsPanel from '@/components/forum/SidebarStatsPanel';
 import OnlineUsers from '@/components/forum/OnlineUsers';
-import FloatingActionButton from '@/components/forum/FloatingActionButton';
 import NewThreadModal from '@/components/forum/NewThreadModal';
 import { useForumContext } from '@/context/ForumContext';
 import { Home as HomeIcon, ChevronRight, Shield } from 'lucide-react';
@@ -69,9 +68,6 @@ export default function ForumRulesPage() {
           </div>
         </div>
       </div>
-
-      {/* Floating Action Button */}
-      <FloatingActionButton onClick={() => setIsModalOpen(true)} />
 
       {/* New Thread Modal */}
       <NewThreadModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />

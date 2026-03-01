@@ -5,6 +5,9 @@ import { Clock, History } from 'lucide-react';
 import PostAuthorSidebar from '@/components/forum/post/PostAuthorSidebar';
 import PostActions from '@/components/forum/post/PostActions';
 import InlineReplyForm from '@/components/forum/thread/InlineReplyForm';
+import ViewParentButton from '@/components/forum/thread/ViewParentButton';
+import ReplyCountBadge from '@/components/forum/thread/ReplyCountBadge';
+import QuotedReplyBox from '@/components/forum/post/QuotedReplyBox';
 
 interface PostCardProps {
   post: PostData;
@@ -24,6 +27,10 @@ interface PostCardProps {
   activeReplyFormId?: string | null;
   onInlineReply?: (postId: string, content: string) => Promise<void>;
   inlineReplySubmitting?: boolean;
+  allPosts?: PostData[];
+  replyCount?: number;
+  onViewParent?: (parentId: string) => void;
+  onAddToMultiQuote?: (post: PostData) => void;
 }
 
 const PostCard = memo(({
@@ -44,6 +51,10 @@ const PostCard = memo(({
   activeReplyFormId,
   onInlineReply,
   inlineReplySubmitting = false,
+  allPosts = [],
+  replyCount = 0,
+  onViewParent,
+  onAddToMultiQuote,
 }: PostCardProps) => {
   const isOwnPost = post.author.id === currentUserId;
   const postAge = Date.now() - new Date(post.createdAt).getTime();
@@ -53,19 +64,32 @@ const PostCard = memo(({
   const indentClass = depth > 0 ? `ml-${Math.min(depth, 3) * 6}` : '';
   const showReplyingToBadge = depth >= 3 && post.replyTo;
 
+  // Find parent post
+  const parentPost = post.replyTo ? allPosts.find(p => p.id === post.replyTo) : null;
+
+  const handleViewParent = (parentId: string) => {
+    const element = document.getElementById(parentId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      element.classList.add('ring-2', 'ring-forum-pink', 'ring-opacity-50');
+      setTimeout(() => {
+        element.classList.remove('ring-2', 'ring-forum-pink', 'ring-opacity-50');
+      }, 2000);
+    }
+  };
+
   return (
     <div
       id={post.id}
-      className={`hud-panel scroll-mt-20 flex flex-col md:flex-row relative rounded-xl ${indentClass}`}
+      className={`hud-panel scroll-mt-24 flex flex-col md:flex-row relative rounded-xl ${indentClass}`}
       style={{ 
-        zIndex: Math.max(1, 100 - Math.min(index, 99)),
         marginLeft: depth > 0 ? `${Math.min(depth, 3) * 24}px` : '0',
       }}
     >
-      {/* Connecting line for nested replies */}
+      {/* Enhanced connecting line for nested replies */}
       {depth > 0 && (
         <div 
-          className="absolute left-0 top-0 bottom-0 w-0.5 bg-forum-border/30"
+          className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-forum-pink/30 via-forum-border/30 to-transparent rounded-l"
           style={{ left: '-12px' }}
         />
       )}
@@ -91,11 +115,9 @@ const PostCard = memo(({
       <div className="flex-1 min-w-0 flex flex-col">
         {/* Post Header */}
         <div className="flex items-center justify-between px-4 py-2 border-b border-forum-border/10 bg-forum-bg/20">
-          <div className="flex items-center gap-3">
-            {showReplyingToBadge && post.replyTo && (
-              <span className="text-[9px] font-mono text-forum-pink bg-forum-pink/10 border border-forum-pink/30 rounded px-2 py-0.5">
-                Replying to @{post.replyTo}
-              </span>
+          <div className="flex items-center gap-2 flex-wrap">
+            {replyCount > 0 && (
+              <ReplyCountBadge count={replyCount} />
             )}
             <span className="text-[10px] font-mono text-forum-muted flex items-center gap-1">
               <Clock size={10} />
@@ -116,8 +138,20 @@ const PostCard = memo(({
         </div>
 
         {/* Post Body */}
-        <div className="px-5 py-4 flex-1 flex flex-col">
-          <PostContentRenderer content={post.content} />
+        <div className="px-5 pt-4 pb-2 flex-1 flex flex-col">
+          {/* User's Reply Content First */}
+          <div className="[&>div]:mb-0">
+            <PostContentRenderer content={post.content} />
+          </div>
+          
+          {/* Quoted Reply Box - Show AFTER the user's content */}
+          {post.replyTo && parentPost && (
+            <QuotedReplyBox 
+              parentPost={parentPost} 
+              onViewParent={handleViewParent}
+            />
+          )}
+          
           {post.editedAt && (
             <div className="mt-4 text-[10px] font-mono italic text-forum-muted/70">
               Last edited: {new Date(post.editedAt).toLocaleDateString('en-US', { 
@@ -143,6 +177,7 @@ const PostCard = memo(({
           onReport={onReport}
           onBookmark={onBookmark}
           onReplyToPost={onReplyToPost}
+          onAddToMultiQuote={onAddToMultiQuote}
         />
 
         {/* Inline Reply Form */}

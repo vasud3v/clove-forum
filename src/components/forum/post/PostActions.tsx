@@ -1,4 +1,4 @@
-import { memo, useState, useCallback } from 'react';
+import { memo, useState, useCallback, useRef, useEffect } from 'react';
 import {
   ChevronUp,
   ChevronDown,
@@ -10,6 +10,8 @@ import {
   Trash2,
   Reply,
   Quote,
+  Plus,
+  ChevronDown as DropdownIcon,
 } from 'lucide-react';
 import { PostData } from '@/types/forum';
 import { useForumContext } from '@/context/ForumContext';
@@ -33,6 +35,7 @@ interface PostActionsProps {
   onReport?: (postId: string, reason: string, details: string) => Promise<void>;
   onBookmark?: (postId: string) => Promise<void>;
   onReplyToPost?: (postId: string) => void;
+  onAddToMultiQuote?: (post: PostData) => void;
 }
 
 const PostActions = memo(({
@@ -48,11 +51,28 @@ const PostActions = memo(({
   onReport,
   onBookmark,
   onReplyToPost,
+  onAddToMultiQuote,
 }: PostActionsProps) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [isVoting, setIsVoting] = useState(false);
+  const [showQuoteMenu, setShowQuoteMenu] = useState(false);
+  const quoteMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close quote menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (quoteMenuRef.current && !quoteMenuRef.current.contains(event.target as Node)) {
+        setShowQuoteMenu(false);
+      }
+    };
+
+    if (showQuoteMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showQuoteMenu]);
 
   const { canManagePosts } = usePermissions();
   const { votePost, getPostVote } = useForumContext();
@@ -85,7 +105,7 @@ const PostActions = memo(({
     
     if (confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
       await onDelete?.(post.id);
-      toast.success('Post deleted');
+      // Toast is handled by parent component (ThreadDetailPage)
     }
   }, [onDelete, post.id, currentUserId]);
 
@@ -113,8 +133,33 @@ const PostActions = memo(({
       return;
     }
     
-    onQuote(post.author.username, post.content);
+    // Check for text selection
+    const selection = window.getSelection();
+    const selectedText = selection?.toString().trim();
+    
+    if (selectedText && selectedText.length > 0) {
+      onQuote(post.author.username, selectedText);
+    } else {
+      onQuote(post.author.username, post.content);
+    }
+    
+    setShowQuoteMenu(false);
   }, [onQuote, post.author.username, post.content, currentUserId]);
+
+  const handleAddToMultiQuote = useCallback(() => {
+    // Check if user is authenticated
+    if (currentUserId === 'guest') {
+      toast.error('Please log in to use multi-quote');
+      return;
+    }
+    
+    if (onAddToMultiQuote) {
+      onAddToMultiQuote(post);
+      // Toast is shown in parent component
+    }
+    
+    setShowQuoteMenu(false);
+  }, [onAddToMultiQuote, post, currentUserId]);
 
   const handleShare = useCallback(() => {
     const url = `${window.location.origin}/thread/${threadId}#${post.id}`;
@@ -280,14 +325,62 @@ const PostActions = memo(({
             Reply
           </button>
 
-          <button
-            onClick={handleQuote}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-mono font-bold rounded text-forum-pink hover:bg-forum-pink/10 transition-colors"
-            title="Quote Post"
-          >
-            <Quote size={11} />
-            Quote
-          </button>
+          {/* Quote Button with Dropdown */}
+          <div className="relative" ref={quoteMenuRef}>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setShowQuoteMenu(!showQuoteMenu);
+              }}
+              type="button"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-mono font-bold rounded text-forum-pink hover:bg-forum-pink/10 transition-colors"
+              title="Quote Options"
+            >
+              <Quote size={11} />
+              Quote
+              <DropdownIcon size={9} />
+            </button>
+
+            {/* Dropdown Menu */}
+            {showQuoteMenu && (
+              <div className="absolute bottom-full mb-1 right-0 z-50 w-48 hud-panel rounded-lg shadow-xl border border-forum-border/30 overflow-hidden animate-in fade-in zoom-in duration-150">
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleQuote();
+                  }}
+                  type="button"
+                  className="w-full flex items-center gap-2 px-3 py-2 text-[11px] font-mono text-forum-text hover:bg-forum-pink/10 transition-colors text-left"
+                >
+                  <Quote size={12} className="text-forum-pink" />
+                  <div>
+                    <div className="font-semibold">Quote & Reply</div>
+                    <div className="text-[9px] text-forum-muted">Reply with quote</div>
+                  </div>
+                </button>
+
+                {onAddToMultiQuote && (
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleAddToMultiQuote();
+                    }}
+                    type="button"
+                    className="w-full flex items-center gap-2 px-3 py-2 text-[11px] font-mono text-forum-text hover:bg-forum-pink/10 transition-colors border-t border-forum-border/10 text-left"
+                  >
+                    <Plus size={12} className="text-forum-pink" />
+                    <div>
+                      <div className="font-semibold">Add to Multi-Quote</div>
+                      <div className="text-[9px] text-forum-muted">Collect multiple quotes</div>
+                    </div>
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

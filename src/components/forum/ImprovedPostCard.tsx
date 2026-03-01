@@ -16,6 +16,7 @@ import { UserRole } from '@/types/forum';
 import ProfileHoverCard from './ProfileHoverCard';
 import { getRankColorCompact, getRankIconCompact, getReputationColor, formatReputation, getVoteScoreColor, formatVoteScore } from '@/lib/forumUtils';
 import { REPORT_REASONS } from '@/lib/forumConstants';
+import { AdvancedEditor } from './editor/AdvancedEditor';
 
 // ============================================================================
 // Types
@@ -54,7 +55,6 @@ const EditModal = memo(({ isOpen, onClose, initialContent, onSave, requireReason
   const [content, setContent] = useState(initialContent);
   const [reason, setReason] = useState('');
   const [isSaving, setIsSaving] = useState(false);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSave = async () => {
     if (!content.trim() || content.trim().length < 5) return;
@@ -76,7 +76,7 @@ const EditModal = memo(({ isOpen, onClose, initialContent, onSave, requireReason
   return createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative hud-panel w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="relative hud-panel w-full max-w-3xl max-h-[90vh] flex flex-col" style={{ overflow: 'visible' }}>
         <div className="flex items-center justify-between px-4 py-3 border-b border-forum-border/20">
           <span className="text-[12px] font-mono font-bold text-forum-text flex items-center gap-2">
             <Pencil size={13} className="text-forum-pink" /> Edit Post
@@ -94,12 +94,11 @@ const EditModal = memo(({ isOpen, onClose, initialContent, onSave, requireReason
             <label className="text-[10px] font-mono text-forum-muted uppercase tracking-wider mb-1.5 block">
               Post Content
             </label>
-            <textarea
-              ref={textareaRef}
+            <AdvancedEditor
               value={content}
-              onChange={(e) => setContent(e.target.value)}
-              className="w-full h-64 bg-forum-bg border border-forum-border/30 rounded-md px-3 py-2.5 text-[12px] font-mono text-forum-text placeholder:text-forum-muted/40 focus:outline-none focus:border-forum-pink/50 focus:ring-1 focus:ring-forum-pink/20 transition-forum resize-none"
+              onChange={setContent}
               placeholder="Write your post content..."
+              minHeight="280px"
             />
             <div className="flex items-center justify-between mt-1">
               <span className="text-[9px] font-mono text-forum-muted/50">

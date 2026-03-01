@@ -155,102 +155,252 @@ export function useCategories({
         tags?: string[],
         poll?: { question: string; options: string[]; isMultipleChoice: boolean; endsAt?: string },
         setPollsMap?: React.Dispatch<React.SetStateAction<Record<string, any>>>,
+        topicId?: string,
     ): Promise<Thread> => {
-        if (!isAuthenticated || !currentUser?.id) {
+        // Validate authentication
+        if (!isAuthenticated || !currentUser?.id || !currentUser?.username) {
             throw new ForumError('User not authenticated', 'AUTH_REQUIRED', 'You must be logged in to create threads.', false);
         }
 
+        // Validate category exists and is not archived
+        const category = categoriesState.find(cat => cat.id === categoryId);
+        if (!category) {
+            throw new ForumError('Invalid category', 'INVALID_CATEGORY', 'The selected category does not exist.', false);
+        }
+
+        // Validate topic if provided
+        if (topicId) {
+            const topicExists = category.topics?.some(topic => topic.id === topicId);
+            if (!topicExists) {
+                throw new ForumError('Invalid topic', 'INVALID_TOPIC', 'The selected topic does not belong to this category.', false);
+            }
+        }
+
+        // Sanitize and validate inputs
+        const sanitizedTitle = title.trim();
+        const sanitizedContent = content.trim();
+        const sanitizedTags = (tags || []).filter(tag => tag && tag.trim().length > 0).slice(0, 10);
+
+        // Generate safe excerpt
+        const excerpt = sanitizedContent.slice(0, 120) + (sanitizedContent.length > 120 ? '...' : '');
+
         const threadId = crypto.randomUUID();
         const now = new Date().toISOString();
+        
+        // Create optimistic thread (but don't add to state yet to avoid race conditions)
         const optimisticThread: Thread = {
-            id: threadId, title,
-            excerpt: content.slice(0, 120) + (content.length > 120 ? '...' : ''),
-            author: currentUser, categoryId, createdAt: now, lastReplyAt: now,
-            lastReplyBy: currentUser, replyCount: 0, viewCount: 1,
-            isPinned: false, isLocked: false, isHot: false, hasUnread: false,
-            tags: tags || [], upvotes: 0, downvotes: 0,
+            id: threadId, 
+            title: sanitizedTitle,
+            excerpt,
+            author: currentUser, 
+            categoryId, 
+            topicId, 
+            createdAt: now, 
+            lastReplyAt: now,
+            lastReplyBy: currentUser, 
+            replyCount: 0, 
+            viewCount: 0,
+            isPinned: false, 
+            isLocked: false, 
+            isHot: false, 
+            hasUnread: false,
+            tags: sanitizedTags, 
+            upvotes: 0, 
+            downvotes: 0,
+            banner: undefined,
         };
 
-        setCategoriesState((prev) =>
-            prev.map((cat) => cat.id === categoryId ? {
-                ...cat, threads: [optimisticThread, ...cat.threads],
-                threadCount: cat.threadCount + 1, postCount: cat.postCount + 1, lastActivity: now,
-            } : cat)
-        );
+        // Track if we need to rollback stats
+        let statsUpdated = false;
 
         try {
-            const { error: threadError } = await supabase.from('threads').insert({
-                id: threadId, title, excerpt: content.slice(0, 120) + (content.length > 120 ? '...' : ''),
-                author_id: currentUser.id, category_id: categoryId, tags: tags || [],
-                created_at: now, last_reply_at: now, last_reply_by_id: currentUser.id,
-            }).select().single();
-            if (threadError) throw threadError;
+            // 1. Create thread in database first
+            const { data: createdThread, error: threadError } = await supabase
+                .from('threads')
+                .insert({
+                    id: threadId, 
+                    title: sanitizedTitle, 
+                    excerpt,
+                    author_id: currentUser.id, 
+                    category_id: categoryId, 
+                    topic_id: topicId || null, 
+                    tags: sanitizedTags,
+                    created_at: now, 
+                    last_reply_at: now, 
+                    last_reply_by_id: currentUser.id,
+                    banner: null,
+                })
+                .select()
+                .single();
+            
+            if (threadError) {
+                console.error('Thread creation error:', threadError);
+                throw threadError;
+            }
 
-            const { error: postError } = await supabase.from('posts').insert({
-                thread_id: threadId, content, author_id: currentUser.id, created_at: now,
-            });
-            if (postError) throw postError;
+            // 2. Create the first post
+            const { error: postError } = await supabase
+                .from('posts')
+                .insert({
+                    thread_id: threadId, 
+                    content: sanitizedContent, 
+                    author_id: currentUser.id, 
+                    created_at: now,
+                });
+            
+            if (postError) {
+                // Rollback: Delete the thread
+                await supabase.from('threads').delete().eq('id', threadId);
+                console.error('Post creation error:', postError);
+                throw postError;
+            }
 
+            // 3. Create poll if provided
             if (poll && poll.options.length >= 2 && setPollsMap) {
                 const pollId = crypto.randomUUID();
-                const { error: pollError } = await supabase.from('polls').insert({
-                    id: pollId, thread_id: threadId, question: poll.question,
-                    is_multiple_choice: poll.isMultipleChoice, ends_at: poll.endsAt || null,
-                    total_votes: 0, created_at: now,
-                });
-                if (pollError) throw pollError;
-
-                const pollOptionsData = poll.options.map((optionText, index) => ({
-                    id: crypto.randomUUID(), poll_id: pollId, text: optionText, vote_count: 0, position: index,
-                }));
-                const { error: pollOptionsError } = await supabase.from('poll_options').insert(pollOptionsData);
-                if (pollOptionsError) throw pollOptionsError;
-
-                setPollsMap((prev: any) => ({
-                    ...prev,
-                    [threadId]: {
+                const { error: pollError } = await supabase
+                    .from('polls')
+                    .insert({
+                        id: pollId, 
+                        thread_id: threadId, 
                         question: poll.question,
-                        options: pollOptionsData.map(opt => ({ id: opt.id, text: opt.text, votes: 0 })),
-                        totalVotes: 0, endsAt: poll.endsAt || '', isMultipleChoice: poll.isMultipleChoice,
-                        hasVoted: false, votedOptionIds: [],
-                    },
+                        is_multiple_choice: poll.isMultipleChoice, 
+                        ends_at: poll.endsAt || null,
+                        total_votes: 0, 
+                        created_at: now,
+                    });
+                
+                if (pollError) {
+                    console.error('Poll creation error (non-critical):', pollError);
+                    // Don't rollback thread for poll errors
+                } else {
+                    const pollOptionsData = poll.options.map((optionText, index) => ({
+                        id: crypto.randomUUID(), 
+                        poll_id: pollId, 
+                        text: optionText, 
+                        vote_count: 0, 
+                        position: index,
+                    }));
+                    
+                    const { error: pollOptionsError } = await supabase
+                        .from('poll_options')
+                        .insert(pollOptionsData);
+                    
+                    if (!pollOptionsError) {
+                        setPollsMap((prev: any) => ({
+                            ...prev,
+                            [threadId]: {
+                                question: poll.question,
+                                options: pollOptionsData.map(opt => ({ id: opt.id, text: opt.text, votes: 0 })),
+                                totalVotes: 0, 
+                                endsAt: poll.endsAt || '', 
+                                isMultipleChoice: poll.isMultipleChoice,
+                                hasVoted: false, 
+                                votedOptionIds: [],
+                            },
+                        }));
+                    }
+                }
+            }
+
+            // 4. Award reputation (non-critical, don't rollback on failure)
+            try {
+                const { error: reputationError } = await supabase
+                    .from('reputation_events')
+                    .insert({
+                        id: crypto.randomUUID(), 
+                        user_id: currentUser.id, 
+                        action: 'thread_created',
+                        points: REPUTATION_POINTS.thread_created, 
+                        description: `Created thread "${sanitizedTitle}"`,
+                        thread_id: threadId, 
+                        thread_title: sanitizedTitle, 
+                        created_at: now,
+                    });
+                
+                if (!reputationError) {
+                    setReputationEvents(prev => ({
+                        ...prev,
+                        [currentUser.id]: [{
+                            id: crypto.randomUUID(), 
+                            userId: currentUser.id, 
+                            action: 'thread_created' as ReputationActionType,
+                            points: REPUTATION_POINTS.thread_created, 
+                            description: `Created thread "${sanitizedTitle}"`,
+                            threadId, 
+                            threadTitle: sanitizedTitle, 
+                            createdAt: now,
+                        }, ...(prev[currentUser.id] || [])],
+                    }));
+                }
+            } catch (repError) {
+                console.error('Reputation error (non-critical):', repError);
+            }
+
+            // 5. Update local state only after successful DB operations
+            setCategoriesState((prev) =>
+                prev.map((cat) => cat.id === categoryId ? {
+                    ...cat, 
+                    threads: [optimisticThread, ...cat.threads],
+                    threadCount: cat.threadCount + 1, 
+                    postCount: cat.postCount + 1, 
+                    lastActivity: now,
+                } : cat)
+            );
+
+            // 6. Update stats
+            setStatsState((prev) => ({
+                ...prev, 
+                totalThreads: prev.totalThreads + 1, 
+                totalPosts: prev.totalPosts + 1,
+                newPostsToday: prev.newPostsToday + 1,
+            }));
+            statsUpdated = true;
+
+            return optimisticThread;
+        } catch (error: any) {
+            // Rollback stats if they were updated
+            if (statsUpdated) {
+                setStatsState((prev) => ({
+                    ...prev, 
+                    totalThreads: Math.max(0, prev.totalThreads - 1), 
+                    totalPosts: Math.max(0, prev.totalPosts - 1),
+                    newPostsToday: Math.max(0, prev.newPostsToday - 1),
                 }));
             }
 
-            const { error: reputationError } = await supabase.from('reputation_events').insert({
-                id: crypto.randomUUID(), user_id: currentUser.id, action: 'thread_created',
-                points: REPUTATION_POINTS.thread_created, description: `Created thread "${title}"`,
-                thread_id: threadId, thread_title: title, created_at: now,
-            });
-            if (reputationError) throw reputationError;
-
-            setReputationEvents(prev => ({
-                ...prev,
-                [currentUser.id]: [{
-                    id: crypto.randomUUID(), userId: currentUser.id, action: 'thread_created' as ReputationActionType,
-                    points: REPUTATION_POINTS.thread_created, description: `Created thread "${title}"`,
-                    threadId, threadTitle: title, createdAt: now,
-                }, ...(prev[currentUser.id] || [])],
-            }));
-
-            setStatsState((prev) => ({
-                ...prev, totalThreads: prev.totalThreads + 1, totalPosts: prev.totalPosts + 1,
-                newPostsToday: prev.newPostsToday + 1,
-            }));
-
-            return optimisticThread;
-        } catch (error) {
-            setCategoriesState((prev) =>
-                prev.map((cat) => cat.id === categoryId ? {
-                    ...cat, threads: cat.threads.filter(t => t.id !== threadId),
-                    threadCount: cat.threadCount - 1, postCount: cat.postCount - 1,
-                } : cat)
-            );
-            const forumError = handleSupabaseError(error, 'createThread');
+            // Enhanced error handling
+            let forumError: ForumError;
+            
+            if (error?.code === '23505') {
+                forumError = new ForumError(
+                    'Duplicate thread',
+                    'DUPLICATE_THREAD',
+                    'A thread with this title already exists. Please use a different title.',
+                    false
+                );
+            } else if (error?.code === '23503') {
+                forumError = new ForumError(
+                    'Invalid reference',
+                    'INVALID_REFERENCE',
+                    'The category or topic you selected is no longer available.',
+                    false
+                );
+            } else if (error?.message?.includes('JWT')) {
+                forumError = new ForumError(
+                    'Session expired',
+                    'SESSION_EXPIRED',
+                    'Your session has expired. Please log in again.',
+                    false
+                );
+            } else {
+                forumError = handleSupabaseError(error, 'createThread');
+            }
+            
             setError('createThread', forumError, 'Create thread');
             throw forumError;
         }
-    }, [currentUser, isAuthenticated, setError, setReputationEvents]);
+    }, [currentUser, isAuthenticated, categoriesState, setError, setReputationEvents]);
 
     return {
         categoriesState,

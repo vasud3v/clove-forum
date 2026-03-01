@@ -7,20 +7,26 @@ import { usePermissions } from '@/hooks/usePermissions';
 import { useForumContext } from '@/context/ForumContext';
 import {
   Shield, FileText, Users, AlertTriangle, MessageSquare,
-  BarChart3, Clock, Settings, ChevronRight, Home as HomeIcon, RefreshCw, Layers,
+  BarChart3, Clock, Settings, ChevronRight, Home as HomeIcon, RefreshCw, Layers, Megaphone, TrendingUp, Server, Zap, FolderTree,
 } from 'lucide-react';
 import { toast } from '@/components/forum/Toast';
 import type { ContentReport, ModerationLog, UserRole } from '@/types/forum';
 
 import AdminOverviewTab from './admin/AdminOverviewTab';
+import AdminQuickSetupTab from './admin/AdminQuickSetupTab';
 import AdminCategoriesTab from './admin/AdminCategoriesTab';
+import AdminTopicsTab from './admin/AdminTopicsTab';
 import AdminThreadsTab from './admin/AdminThreadsTab';
 import AdminPostsTab from './admin/AdminPostsTab';
 import AdminUsersTab from './admin/AdminUsersTab';
 import AdminReportsTab from './admin/AdminReportsTab';
 import AdminModLogTab from './admin/AdminModLogTab';
+import AdminBannersTab from './admin/AdminBannersTab';
+import AdminSettingsTab from './admin/AdminSettingsTab';
+import AdminAnalyticsTab from './admin/AdminAnalyticsTab';
+import AdminSystemTab from './admin/AdminSystemTab';
 
-type TabKey = 'overview' | 'categories' | 'threads' | 'posts' | 'users' | 'reports' | 'modlog' | 'settings';
+type TabKey = 'overview' | 'quicksetup' | 'categories' | 'topics' | 'threads' | 'posts' | 'users' | 'reports' | 'modlog' | 'banners' | 'analytics' | 'system' | 'settings';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -98,7 +104,7 @@ export default function AdminDashboard() {
 
       // Threads
       const { data: threadData } = await supabase.from('threads')
-        .select('id, title, reply_count, view_count, is_pinned, is_locked, is_featured, is_archived, created_at, category_id, author_id, author:forum_users!threads_author_id_fkey(username)')
+        .select('id, title, reply_count, view_count, is_pinned, is_locked, is_featured, is_archived, created_at, category_id, author_id, author:forum_users!threads_author_id_fkey(username, avatar)')
         .order('created_at', { ascending: false }).limit(100);
       if (threadData) setThreads(threadData.map((t: any) => ({
         id: t.id, title: t.title, authorName: Array.isArray(t.author) ? t.author[0]?.username : t.author?.username || 'Unknown',
@@ -111,7 +117,7 @@ export default function AdminDashboard() {
 
       // Posts
       const { data: postData } = await supabase.from('posts')
-        .select('id, thread_id, content, author_id, created_at, likes, upvotes, downvotes, author:forum_users!posts_author_id_fkey(username), thread:threads!posts_thread_id_fkey(title)')
+        .select('id, thread_id, content, author_id, created_at, likes, upvotes, downvotes, author:forum_users!posts_author_id_fkey(username, avatar), thread:threads!posts_thread_id_fkey(title)')
         .order('created_at', { ascending: false }).limit(100);
       if (postData) setPosts(postData.map((p: any) => ({
         id: p.id, threadId: p.thread_id, content: p.content,
@@ -134,19 +140,19 @@ export default function AdminDashboard() {
 
       // Reports
       const { data: reportData } = await supabase.from('content_reports')
-        .select('*, reporter:forum_users!content_reports_reporter_id_fkey(username)')
+        .select('*, reporter:forum_users!content_reports_reporter_id_fkey(username, avatar)')
         .order('created_at', { ascending: false }).limit(100);
       if (reportData) {
         const enrichedReports: ContentReport[] = await Promise.all(reportData.map(async (r: any) => {
           let targetTitle = '', targetContent = '', targetAuthorName = '';
           try {
             if (r.target_type === 'thread') {
-              const { data } = await supabase.from('threads').select('title, author:forum_users!threads_author_id_fkey(username)').eq('id', r.target_id).maybeSingle();
+              const { data } = await supabase.from('threads').select('title, author:forum_users!threads_author_id_fkey(username, avatar)').eq('id', r.target_id).maybeSingle();
               const d = data as any;
               targetTitle = d?.title || '';
               targetAuthorName = Array.isArray(d?.author) ? d.author[0]?.username : d?.author?.username || '';
             } else {
-              const { data } = await supabase.from('posts').select('content, author:forum_users!posts_author_id_fkey(username)').eq('id', r.target_id).maybeSingle();
+              const { data } = await supabase.from('posts').select('content, author:forum_users!posts_author_id_fkey(username, avatar)').eq('id', r.target_id).maybeSingle();
               const d = data as any;
               targetContent = d?.content || '';
               targetAuthorName = Array.isArray(d?.author) ? d.author[0]?.username : d?.author?.username || '';
@@ -165,7 +171,7 @@ export default function AdminDashboard() {
 
       // Mod Logs
       const { data: logData } = await supabase.from('moderation_logs')
-        .select('*, moderator:forum_users!moderation_logs_moderator_id_fkey(username), target_user:forum_users!moderation_logs_target_user_id_fkey(username)')
+        .select('*, moderator:forum_users!moderation_logs_moderator_id_fkey(username, avatar), target_user:forum_users!moderation_logs_target_user_id_fkey(username, avatar)')
         .order('created_at', { ascending: false }).limit(200);
       if (logData) setModLogs(logData.map((l: any) => ({
         id: l.id, moderatorId: l.moderator_id,
@@ -189,12 +195,17 @@ export default function AdminDashboard() {
 
   const tabs: { key: TabKey; label: string; icon: typeof Shield; show: boolean }[] = [
     { key: 'overview', label: 'Overview', icon: BarChart3, show: true },
+    { key: 'quicksetup', label: 'Quick Setup', icon: Zap, show: permissions.isStaff },
+    { key: 'analytics', label: 'Analytics', icon: TrendingUp, show: permissions.isStaff },
     { key: 'categories', label: 'Categories', icon: Layers, show: permissions.canManageCategories },
+    { key: 'topics', label: 'Topics', icon: FolderTree, show: permissions.canManageCategories },
     { key: 'threads', label: 'Threads', icon: FileText, show: permissions.canManageThreads },
     { key: 'posts', label: 'Posts', icon: MessageSquare, show: permissions.canManagePosts },
     { key: 'users', label: 'Users', icon: Users, show: permissions.canManageUsers },
     { key: 'reports', label: 'Reports', icon: AlertTriangle, show: permissions.canViewReports },
     { key: 'modlog', label: 'Mod Log', icon: Clock, show: permissions.canViewModLogs },
+    { key: 'banners', label: 'Banners', icon: Megaphone, show: permissions.isStaff },
+    { key: 'system', label: 'System', icon: Server, show: permissions.isAdmin },
     { key: 'settings', label: 'Settings', icon: Settings, show: permissions.canManageSettings },
   ];
 
@@ -259,8 +270,14 @@ export default function AdminDashboard() {
             {activeTab === 'overview' && (
               <AdminOverviewTab stats={stats} recentLogs={modLogs} onNavigateTab={setActiveTab as any} formatDate={formatDate} />
             )}
+            {activeTab === 'quicksetup' && (
+              <AdminQuickSetupTab currentUserId={currentUser.id} onRefresh={loadData} onLogAction={logModAction} />
+            )}
             {activeTab === 'categories' && (
               <AdminCategoriesTab categories={categories} onRefresh={loadData} onLogAction={logModAction} />
+            )}
+            {activeTab === 'topics' && (
+              <AdminTopicsTab onRefresh={loadData} onLogAction={logModAction} />
             )}
             {activeTab === 'threads' && (
               <AdminThreadsTab threads={threads} categories={categories.map(c => ({ id: c.id, name: c.name }))}
@@ -280,12 +297,17 @@ export default function AdminDashboard() {
             {activeTab === 'modlog' && (
               <AdminModLogTab logs={modLogs} formatDate={formatDate} />
             )}
+            {activeTab === 'banners' && (
+              <AdminBannersTab />
+            )}
+            {activeTab === 'analytics' && (
+              <AdminAnalyticsTab />
+            )}
+            {activeTab === 'system' && (
+              <AdminSystemTab />
+            )}
             {activeTab === 'settings' && (
-              <div className="hud-panel flex flex-col items-center justify-center py-16">
-                <Settings size={40} className="text-forum-muted/20 mb-3" />
-                <h3 className="text-[13px] font-bold text-forum-text font-mono mb-1">Forum Settings</h3>
-                <p className="text-[11px] text-forum-muted font-mono">Settings panel coming soon</p>
-              </div>
+              <AdminSettingsTab />
             )}
           </>
         )}

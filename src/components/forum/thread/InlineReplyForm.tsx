@@ -1,7 +1,6 @@
 import { useState, useRef } from 'react';
 import { Reply, X, Send } from 'lucide-react';
-import MarkdownToolbar from '../editor/MarkdownToolbar';
-import EmojiPicker from '../editor/EmojiPicker';
+import { AdvancedEditor } from '../editor/AdvancedEditor';
 
 interface InlineReplyFormProps {
   parentAuthor: string;
@@ -17,39 +16,11 @@ export default function InlineReplyForm({
   isSubmitting,
 }: InlineReplyFormProps) {
   const [text, setText] = useState('');
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  const handleInsert = (insertText: string) => {
-    const textarea = textareaRef.current;
-    if (textarea) {
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      const before = text.slice(0, start);
-      const after = text.slice(end);
-      setText(before + insertText + after);
-      requestAnimationFrame(() => {
-        textarea.focus();
-        textarea.selectionStart = textarea.selectionEnd = start + insertText.length;
-      });
-    } else {
-      setText(text + insertText);
-    }
-  };
 
   const handleSubmit = async () => {
     if (!text.trim() || isSubmitting) return;
     await onSubmit(text);
     setText('');
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-      e.preventDefault();
-      handleSubmit();
-    }
-    if (e.key === 'Escape') {
-      onCancel();
-    }
   };
 
   return (
@@ -68,49 +39,38 @@ export default function InlineReplyForm({
         </button>
       </div>
       <div className="p-2">
-        <MarkdownToolbar onInsert={handleInsert}>
-          <EmojiPicker onSelect={handleInsert} iconSize={10} />
-        </MarkdownToolbar>
-        <textarea
-          ref={textareaRef}
+        <AdvancedEditor
           value={text}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={handleKeyDown}
+          onChange={setText}
           placeholder="Write a reply..."
-          autoFocus
-          className="w-full h-20 bg-forum-bg border border-forum-border/20 rounded px-2.5 py-2 text-[11px] font-mono text-forum-text placeholder:text-forum-muted/40 focus:outline-none focus:border-forum-pink/30 focus:ring-1 focus:ring-forum-pink/10 transition-forum resize-none"
+          minHeight="120px"
         />
-        <div className="flex items-center justify-between mt-1.5">
-          <span className="text-[8px] font-mono text-forum-muted/40">
-            Esc to cancel · Ctrl+Enter to submit
-          </span>
-          <div className="flex items-center gap-1.5">
-            <button
-              type="button"
-              onClick={onCancel}
-              className="transition-forum rounded px-2.5 py-1 text-[9px] font-mono text-forum-muted border border-forum-border/20 hover:text-forum-text hover:border-forum-border/40"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              onClick={handleSubmit}
-              disabled={!text.trim() || isSubmitting}
-              className="transition-forum rounded bg-forum-pink px-3 py-1 text-[9px] font-mono font-semibold text-white hover:shadow-pink-glow active:scale-95 border border-forum-pink/50 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5"
-            >
-              {isSubmitting ? (
-                <>
-                  <div className="inline-block animate-spin rounded-full h-2.5 w-2.5 border-b-2 border-white" />
-                  Posting...
-                </>
-              ) : (
-                <>
-                  <Send size={9} />
-                  Reply
-                </>
-              )}
-            </button>
-          </div>
+        <div className="flex items-center justify-end mt-2 gap-1.5">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="transition-forum rounded px-2.5 py-1 text-[9px] font-mono text-forum-muted border border-forum-border/20 hover:text-forum-text hover:border-forum-border/40"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={handleSubmit}
+            disabled={!text.trim() || isSubmitting}
+            className="transition-forum rounded bg-forum-pink px-3 py-1 text-[9px] font-mono font-semibold text-white hover:shadow-pink-glow active:scale-95 border border-forum-pink/50 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5"
+          >
+            {isSubmitting ? (
+              <>
+                <div className="inline-block animate-spin rounded-full h-2.5 w-2.5 border-b-2 border-white" />
+                Posting...
+              </>
+            ) : (
+              <>
+                <Send size={9} />
+                Reply
+              </>
+            )}
+          </button>
         </div>
       </div>
     </div>

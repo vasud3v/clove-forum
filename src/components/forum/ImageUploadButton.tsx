@@ -1,59 +1,123 @@
 import { useRef, useState } from 'react';
-import { Image as ImageIcon, Upload, X, Loader2 } from 'lucide-react';
+import { Image as ImageIcon, Upload, X, Loader2, ExternalLink, Video } from 'lucide-react';
 
 interface ImageUploadButtonProps {
   onImageInsert: (markdownImage: string) => void;
   className?: string;
   iconSize?: number;
+  mode?: 'image' | 'video' | 'both'; // New prop to specify upload mode
 }
+
+// Upload proxy server URL
+const UPLOAD_PROXY_URL = 'http://localhost:3001/api/upload-image';
 
 export default function ImageUploadButton({
   onImageInsert,
   className = 'transition-forum rounded p-1.5 text-forum-muted hover:bg-forum-hover hover:text-forum-pink',
   iconSize = 14,
+  mode = 'both', // Default to both images and videos
 }: ImageUploadButtonProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [urlInput, setUrlInput] = useState('');
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  // Determine file accept types based on mode
+  const getAcceptTypes = () => {
+    if (mode === 'image') return 'image/png,image/jpeg,image/gif,image/webp';
+    if (mode === 'video') return 'video/mp4,video/webm,video/mov,video/avi';
+    return 'image/png,image/jpeg,image/gif,image/webp,video/mp4,video/webm,video/mov,video/avi';
+  };
 
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      alert('Please select an image file (PNG, JPG, GIF, WebP)');
+  // Get button text based on mode
+  const getButtonText = () => {
+    if (mode === 'image') return 'Upload images';
+    if (mode === 'video') return 'Upload videos';
+    return 'Insert Image';
+  };
+
+  // Get icon based on mode
+  const getIcon = () => {
+    if (mode === 'video') return Video;
+    return ImageIcon;
+  };
+
+  const Icon = getIcon();
+
+  const uploadFile = async (file: File) => {
+    const isVideo = file.type.startsWith('video/');
+    const isImage = file.type.startsWith('image/');
+    
+    // Validate file type based on mode
+    if (mode === 'image' && !isImage) {
+      alert('Please select an image file');
+      return;
+    }
+    if (mode === 'video' && !isVideo) {
+      alert('Please select a video file');
+      return;
+    }
+    if (mode === 'both' && !isImage && !isVideo) {
+      alert('Please select an image or video file');
       return;
     }
 
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      alert('Image must be less than 5MB');
+    // Validate file size
+    const maxSize = isVideo ? 500 : 32; // 500MB for videos, 32MB for images (ImgBB)
+    if (file.size > maxSize * 1024 * 1024) {
+      alert(`${isVideo ? 'Video' : 'Image'} must be less than ${maxSize}MB`);
       return;
     }
 
     setIsUploading(true);
 
-    // Convert to data URL for local preview (no backend needed)
-    const reader = new FileReader();
-    reader.onload = () => {
-      const dataUrl = reader.result as string;
-      const altText = file.name.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' ');
-      onImageInsert(`\n![${altText}](${dataUrl})\n`);
-      setIsUploading(false);
-      setShowDropdown(false);
-    };
-    reader.onerror = () => {
-      alert('Failed to read image file');
-      setIsUploading(false);
-    };
-    reader.readAsDataURL(file);
+    try {
+      // Create FormData and append the file directly
+      const formData = new FormData();
+      formData.append('image', file);
 
-    // Reset input
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      // Upload via proxy server
+      const response = await fetch(UPLOAD_PROXY_URL, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Upload failed');
+      }
+
+      // Get the file URL from response
+      const fileUrl = result.url;
+      const altText = file.name.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' ');
+      
+      // Insert appropriate markdown based on file type
+      if (isVideo) {
+        // For videos, use HTML5 video tag with src directly on video element (not nested source)
+        onImageInsert(`\n<video src="${fileUrl}" type="${file.type}" controls width="100%" style="max-width: 800px;"></video>\n`);
+      } else {
+        // For images, use markdown image syntax
+        onImageInsert(`\n![${altText}](${fileUrl})\n`);
+      }
+      
+      setShowDropdown(false);
+    } catch (error: any) {
+      console.error('Failed to upload file:', error);
+      alert(error.message || 'Failed to upload file. Make sure the upload server is running (npm run dev).');
+    } finally {
+      setIsUploading(false);
+      // Reset input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
+  };
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    await uploadFile(file);
   };
 
   const handleUrlInsert = () => {
@@ -65,37 +129,54 @@ export default function ImageUploadButton({
 
   return (
     <div className="relative">
-      <button
-        type="button"
-        onClick={() => setShowDropdown(!showDropdown)}
-        className={className}
-        title="Insert Image"
-        disabled={isUploading}
-      >
-        {isUploading ? (
-          <Loader2 size={iconSize} className="animate-spin" />
-        ) : (
-          <ImageIcon size={iconSize} />
-        )}
-      </button>
+      {/* Render as full button for image/video modes, icon button for 'both' mode */}
+      {mode === 'image' || mode === 'video' ? (
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={isUploading}
+          className="flex items-center gap-2 px-4 py-2 rounded-md bg-zinc-800 border border-zinc-700 text-zinc-300 hover:bg-zinc-700 hover:border-zinc-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-[13px] font-medium"
+        >
+          {isUploading ? (
+            <Loader2 size={16} className="animate-spin" />
+          ) : (
+            <Icon size={16} />
+          )}
+          {isUploading ? 'Uploading...' : getButtonText()}
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setShowDropdown(!showDropdown)}
+          className={className}
+          title="Insert Image"
+          disabled={isUploading}
+        >
+          {isUploading ? (
+            <Loader2 size={iconSize} className="animate-spin" />
+          ) : (
+            <Icon size={iconSize} />
+          )}
+        </button>
+      )}
 
       {/* Hidden file input */}
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/png,image/jpeg,image/gif,image/webp"
+        accept={getAcceptTypes()}
         className="hidden"
         onChange={handleFileSelect}
       />
 
-      {/* Dropdown menu */}
-      {showDropdown && (
+      {/* Dropdown menu - only show for 'both' mode */}
+      {showDropdown && mode === 'both' && (
         <>
           <div
             className="fixed inset-0 z-10"
             onClick={() => setShowDropdown(false)}
           />
-          <div className="absolute left-0 top-full mt-1 z-20 hud-panel w-[280px] p-3 space-y-3">
+          <div className="absolute right-0 top-full mt-1 z-20 hud-panel w-[280px] max-w-[calc(100vw-2rem)] p-3 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-mono font-bold text-forum-text uppercase tracking-wider">
                 Insert Image
@@ -111,18 +192,24 @@ export default function ImageUploadButton({
             {/* Upload from file */}
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="transition-forum w-full flex items-center gap-2 rounded-md border border-dashed border-forum-border/50 bg-forum-bg/50 px-3 py-3 text-[10px] font-mono text-forum-muted hover:border-forum-pink/40 hover:text-forum-pink hover:bg-forum-pink/[0.03] group"
+              disabled={isUploading}
+              className="transition-forum w-full flex items-center gap-2 rounded-md border border-dashed border-forum-border/50 bg-forum-bg/50 px-3 py-3 text-[10px] font-mono text-forum-muted hover:border-forum-pink/40 hover:text-forum-pink hover:bg-forum-pink/[0.03] group disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Upload size={14} className="text-forum-muted group-hover:text-forum-pink transition-forum" />
               <div className="text-left">
-                <div className="font-semibold">Upload from device</div>
-                <div className="text-[8px] text-forum-muted/60">PNG, JPG, GIF, WebP · Max 5MB</div>
+                <div className="font-semibold">
+                  {isUploading ? 'Uploading...' : 'Upload from device'}
+                </div>
+                <div className="text-[8px] text-forum-muted/60">
+                  Images (32MB) · Videos (500MB)
+                </div>
               </div>
             </button>
 
             {/* Insert from URL */}
             <div className="space-y-1.5">
-              <span className="text-[9px] font-mono text-forum-muted">
+              <span className="text-[9px] font-mono text-forum-muted flex items-center gap-1">
+                <ExternalLink size={9} />
                 Or paste image URL
               </span>
               <div className="flex gap-1.5">

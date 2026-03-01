@@ -2,9 +2,11 @@ import { useState, useMemo, type ReactNode } from 'react';
 import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
+import rehypeRaw from 'rehype-raw';
 import { EmbedRenderer } from './EmbedRenderer';
+import VideoPlayer from './VideoPlayer';
 import { parseEmbeddableUrl, isStandaloneUrl } from '@/lib/embed-parser';
-import { Code, EyeOff, Copy, Check } from 'lucide-react';
+import { Code, EyeOff, Copy, Check, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface PostContentRendererProps {
   content: string;
@@ -14,16 +16,35 @@ interface PostContentRendererProps {
 // This pre-processing is needed because [spoiler] tags and auto-embeds are custom
 // syntax that react-markdown doesn't handle natively.
 interface Segment {
-  type: 'markdown' | 'spoiler' | 'embed';
+  type: 'markdown' | 'spoiler' | 'embed' | 'video';
   content: string;
 }
 
 function parseSegments(content: string): Segment[] {
   const segments: Segment[] = [];
+  
+  // First, extract video tags
+  const videoRegex = /<video[^>]*>[\s\S]*?<\/video>/gi;
+  let videoMatches: { index: number; content: string; src: string; type: string }[] = [];
+  let match;
+  
+  while ((match = videoRegex.exec(content)) !== null) {
+    const videoHtml = match[0];
+    const srcMatch = videoHtml.match(/src="([^"]+)"/);
+    const typeMatch = videoHtml.match(/type="([^"]+)"/);
+    if (srcMatch) {
+      videoMatches.push({
+        index: match.index,
+        content: videoHtml,
+        src: srcMatch[1],
+        type: typeMatch ? typeMatch[1] : 'video/mp4'
+      });
+    }
+  }
+  
   // Split on spoiler tags first
   const spoilerRegex = /\[spoiler\]([\s\S]*?)\[\/spoiler\]/gi;
   let lastIndex = 0;
-  let match;
 
   while ((match = spoilerRegex.exec(content)) !== null) {
     if (match.index > lastIndex) {
@@ -37,7 +58,7 @@ function parseSegments(content: string): Segment[] {
     segments.push({ type: 'markdown', content: content.slice(lastIndex) });
   }
 
-  // Now split markdown segments further to extract standalone embed URLs
+  // Now split markdown segments to extract videos and standalone embed URLs
   const expanded: Segment[] = [];
   for (const seg of segments) {
     if (seg.type !== 'markdown') {
@@ -45,28 +66,54 @@ function parseSegments(content: string): Segment[] {
       continue;
     }
 
-    const lines = seg.content.split('\n');
-    let mdBuffer: string[] = [];
-
-    const flushBuffer = () => {
-      if (mdBuffer.length > 0) {
-        expanded.push({ type: 'markdown', content: mdBuffer.join('\n') });
-        mdBuffer = [];
-      }
-    };
-
-    for (const line of lines) {
-      if (isStandaloneUrl(line)) {
-        const embedData = parseEmbeddableUrl(line.trim());
-        if (embedData && embedData.type !== 'link') {
-          flushBuffer();
-          expanded.push({ type: 'embed', content: line.trim() });
-          continue;
+    let currentContent = seg.content;
+    let currentIndex = 0;
+    
+    // Extract videos from this segment
+    for (const video of videoMatches) {
+      const relativeIndex = video.index - (content.length - seg.content.length);
+      if (relativeIndex >= 0 && relativeIndex < seg.content.length) {
+        // Add content before video
+        if (relativeIndex > currentIndex) {
+          const beforeContent = currentContent.slice(currentIndex, relativeIndex);
+          if (beforeContent.trim()) {
+            expanded.push({ type: 'markdown', content: beforeContent });
+          }
         }
+        // Add video segment
+        expanded.push({ type: 'video', content: `${video.src}|${video.type}` });
+        currentIndex = relativeIndex + video.content.length;
       }
-      mdBuffer.push(line);
     }
-    flushBuffer();
+    
+    // Add remaining content
+    if (currentIndex < currentContent.length) {
+      const remaining = currentContent.slice(currentIndex);
+      
+      // Check for standalone URLs in remaining content
+      const lines = remaining.split('\n');
+      let mdBuffer: string[] = [];
+
+      const flushBuffer = () => {
+        if (mdBuffer.length > 0) {
+          expanded.push({ type: 'markdown', content: mdBuffer.join('\n') });
+          mdBuffer = [];
+        }
+      };
+
+      for (const line of lines) {
+        if (isStandaloneUrl(line)) {
+          const embedData = parseEmbeddableUrl(line.trim());
+          if (embedData && embedData.type !== 'link') {
+            flushBuffer();
+            expanded.push({ type: 'embed', content: line.trim() });
+            continue;
+          }
+        }
+        mdBuffer.push(line);
+      }
+      flushBuffer();
+    }
   }
 
   return expanded;
@@ -138,9 +185,134 @@ function extractText(node: ReactNode): string {
   return '';
 }
 
+// Expandable Blockquote component
+function ExpandableBlockquote({ children }: { children: ReactNode }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const contentRef = useState<HTMLDivElement | null>(null)[0];
+  
+  // Check if content is long enough to need expansion
+  const textContent = extractText(children);
+  const isLong = textContent.length > 300; // More than 300 characters
+  
+  if (!isLong) {
+    return (
+      <blockquote className="my-2 pl-3 border-l-2 border-forum-pink/40 text-forum-text/70 italic">
+        {children}
+      </blockquote>
+    );
+  }
+  
+  return (
+    <blockquote className="my-2 pl-3 border-l-2 border-forum-pink/40 text-forum-text/70 italic relative">
+      <div className={`${isExpanded ? '' : 'max-h-[100px] overflow-hidden relative'}`}>
+        {children}
+        {!isExpanded && (
+          <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-forum-bg to-transparent" />
+        )}
+      </div>
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="mt-2 flex items-center gap-1.5 text-[10px] font-mono font-semibold text-forum-pink hover:text-forum-pink/80 transition-colors"
+      >
+        {isExpanded ? (
+          <>
+            <ChevronUp size={12} />
+            Click to collapse...
+          </>
+        ) : (
+          <>
+            <ChevronDown size={12} />
+            Click to expand...
+          </>
+        )}
+      </button>
+    </blockquote>
+  );
+}
+
 // Spoiler block component
 function SpoilerBlock({ content }: { content: string }) {
   const [expanded, setExpanded] = useState(false);
+
+  // Parse spoiler content for videos and embeds
+  const spoilerSegments = useMemo(() => {
+    const segments: Segment[] = [];
+    
+    // Extract video tags from spoiler content
+    const videoRegex = /<video[^>]*>[\s\S]*?<\/video>/gi;
+    let videoMatches: { index: number; content: string; src: string; type: string }[] = [];
+    let match;
+    
+    while ((match = videoRegex.exec(content)) !== null) {
+      const videoHtml = match[0];
+      const srcMatch = videoHtml.match(/src="([^"]+)"/);
+      const typeMatch = videoHtml.match(/type="([^"]+)"/);
+      if (srcMatch) {
+        videoMatches.push({
+          index: match.index,
+          content: videoHtml,
+          src: srcMatch[1],
+          type: typeMatch ? typeMatch[1] : 'video/mp4'
+        });
+      }
+    }
+    
+    if (videoMatches.length === 0) {
+      // No videos, check for embeds
+      const lines = content.split('\n');
+      let mdBuffer: string[] = [];
+
+      for (const line of lines) {
+        if (isStandaloneUrl(line)) {
+          const embedData = parseEmbeddableUrl(line.trim());
+          if (embedData && embedData.type !== 'link') {
+            if (mdBuffer.length > 0) {
+              segments.push({ type: 'markdown', content: mdBuffer.join('\n') });
+              mdBuffer = [];
+            }
+            segments.push({ type: 'embed', content: line.trim() });
+            continue;
+          }
+        }
+        mdBuffer.push(line);
+      }
+      
+      if (mdBuffer.length > 0) {
+        segments.push({ type: 'markdown', content: mdBuffer.join('\n') });
+      }
+      
+      return segments;
+    }
+    
+    // Process content with videos
+    let lastIndex = 0;
+    
+    // Sort videos by index
+    videoMatches.sort((a, b) => a.index - b.index);
+    
+    for (const video of videoMatches) {
+      // Add content before video
+      if (video.index > lastIndex) {
+        const beforeContent = content.slice(lastIndex, video.index);
+        if (beforeContent.trim()) {
+          segments.push({ type: 'markdown', content: beforeContent });
+        }
+      }
+      // Add video segment
+      segments.push({ type: 'video', content: `${video.src}|${video.type}` });
+      lastIndex = video.index + video.content.length;
+    }
+    
+    // Add remaining content
+    if (lastIndex < content.length) {
+      const remaining = content.slice(lastIndex);
+      if (remaining.trim()) {
+        segments.push({ type: 'markdown', content: remaining });
+      }
+    }
+    
+    return segments;
+  }, [content]);
 
   return (
     <span className="inline-block my-2">
@@ -153,7 +325,25 @@ function SpoilerBlock({ content }: { content: string }) {
       </button>
       {expanded && (
         <div className="mt-1.5 px-3 py-2 bg-forum-bg/60 border border-forum-border/30 rounded-md text-forum-text/80 animate-in fade-in duration-200">
-          <MarkdownBlock content={content} />
+          {spoilerSegments.map((seg, i) => {
+            switch (seg.type) {
+              case 'video': {
+                const [src, type] = seg.content.split('|');
+                return <VideoPlayer key={i} src={src} type={type} />;
+              }
+              case 'embed': {
+                const embedData = parseEmbeddableUrl(seg.content);
+                if (embedData && embedData.type !== 'link') {
+                  return <EmbedRenderer key={i} embed={embedData} />;
+                }
+                return <MarkdownBlock key={i} content={seg.content} />;
+              }
+              case 'markdown':
+                return <MarkdownBlock key={i} content={seg.content} />;
+              default:
+                return null;
+            }
+          })}
         </div>
       )}
     </span>
@@ -184,7 +374,7 @@ const markdownComponents: Components = {
 
   // Paragraphs
   p: ({ children }) => (
-    <p className="my-1 leading-relaxed">{processMentions(children)}</p>
+    <p className="my-0.5 leading-relaxed">{processMentions(children)}</p>
   ),
 
   // Bold / Italic
@@ -255,11 +445,7 @@ const markdownComponents: Components = {
   },
 
   // Blockquotes
-  blockquote: ({ children }) => (
-    <blockquote className="my-2 pl-3 border-l-2 border-forum-pink/40 text-forum-text/70 italic">
-      {children}
-    </blockquote>
-  ),
+  blockquote: ({ children }) => <ExpandableBlockquote>{children}</ExpandableBlockquote>,
 
   // Horizontal rules
   hr: () => <hr className="my-4 border-forum-border/30" />,
@@ -298,6 +484,14 @@ const markdownComponents: Components = {
     }
     return <input type={type} {...props} />;
   },
+
+  // Custom video player
+  video: ({ src, ...props }: any) => {
+    if (src) {
+      return <VideoPlayer src={src} type={props.type} />;
+    }
+    return <video src={src} {...props} />;
+  },
 };
 
 // Highlight @mentions in text children
@@ -334,7 +528,7 @@ function MarkdownBlock({ content }: { content: string }) {
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
-      rehypePlugins={[rehypeHighlight]}
+      rehypePlugins={[rehypeRaw, rehypeHighlight]}
       components={markdownComponents}
     >
       {content}
@@ -346,11 +540,16 @@ export default function PostContentRenderer({ content }: PostContentRendererProp
   const segments = useMemo(() => parseSegments(content), [content]);
 
   return (
-    <div className="text-[13px] font-mono text-forum-text/90 leading-relaxed flex-1 break-words post-content">
+    <div className="prose prose-invert max-w-none text-[13px] font-mono text-forum-text/90 leading-relaxed flex-1 break-words post-content">
       {segments.map((seg, i) => {
         switch (seg.type) {
           case 'spoiler':
             return <SpoilerBlock key={i} content={seg.content} />;
+
+          case 'video': {
+            const [src, type] = seg.content.split('|');
+            return <VideoPlayer key={i} src={src} type={type} />;
+          }
 
           case 'embed': {
             const embedData = parseEmbeddableUrl(seg.content);

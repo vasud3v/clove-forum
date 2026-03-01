@@ -18,7 +18,10 @@ export async function fetchCategories(currentUserId?: string, page: number = 0, 
         .select(`
       id, name, description, icon, thread_count, post_count, last_activity,
       is_sticky, is_important,
-      topics:topics(id, name, description, thread_count, post_count, last_activity, last_post_by)
+      topics:topics(
+        id, name, description, thread_count, post_count, last_activity,
+        last_post_by_user:forum_users!topics_last_post_by_fkey(username)
+      )
     `)
         .order('is_sticky', { ascending: false })
         .order('is_important', { ascending: false })
@@ -40,8 +43,8 @@ export async function fetchCategories(currentUserId?: string, page: number = 0, 
           reply_count, view_count, is_pinned, is_locked, is_hot,
           has_unread, tags, is_staff_only, is_featured, is_archived,
           trending_score, upvotes, downvotes,
-          author:forum_users!threads_author_id_fkey(id, username, avatar, custom_avatar, banner, custom_banner, post_count, reputation, join_date, is_online, rank, role),
-          last_reply_by:forum_users!threads_last_reply_by_id_fkey(id, username, avatar, custom_avatar, banner, custom_banner, post_count, reputation, join_date, is_online, rank, role)
+          author:forum_users!threads_author_id_fkey(id, username, avatar, banner, post_count, reputation, join_date, is_online, rank, role),
+          last_reply_by:forum_users!threads_last_reply_by_id_fkey(id, username, avatar, banner, post_count, reputation, join_date, is_online, rank, role)
         `)
                 .eq('category_id', cat.id)
                 .order('is_pinned', { ascending: false })
@@ -63,8 +66,8 @@ export async function fetchCategories(currentUserId?: string, page: number = 0, 
                     author: {
                         id: threadAuthor.id,
                         username: threadAuthor.username,
-                        avatar: threadAuthor.custom_avatar || threadAuthor.avatar,
-                        banner: threadAuthor.custom_banner || threadAuthor.banner || undefined,
+                        avatar: threadAuthor.avatar,
+                        banner: threadAuthor.banner || undefined,
                         postCount: threadAuthor.post_count,
                         reputation: threadAuthor.reputation,
                         joinDate: threadAuthor.join_date,
@@ -79,8 +82,8 @@ export async function fetchCategories(currentUserId?: string, page: number = 0, 
                     lastReplyBy: {
                         id: lastReplyBy.id,
                         username: lastReplyBy.username,
-                        avatar: lastReplyBy.custom_avatar || lastReplyBy.avatar,
-                        banner: lastReplyBy.custom_banner || lastReplyBy.banner || undefined,
+                        avatar: lastReplyBy.avatar,
+                        banner: lastReplyBy.banner || undefined,
                         postCount: lastReplyBy.post_count,
                         reputation: lastReplyBy.reputation,
                         joinDate: lastReplyBy.join_date,
@@ -120,7 +123,7 @@ export async function fetchCategories(currentUserId?: string, page: number = 0, 
                     threadCount: topic.thread_count,
                     postCount: topic.post_count,
                     lastActivity: topic.last_activity,
-                    lastPostBy: topic.last_post_by || undefined,
+                    lastPostBy: topic.last_post_by_user?.username || undefined,
                 })) || undefined,
                 isSticky: cat.is_sticky || undefined,
                 isImportant: cat.is_important || undefined,
@@ -179,8 +182,8 @@ export async function fetchPostsForThread(threadId: string, currentUserId: strin
             author: {
                 id: postAuthor.id,
                 username: postAuthor.username,
-                avatar: postAuthor.custom_avatar || postAuthor.avatar,
-                banner: postAuthor.custom_banner || postAuthor.banner || undefined,
+                avatar: postAuthor.avatar,
+                banner: postAuthor.banner || undefined,
                 postCount: postAuthor.post_count,
                 reputation: postAuthor.reputation,
                 joinDate: postAuthor.join_date,

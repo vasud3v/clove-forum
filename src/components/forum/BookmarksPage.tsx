@@ -5,7 +5,6 @@ import ThreadRow from '@/components/forum/ThreadRow';
 import MobileBottomNav from '@/components/forum/MobileBottomNav';
 import SidebarStatsPanel from '@/components/forum/SidebarStatsPanel';
 import OnlineUsers from '@/components/forum/OnlineUsers';
-import FloatingActionButton from '@/components/forum/FloatingActionButton';
 import NewThreadModal from '@/components/forum/NewThreadModal';
 import { useForumContext } from '@/context/ForumContext';
 import { useAuth } from '@/context/AuthContext';
@@ -84,6 +83,7 @@ export default function BookmarksPage() {
               id: authorData.id,
               username: authorData.username,
               avatar: authorData.avatar,
+              
               banner: authorData.banner || undefined,
               postCount: authorData.post_count,
               reputation: authorData.reputation,
@@ -99,6 +99,7 @@ export default function BookmarksPage() {
               id: lastReplyByData.id,
               username: lastReplyByData.username,
               avatar: lastReplyByData.avatar,
+              
               banner: lastReplyByData.banner || undefined,
               postCount: lastReplyByData.post_count,
               reputation: lastReplyByData.reputation,
@@ -110,6 +111,7 @@ export default function BookmarksPage() {
               id: authorData.id,
               username: authorData.username,
               avatar: authorData.avatar,
+              
               banner: authorData.banner || undefined,
               postCount: authorData.post_count,
               reputation: authorData.reputation,
@@ -248,7 +250,6 @@ export default function BookmarksPage() {
         </div>
       )}
 
-      <FloatingActionButton onClick={() => setIsModalOpen(true)} />
       <NewThreadModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       <MobileBottomNav />
     </div>

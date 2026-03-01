@@ -6,11 +6,15 @@ import {
   Check,
   AlertCircle,
   Tag,
-  Smile,
 } from 'lucide-react';
 import { useForumContext } from '@/context/ForumContext';
-import ImageUploadButton from '@/components/forum/ImageUploadButton';
-import { COMMON_EMOJIS, MARKDOWN_TOOLBAR_ACTIONS } from '@/lib/forumConstants';
+import { AdvancedEditor } from './editor/AdvancedEditor';
+import { 
+  validateThreadCreation, 
+  validateTags, 
+  THREAD_VALIDATION,
+  type ThreadValidationError 
+} from '@/lib/threadValidation';
 
 interface NewThreadModalProps {
   isOpen: boolean;
@@ -23,6 +27,7 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
   const { categories, createThread } = useForumContext();
   const [title, setTitle] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(defaultCategoryId || '');
+  const [selectedTopic, setSelectedTopic] = useState('');
 
   // Sync selectedCategory when defaultCategoryId prop changes
   useEffect(() => {
@@ -30,43 +35,75 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
       setSelectedCategory(defaultCategoryId);
     }
   }, [defaultCategoryId]);
+  
+  // Reset topic when category changes
+  useEffect(() => {
+    setSelectedTopic('');
+  }, [selectedCategory]);
+  
   const [content, setContent] = useState('');
   const [tagsInput, setTagsInput] = useState('');
-  const [errors, setErrors] = useState<{ title?: string; category?: string; content?: string }>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const handleSubmit = async () => {
-    const newErrors: typeof errors = {};
-    if (!title.trim()) newErrors.title = 'Title is required';
-    else if (title.trim().length < 5) newErrors.title = 'Title must be at least 5 characters';
-    if (!selectedCategory) newErrors.category = 'Please select a category';
-    if (!content.trim()) newErrors.content = 'Content is required';
-    else if (content.trim().length < 10) newErrors.content = 'Content must be at least 10 characters';
+    // Clear previous errors
+    setErrors({});
 
-    // Check if category is mod-only
-    const cat = categories.find((c) => c.id === selectedCategory);
-    if (cat?.isImportant) {
-      newErrors.category = 'This category is for moderators only';
+    // Comprehensive validation
+    const validation = validateThreadCreation(title, content, selectedCategory, tagsInput);
+    
+    if (!validation.isValid) {
+      const errorMap: Record<string, string> = {};
+      validation.errors.forEach(err => {
+        errorMap[err.field] = err.message;
+      });
+      setErrors(errorMap);
+      return;
     }
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+    // Additional category validation
+    const cat = categories.find((c) => c.id === selectedCategory);
+    if (!cat) {
+      setErrors({ category: 'Selected category no longer exists' });
       return;
+    }
+    
+    if (cat.isImportant) {
+      setErrors({ category: 'This category is for moderators only' });
+      return;
+    }
+
+    // Validate topic if selected
+    if (selectedTopic) {
+      const topicExists = cat.topics?.some(t => t.id === selectedTopic);
+      if (!topicExists) {
+        setErrors({ topic: 'Selected topic is not valid for this category' });
+        return;
+      }
     }
 
     setIsSubmitting(true);
 
     try {
-      // Parse tags
-      const tags = tagsInput
-        .split(',')
-        .map((t) => t.trim().toLowerCase().replace(/^#/, ''))
-        .filter((t) => t.length > 0);
+      // Parse and validate tags
+      const tagsValidation = validateTags(tagsInput);
+      if (!tagsValidation.isValid) {
+        setErrors({ tags: tagsValidation.error?.message || 'Invalid tags' });
+        setIsSubmitting(false);
+        return;
+      }
 
-      // Create the thread through context (now async)
-      const newThread = await createThread(title.trim(), selectedCategory, content.trim(), tags);
+      // Create the thread through context
+      const newThread = await createThread(
+        title.trim(), 
+        selectedCategory, 
+        content.trim(), 
+        tagsValidation.tags,
+        undefined, // poll
+        selectedTopic || undefined // topicId
+      );
 
       // Show success feedback
       setShowSuccess(true);
@@ -75,6 +112,7 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
         setShowSuccess(false);
         setTitle('');
         setSelectedCategory(defaultCategoryId || '');
+        setSelectedTopic('');
         setContent('');
         setTagsInput('');
         setErrors({});
@@ -82,10 +120,33 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
         // Navigate to the new thread
         navigate(`/thread/${newThread.id}`);
       }, 800);
-    } catch (error) {
-      // Handle error
+    } catch (error: any) {
+      // Handle specific error types
       setIsSubmitting(false);
-      setErrors({ content: 'Failed to create thread. Please try again.' });
+      
+      let errorMessage = 'Failed to create thread. Please try again.';
+      
+      if (error?.code === 'AUTH_REQUIRED') {
+        errorMessage = 'You must be logged in to create threads.';
+      } else if (error?.code === 'INVALID_CATEGORY') {
+        errorMessage = 'The selected category is no longer available.';
+        setErrors({ category: errorMessage });
+        return;
+      } else if (error?.code === 'INVALID_TOPIC') {
+        errorMessage = 'The selected topic is not valid.';
+        setErrors({ topic: errorMessage });
+        return;
+      } else if (error?.code === 'DUPLICATE_THREAD') {
+        errorMessage = 'A thread with this title already exists.';
+        setErrors({ title: errorMessage });
+        return;
+      } else if (error?.code === 'SESSION_EXPIRED') {
+        errorMessage = 'Your session has expired. Please log in again.';
+      } else if (error?.message) {
+        errorMessage = error.message;
+      }
+      
+      setErrors({ general: errorMessage });
       console.error('Failed to create thread:', error);
     }
   };
@@ -94,15 +155,11 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
     if (isSubmitting) return;
     setTitle('');
     setSelectedCategory(defaultCategoryId || '');
+    setSelectedTopic('');
     setContent('');
     setTagsInput('');
     setErrors({});
-    setShowEmojiPicker(false);
     onClose();
-  };
-
-  const insertMarkdown = (syntax: string) => {
-    setContent((prev) => prev + syntax);
   };
 
   if (!isOpen) return null;
@@ -143,6 +200,15 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
 
         {/* Form */}
         <div className="p-6 space-y-4">
+          {/* General error message */}
+          {errors.general && (
+            <div className="rounded border border-red-500/50 bg-red-500/10 px-4 py-3">
+              <p className="text-[11px] text-red-400 font-mono flex items-center gap-2">
+                <AlertCircle size={14} /> {errors.general}
+              </p>
+            </div>
+          )}
+
           {/* Title */}
           <div>
             <label className="mb-1.5 block text-[10px] font-mono font-bold text-forum-muted uppercase tracking-wider">
@@ -156,7 +222,7 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
                 setErrors({ ...errors, title: undefined });
               }}
               placeholder="Enter your thread title..."
-              maxLength={200}
+              maxLength={THREAD_VALIDATION.TITLE_MAX_LENGTH}
               className={`transition-forum w-full rounded border bg-forum-bg px-4 py-2.5 text-[12px] font-mono text-forum-text placeholder-forum-muted outline-none focus:ring-1 ${errors.title
                   ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/30'
                   : 'border-forum-border focus:border-forum-pink focus:ring-forum-pink/30'
@@ -170,7 +236,13 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
               ) : (
                 <span />
               )}
-              <span className="text-[9px] font-mono text-forum-muted/40">{title.length}/200</span>
+              <span className={`text-[9px] font-mono ${
+                title.length > THREAD_VALIDATION.TITLE_MAX_LENGTH * 0.9 
+                  ? 'text-orange-400' 
+                  : 'text-forum-muted/40'
+              }`}>
+                {title.length}/{THREAD_VALIDATION.TITLE_MAX_LENGTH}
+              </span>
             </div>
           </div>
 
@@ -206,20 +278,71 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
             )}
           </div>
 
+          {/* Topic (Subcategory) - Only show if selected category has topics */}
+          {selectedCategory && categories.find(c => c.id === selectedCategory)?.topics && (
+            <div>
+              <label className="mb-1.5 block text-[10px] font-mono font-bold text-forum-muted uppercase tracking-wider">
+                Topic <span className="text-forum-muted/40 font-normal">(optional)</span>
+              </label>
+              <select
+                value={selectedTopic}
+                onChange={(e) => {
+                  setSelectedTopic(e.target.value);
+                  setErrors({ ...errors, topic: undefined });
+                }}
+                className={`transition-forum w-full appearance-none rounded border bg-forum-bg px-4 py-2.5 pr-8 text-[12px] font-mono text-forum-text outline-none cursor-pointer focus:ring-1 ${
+                  errors.topic
+                    ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/30'
+                    : 'border-forum-border focus:border-forum-pink focus:ring-forum-pink/30'
+                }`}
+              >
+                <option value="" className="bg-forum-card">No specific topic</option>
+                {categories
+                  .find(c => c.id === selectedCategory)
+                  ?.topics?.map((topic) => (
+                    <option key={topic.id} value={topic.id} className="bg-forum-card">
+                      {topic.name}
+                    </option>
+                  ))}
+              </select>
+              {errors.topic ? (
+                <p className="mt-1 text-[10px] text-red-400 font-mono flex items-center gap-1">
+                  <AlertCircle size={10} /> {errors.topic}
+                </p>
+              ) : (
+                <p className="mt-1 text-[9px] text-forum-muted/60 font-mono">
+                  Select a topic to categorize your thread within {categories.find(c => c.id === selectedCategory)?.name}
+                </p>
+              )}
+            </div>
+          )}
+
           {/* Tags */}
           <div>
             <label className="mb-1.5 block text-[10px] font-mono font-bold text-forum-muted uppercase tracking-wider flex items-center gap-1.5">
               <Tag size={10} className="text-forum-pink/60" />
-              Tags <span className="text-forum-muted/40 font-normal">(optional, comma separated)</span>
+              Tags <span className="text-forum-muted/40 font-normal">(optional, max {THREAD_VALIDATION.MAX_TAGS})</span>
             </label>
             <input
               type="text"
               value={tagsInput}
-              onChange={(e) => setTagsInput(e.target.value)}
-              placeholder="e.g., typescript, react, help"
-              className="transition-forum w-full rounded border border-forum-border bg-forum-bg px-4 py-2.5 text-[12px] font-mono text-forum-text placeholder-forum-muted outline-none focus:ring-1 focus:border-forum-pink focus:ring-forum-pink/30"
+              onChange={(e) => {
+                setTagsInput(e.target.value);
+                setErrors({ ...errors, tags: undefined });
+              }}
+              placeholder="e.g., discussion, question, news"
+              className={`transition-forum w-full rounded border bg-forum-bg px-4 py-2.5 text-[12px] font-mono text-forum-text placeholder-forum-muted outline-none focus:ring-1 ${
+                errors.tags
+                  ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/30'
+                  : 'border-forum-border focus:border-forum-pink focus:ring-forum-pink/30'
+              }`}
             />
-            {tagsInput && (
+            {errors.tags && (
+              <p className="mt-1 text-[10px] text-red-400 font-mono flex items-center gap-1">
+                <AlertCircle size={10} /> {errors.tags}
+              </p>
+            )}
+            {tagsInput && !errors.tags && (
               <div className="flex items-center gap-1 flex-wrap mt-2">
                 {tagsInput.split(',').map((tag, i) => {
                   const trimmed = tag.trim().toLowerCase().replace(/^#/, '');
@@ -242,82 +365,17 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
             <label className="mb-1.5 block text-[10px] font-mono font-bold text-forum-muted uppercase tracking-wider">
               Content <span className="text-forum-pink">*</span>
             </label>
-            {/* Rich text editor toolbar */}
-            <div className="flex items-center gap-1 rounded-t border border-b-0 border-forum-border bg-forum-card-alt px-2 py-1.5 flex-wrap">
-              {MARKDOWN_TOOLBAR_ACTIONS.map((action, i) => (
-                <span key={i} className="contents">
-                  {action.separator && <div className="w-px h-4 bg-forum-border/30 mx-0.5" />}
-                  <button
-                    type="button"
-                    onClick={() => insertMarkdown(action.insertText)}
-                    className="transition-forum rounded p-1.5 text-forum-muted hover:bg-forum-hover hover:text-forum-pink"
-                    title={action.tooltip}
-                  >
-                    {action.icon ? (
-                      <action.icon size={14} />
-                    ) : (
-                      <span className="text-[10px] font-mono font-bold">{action.iconLabel}</span>
-                    )}
-                  </button>
-                </span>
-              ))}
-              <ImageUploadButton
-                onImageInsert={(markdown) => setContent((prev) => prev + markdown)}
-              />
-              {/* Emoji picker */}
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                  className={`transition-forum rounded p-1.5 hover:bg-forum-hover ${showEmojiPicker ? 'text-forum-pink bg-forum-pink/10' : 'text-forum-muted hover:text-forum-pink'}`}
-                  title="Emoji Picker"
-                >
-                  <Smile size={14} />
-                </button>
-                {showEmojiPicker && (
-                  <>
-                    <div className="fixed inset-0 z-10" onClick={() => setShowEmojiPicker(false)} />
-                    <div className="absolute left-0 bottom-full mb-1 z-20 hud-panel w-[220px] p-2">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-[8px] font-mono font-bold text-forum-muted uppercase tracking-wider">Emoji</span>
-                        <button type="button" onClick={() => setShowEmojiPicker(false)} className="text-forum-muted hover:text-forum-text transition-forum">
-                          <X size={10} />
-                        </button>
-                      </div>
-                      <div className="grid grid-cols-10 gap-0.5">
-                        {COMMON_EMOJIS.map((emoji) => (
-                          <button
-                            key={emoji}
-                            type="button"
-                            onClick={() => {
-                              insertMarkdown(emoji);
-                              setShowEmojiPicker(false);
-                            }}
-                            className="transition-forum rounded p-1 text-[14px] hover:bg-forum-pink/10 hover:scale-125 transform"
-                          >
-                            {emoji}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-              <div className="flex-1" />
-              <span className="text-[8px] font-mono text-forum-muted/40">Markdown supported</span>
-            </div>
-            <textarea
+            <AdvancedEditor
               value={content}
-              onChange={(e) => {
-                setContent(e.target.value);
-                setErrors({ ...errors, content: undefined });
+              onChange={(newContent) => {
+                // Enforce max length
+                if (newContent.length <= THREAD_VALIDATION.CONTENT_MAX_LENGTH) {
+                  setContent(newContent);
+                  setErrors({ ...errors, content: undefined });
+                }
               }}
-              placeholder="Write your thread content here... (Markdown supported)"
-              rows={8}
-              className={`transition-forum w-full rounded-b border bg-forum-bg px-4 py-3 text-[12px] font-mono text-forum-text placeholder-forum-muted outline-none resize-none focus:ring-1 leading-relaxed ${errors.content
-                  ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/30'
-                  : 'border-forum-border focus:border-forum-pink focus:ring-forum-pink/30'
-                }`}
+              placeholder="Write your thread content here... (Rich text supported)"
+              minHeight="220px"
             />
             <div className="flex items-center justify-between mt-1">
               {errors.content ? (
@@ -325,9 +383,17 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
                   <AlertCircle size={10} /> {errors.content}
                 </p>
               ) : (
-                <span />
+                <span className="text-[9px] text-forum-muted/60 font-mono">
+                  Min {THREAD_VALIDATION.CONTENT_MIN_LENGTH} characters
+                </span>
               )}
-              <span className="text-[9px] font-mono text-forum-muted/40">{content.length} chars</span>
+              <span className={`text-[9px] font-mono ${
+                content.length > THREAD_VALIDATION.CONTENT_MAX_LENGTH * 0.9 
+                  ? 'text-orange-400' 
+                  : 'text-forum-muted/40'
+              }`}>
+                {content.length}/{THREAD_VALIDATION.CONTENT_MAX_LENGTH}
+              </span>
             </div>
           </div>
         </div>

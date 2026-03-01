@@ -32,7 +32,21 @@ export const supabase = createClient<Database>(
   {
     realtime: {
       params: {
-        eventsPerSecond: 50, // Increased from 10 for better performance
+        eventsPerSecond: 10, // Reduced from 50 to limit realtime overhead
+      },
+    },
+    db: {
+      schema: 'public',
+    },
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+    },
+    global: {
+      headers: {
+        'x-client-info': 'forum-app',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
       },
     },
   }

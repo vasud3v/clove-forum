@@ -15,17 +15,18 @@ import ForumHeader from '@/components/forum/ForumHeader';
 import ThreadedPostList from '@/components/forum/thread/ThreadedPostList';
 import PostSkeleton from '@/components/forum/thread/PostSkeleton';
 import MobileBottomNav from '@/components/forum/MobileBottomNav';
-import SidebarStatsPanel from '@/components/forum/SidebarStatsPanel';
-import OnlineUsers from '@/components/forum/OnlineUsers';
-import PopularTags from '@/components/forum/PopularTags';
-import FloatingActionButton from '@/components/forum/FloatingActionButton';
-import NewThreadModal from '@/components/forum/NewThreadModal';
+import SelectTopicModal from '@/components/forum/SelectTopicModal';
+import TextSelectionQuote from '@/components/forum/thread/TextSelectionQuote';
+import MultiQuoteManager from '@/components/forum/thread/MultiQuoteManager';
 import { useForumContext } from '@/context/ForumContext';
 import { usePermissions } from '@/hooks/usePermissions';
+import { useQuoteManager } from '@/hooks/forum/useQuoteManager';
 import { toast } from '@/components/forum/Toast';
 import { formatTimeAgo } from '@/lib/forumUtils';
 import { REACTION_EMOJIS } from '@/lib/forumConstants';
+import { getUserAvatar } from '@/lib/avatar';
 import { supabase } from '@/lib/supabase';
+import { Thread, Category, User, PostData } from '@/types/forum';
 
 // Sub-components
 import ThreadHeader from '@/components/forum/thread/ThreadHeader';
@@ -167,6 +168,10 @@ export default function ThreadDetailPage() {
   const [isSubmittingReply, setIsSubmittingReply] = useState(false);
   const [activeReplyFormId, setActiveReplyFormId] = useState<string | null>(null);
   const [inlineReplySubmitting, setInlineReplySubmitting] = useState(false);
+  const [loadingThread, setLoadingThread] = useState(false);
+  const [fetchedThread, setFetchedThread] = useState<Thread | null>(null);
+  const [fetchedCategory, setFetchedCategory] = useState<Category | null>(null);
+  const prefetchedThreadsRef = useRef<Set<string>>(new Set());
   const postsContainerRef = useRef<HTMLDivElement>(null);
   const replyBoxRef = useRef<HTMLTextAreaElement>(null);
   const scrollPositionRef = useRef<number>(0);
@@ -189,16 +194,136 @@ export default function ThreadDetailPage() {
 
   const { canManageThreads, canPinThreads, canLockThreads, canDeleteThreads, canFeatureThreads } = usePermissions();
 
-  const thread = useMemo(() => threadId ? getThread(threadId) : null, [threadId, getThread]);
-  const category = useMemo(() => thread ? getCategory(thread.categoryId) : null, [thread, getCategory]);
+  // Quote manager for multi-quote functionality
+  const quoteManager = useQuoteManager();
+
+  // Try to get thread from context first
+  const contextThread = useMemo(() => threadId ? getThread(threadId) : null, [threadId, getThread]);
+  const contextCategory = useMemo(() => contextThread ? getCategory(contextThread.categoryId) : null, [contextThread, getCategory]);
+
+  // Fetch thread from database if not in context
+  useEffect(() => {
+    if (!threadId) return;
+    if (contextThread && contextCategory) {
+      setFetchedThread(null);
+      setFetchedCategory(null);
+      return;
+    }
+
+    const fetchThread = async () => {
+      setLoadingThread(true);
+      try {
+        const { data: threadData, error: threadError } = await supabase
+          .from('threads')
+          .select(`
+            *,
+            author:forum_users!threads_author_id_fkey(*),
+            last_reply_by:forum_users!threads_last_reply_by_id_fkey(*)
+          `)
+          .eq('id', threadId)
+          .single();
+
+        if (threadError) throw threadError;
+
+        const tAuthor = Array.isArray(threadData.author) ? threadData.author[0] : threadData.author;
+        const tLast = threadData.last_reply_by ? (Array.isArray(threadData.last_reply_by) ? threadData.last_reply_by[0] : threadData.last_reply_by) : null;
+
+        const thread: Thread = {
+          id: threadData.id,
+          title: threadData.title,
+          excerpt: threadData.excerpt,
+          author: {
+            id: tAuthor.id,
+            username: tAuthor.username,
+            avatar: tAuthor.avatar,
+            
+            banner: tAuthor.banner || undefined,
+            postCount: tAuthor.post_count,
+            reputation: tAuthor.reputation,
+            joinDate: tAuthor.join_date,
+            isOnline: tAuthor.is_online,
+            rank: tAuthor.rank || 'Newcomer',
+            role: tAuthor.role || 'member',
+          },
+          categoryId: threadData.category_id,
+          topicId: threadData.topic_id,
+          createdAt: threadData.created_at,
+          lastReplyAt: threadData.last_reply_at,
+          lastReplyBy: tLast ? {
+            id: tLast.id,
+            username: tLast.username,
+            avatar: tLast.avatar,
+            
+            banner: tLast.banner || undefined,
+            postCount: tLast.post_count,
+            reputation: tLast.reputation,
+            joinDate: tLast.join_date,
+            isOnline: tLast.is_online,
+            rank: tLast.rank || 'Newcomer',
+            role: tLast.role || 'member',
+          } : tAuthor as User,
+          replyCount: threadData.reply_count,
+          viewCount: threadData.view_count,
+          isPinned: threadData.is_pinned,
+          isLocked: threadData.is_locked,
+          isHot: threadData.is_hot,
+          hasUnread: false,
+          tags: threadData.tags || [],
+          upvotes: threadData.upvotes,
+          downvotes: threadData.downvotes,
+          banner: threadData.banner,
+        };
+
+        setFetchedThread(thread);
+
+        // Fetch category
+        const { data: categoryData, error: categoryError } = await supabase
+          .from('categories')
+          .select('*')
+          .eq('id', threadData.category_id)
+          .single();
+
+        if (categoryError) throw categoryError;
+
+        const category: Category = {
+          id: categoryData.id,
+          name: categoryData.name,
+          description: categoryData.description,
+          icon: categoryData.icon,
+          threadCount: categoryData.thread_count,
+          postCount: categoryData.post_count,
+          lastActivity: categoryData.last_activity,
+          threads: [],
+        };
+
+        setFetchedCategory(category);
+      } catch (error) {
+        console.error('Error fetching thread:', error);
+        setFetchedThread(null);
+        setFetchedCategory(null);
+      } finally {
+        setLoadingThread(false);
+      }
+    };
+
+    fetchThread();
+  }, [threadId, contextThread, contextCategory]);
+
+  // Use context thread/category if available, otherwise use fetched
+  const thread = contextThread || fetchedThread;
+  const category = contextCategory || fetchedCategory;
   const poll = useMemo(() => thread ? getPollForThread(thread.id) : null, [thread, getPollForThread]);
 
-  // Prefetch posts when thread changes
+  // Get posts - stable reference to avoid scroll jumps (MUST be defined before useEffects that use it)
+  const posts = thread ? getPostsForThread(thread.id) : [];
+
+  // Prefetch posts when thread changes or becomes available
   useEffect(() => {
-    if (threadId) {
+    if (threadId && thread && !prefetchedThreadsRef.current.has(threadId)) {
+      prefetchedThreadsRef.current.add(threadId);
       prefetchPosts(threadId);
     }
-  }, [threadId, prefetchPosts]);
+  }, [threadId, thread, prefetchPosts]);
 
   // Increment view count when thread is viewed
   useEffect(() => {
@@ -222,9 +347,6 @@ export default function ThreadDetailPage() {
     const timer = setTimeout(incrementViewCount, 1000);
     return () => clearTimeout(timer);
   }, [threadId]);
-
-  // Get posts - stable reference to avoid scroll jumps
-  const posts = thread ? getPostsForThread(thread.id) : [];
 
   // Scroll to post if hash is present in URL
   useEffect(() => {
@@ -259,12 +381,90 @@ export default function ThreadDetailPage() {
   const isWatching = threadId ? isWatchingFn(threadId) : false;
 
   const handleQuote = useCallback((author: string, content: string) => {
-    const quoteText = `> **@${author}** wrote:\n> ${content}...\n\n`;
-    setReplyText((prev) => prev + quoteText);
-    setQuotedPost({ author, content: content + '...' });
+    // Check for text selection for partial quote
+    const selection = window.getSelection();
+    const selectedText = selection?.toString().trim();
+    
+    const quoteContent = selectedText || content;
+    
+    // Format quote as markdown and insert into textarea
+    const quoteMarkdown = `> **@${author}** wrote:\n> ${quoteContent.split('\n').join('\n> ')}\n\n`;
+    
+    // Insert quote at the beginning of current text
+    setReplyText(prev => quoteMarkdown + prev);
+    
+    // Don't set quotedPost - we're only using the textarea quote now
+    // setQuotedPost({ author, content: quoteContent.substring(0, 100) });
+    
+    // Scroll and focus
     replyBoxRef.current?.focus();
     replyBoxRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    
+    // Position cursor after the quote
+    setTimeout(() => {
+      if (replyBoxRef.current) {
+        const cursorPos = quoteMarkdown.length;
+        replyBoxRef.current.setSelectionRange(cursorPos, cursorPos);
+      }
+    }, 100);
   }, []);
+
+  const handleAddToMultiQuote = useCallback((post: PostData) => {
+    // Check for text selection for partial quote
+    const selection = window.getSelection();
+    const selectedText = selection?.toString().trim();
+    
+    // Check if this exact quote already exists
+    const quoteContent = selectedText || post.content;
+    const isDuplicate = quoteManager.quotes.some(
+      q => q.postId === post.id && q.content === quoteContent
+    );
+    
+    if (isDuplicate) {
+      toast.info('This quote is already in your collection');
+      return;
+    }
+    
+    quoteManager.addToMultiQuote(post, selectedText);
+    toast.success('Added to multi-quote');
+  }, [quoteManager]);
+
+  const handleTextSelectionQuote = useCallback((selectedText: string) => {
+    // For text selection popup - just set as quoted post
+    const posts = thread ? getPostsForThread(thread.id) : [];
+    if (posts.length > 0) {
+      // Find the post containing the selected text (simplified - you might want better logic)
+      setQuotedPost({ author: 'Selected', content: selectedText });
+      replyBoxRef.current?.focus();
+      replyBoxRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [thread, getPostsForThread]);
+
+  const handleInsertMultiQuotes = useCallback((quotes: any[]) => {
+    // Format all collected quotes as markdown
+    const quotesText = quotes.map(q => {
+      const content = q.isPartial ? `...${q.content}...` : q.content;
+      return `> **@${q.author}** wrote:\n> ${content.split('\n').join('\n> ')}\n\n`;
+    }).join('\n');
+    
+    // Insert at the beginning of current text
+    setReplyText(prev => quotesText + prev);
+    
+    // Clear the multi-quote collection
+    quoteManager.clearAllQuotes();
+    
+    // Scroll and focus
+    replyBoxRef.current?.focus();
+    replyBoxRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    
+    // Position cursor after all quotes
+    setTimeout(() => {
+      if (replyBoxRef.current) {
+        const cursorPos = quotesText.length;
+        replyBoxRef.current.setSelectionRange(cursorPos, cursorPos);
+      }
+    }, 100);
+  }, [quoteManager]);
 
   const handlePostReply = useCallback(async () => {
     if (!replyText.trim() || !thread || isSubmittingReply) return;
@@ -276,11 +476,9 @@ export default function ThreadDetailPage() {
     }
     
     setIsSubmittingReply(true);
-    const actualContent = quotedPost
-      ? replyText.replace(/^(?:>.*\n)+\n?/m, '').trim() || replyText
-      : replyText;
     try {
-      await addPost(thread.id, actualContent, quotedPost);
+      // Pass the reply text as-is, along with quotedPost for context
+      await addPost(thread.id, replyText.trim(), quotedPost);
       setReplyText('');
       setQuotedPost(undefined);
       toast.success('Reply posted successfully');
@@ -388,6 +586,14 @@ export default function ThreadDetailPage() {
     }
   }, [currentUser.id, togglePostBookmark, isPostBookmarked]);
 
+  if (loadingThread) {
+    return (
+      <div className="min-h-screen bg-forum-bg flex items-center justify-center">
+        <div className="text-forum-muted">Loading thread...</div>
+      </div>
+    );
+  }
+
   if (!thread || !category) {
     return (
       <div className="min-h-screen bg-forum-bg flex items-center justify-center">
@@ -411,15 +617,29 @@ export default function ThreadDetailPage() {
 
       <ForumHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} onMobileMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)} isMobileMenuOpen={isMobileMenuOpen} />
 
-      {/* Breadcrumb */}
+      {/* Breadcrumb with Create Thread Button */}
       <div className="mx-auto max-w-7xl px-4 lg:px-6 pt-4 pb-2">
-        <div className="flex items-center gap-1.5 text-[10px] font-mono text-forum-muted">
-          <HomeIcon size={11} className="text-forum-pink" />
-          <span onClick={() => navigate('/')} className="text-forum-text hover:text-forum-pink transition-forum cursor-pointer">Forums</span>
-          <ChevronRight size={10} />
-          <span onClick={() => navigate(`/category/${category.id}`)} className="text-forum-text hover:text-forum-pink transition-forum cursor-pointer">{category.name}</span>
-          <ChevronRight size={10} />
-          <span className="text-forum-pink truncate max-w-[200px]">{thread.title}</span>
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-1.5 text-[10px] font-mono text-forum-muted">
+            <HomeIcon size={11} className="text-forum-pink" />
+            <span onClick={() => navigate('/')} className="text-forum-text hover:text-forum-pink transition-forum cursor-pointer">Forums</span>
+            <ChevronRight size={10} />
+            <span onClick={() => navigate(`/category/${category.id}`)} className="text-forum-text hover:text-forum-pink transition-forum cursor-pointer">{category.name}</span>
+            <ChevronRight size={10} />
+            <span className="text-forum-pink truncate max-w-[200px]">{thread.title}</span>
+          </div>
+          
+          {/* Create Thread Button */}
+          {currentUser.id !== 'guest' && (
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="transition-forum flex items-center gap-1.5 rounded-md bg-forum-pink px-3 py-1.5 text-[11px] font-mono font-bold text-white hover:bg-forum-pink/90 hover:shadow-pink-glow border border-forum-pink/60 whitespace-nowrap"
+            >
+              <MessageCircle size={13} />
+              <span className="hidden sm:inline">Create Thread</span>
+              <span className="sm:hidden">New</span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -486,7 +706,17 @@ export default function ThreadDetailPage() {
 
                 {/* Always use nested/threaded view */}
                 <ThreadedPostList
-                    posts={[...posts].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())}
+                    posts={[...posts].sort((a, b) => {
+                      if (sortBy === 'votes') {
+                        // Sort by vote score (upvotes - downvotes)
+                        const scoreA = (a.upvotes || 0) - (a.downvotes || 0);
+                        const scoreB = (b.upvotes || 0) - (b.downvotes || 0);
+                        return scoreB - scoreA; // Highest score first
+                      } else {
+                        // Sort by date (oldest first for chronological order)
+                        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+                      }
+                    })}
                     currentUserId={currentUser.id}
                     threadAuthorId={thread?.author.id || ''}
                     threadId={thread?.id || ''}
@@ -500,6 +730,7 @@ export default function ThreadDetailPage() {
                     activeReplyFormId={activeReplyFormId}
                     onInlineReply={handleInlineReply}
                     inlineReplySubmitting={inlineReplySubmitting}
+                    onAddToMultiQuote={handleAddToMultiQuote}
                 />
               </>
             )}
@@ -593,9 +824,6 @@ export default function ThreadDetailPage() {
             )}
 
             <RelatedThreads currentThread={thread.id} categoryId={thread.categoryId} />
-            <SidebarStatsPanel stats={forumStats} />
-            <PopularTags />
-            <OnlineUsers />
           </div>
         </div>
       </div>
@@ -605,18 +833,39 @@ export default function ThreadDetailPage() {
         <div className="fixed inset-0 z-40 lg:hidden">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
           <div className="absolute right-0 top-0 bottom-0 w-[300px] overflow-y-auto border-l border-forum-border bg-forum-card p-4 space-y-4">
-            <SidebarStatsPanel stats={forumStats} />
-            <PopularTags />
-            <OnlineUsers />
+            {/* Mobile sidebar content - empty for thread pages */}
           </div>
         </div>
       )}
 
-      <FloatingActionButton onClick={() => setIsModalOpen(true)} />
       <ScrollToTopButton />
-      <NewThreadModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <SelectTopicModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       <ShareModal isOpen={showShareModal} onClose={() => setShowShareModal(false)} threadTitle={thread.title} threadId={thread.id} />
       <MobileBottomNav />
+      
+      {/* Text Selection Quote Popup */}
+      <TextSelectionQuote 
+        onQuote={handleTextSelectionQuote}
+        onAddToMultiQuote={(text) => {
+          const posts = thread ? getPostsForThread(thread.id) : [];
+          if (posts.length > 0) {
+            // Create a temporary post object for the selected text
+            const tempPost: PostData = {
+              ...posts[0],
+              content: text,
+            };
+            handleAddToMultiQuote(tempPost);
+          }
+        }}
+      />
+      
+      {/* Multi-Quote Manager */}
+      <MultiQuoteManager 
+        quotes={quoteManager.quotes}
+        onInsertQuotes={handleInsertMultiQuotes}
+        onRemoveQuote={quoteManager.removeFromMultiQuote}
+        onClearAll={quoteManager.clearAllQuotes}
+      />
     </div>
   );
 }

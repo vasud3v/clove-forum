@@ -147,7 +147,9 @@ export function usePosts({
 
         const postId = crypto.randomUUID();
         const now = new Date().toISOString();
-        const fullContent = quotedPost ? `> **@${quotedPost.author}** wrote:\n> ${quotedPost.content}\n\n${trimmedContent}` : trimmedContent;
+        // Don't add quote to content - it will be shown in UI via QuotedReplyBox
+        // Just store the clean reply content
+        const fullContent = trimmedContent;
 
         const optimisticPost: PostData = {
             id: postId, threadId, content: fullContent, author: currentUser,
@@ -471,6 +473,34 @@ export function usePosts({
         };
     }, []);
 
+    // Update user profile data in all cached posts
+    const updateUserInPosts = useCallback((userId: string, updates: { avatar?: string; banner?: string; username?: string; rank?: string; role?: string; postCount?: number; reputation?: number }) => {
+        setPostsMap((prev) => {
+            const updated = { ...prev };
+            for (const threadId in updated) {
+                updated[threadId] = updated[threadId].map(post => {
+                    if (post.author.id === userId) {
+                        return {
+                            ...post,
+                            author: {
+                                ...post.author,
+                                ...(updates.avatar !== undefined && { avatar: updates.avatar }),
+                                ...(updates.banner !== undefined && { banner: updates.banner }),
+                                ...(updates.username !== undefined && { username: updates.username }),
+                                ...(updates.rank !== undefined && { rank: updates.rank }),
+                                ...(updates.role !== undefined && { role: updates.role }),
+                                ...(updates.postCount !== undefined && { postCount: updates.postCount }),
+                                ...(updates.reputation !== undefined && { reputation: updates.reputation }),
+                            }
+                        };
+                    }
+                    return post;
+                });
+            }
+            return updated;
+        });
+    }, []);
+
     return {
         postsMap,
         setPostsMap,
@@ -485,5 +515,6 @@ export function usePosts({
         togglePostLike,
         togglePostReaction,
         resetPosts,
+        updateUserInPosts,
     };
 }

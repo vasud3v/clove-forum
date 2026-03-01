@@ -1,20 +1,16 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Pin,
   Lock,
-  Eye,
-  MessageCircle,
-  Share2,
-  Flag,
-  Clock,
-  Zap,
-  Star,
+  Flame,
+  CheckCircle2,
+  Shield,
 } from 'lucide-react';
 import { Thread } from '@/types/forum';
 import { useForumContext } from '@/context/ForumContext';
+import { getUserAvatar } from '@/lib/avatar';
 import { formatTimeAgo } from '@/lib/forumUtils';
-import { toast } from '@/components/forum/Toast';
 
 interface ThreadRowProps {
   thread: Thread;
@@ -23,219 +19,209 @@ interface ThreadRowProps {
 export default function ThreadRow({ thread }: ThreadRowProps) {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
-  const [isVoting, setIsVoting] = useState(false);
-  const { voteThread, getThreadVote, getUserProfile } = useForumContext();
-  const threadVote = getThreadVote(thread.id);
-  const voteScore = thread.upvotes - thread.downvotes;
+  const { getUserProfile } = useForumContext();
 
   const authorProfile = getUserProfile(thread.author.id);
-  const displayAvatar = authorProfile.avatar || thread.author.avatar;
+  const displayAvatar = authorProfile?.avatar || thread.author.avatar;
 
   const lastReplyByProfile = getUserProfile(thread.lastReplyBy.id);
-  const displayLastReplyByAvatar = lastReplyByProfile.avatar || thread.lastReplyBy.avatar;
+  const displayLastReplyByAvatar = lastReplyByProfile?.avatar || thread.lastReplyBy.avatar;
 
-  const handleVote = async (direction: 'up' | 'down') => {
-    if (isVoting) return;
-    setIsVoting(true);
-    try {
-      voteThread(thread.id, direction);
-      await new Promise(resolve => setTimeout(resolve, 300));
-    } finally {
-      setIsVoting(false);
-    }
-  };
+  // Check if thread is solved
+  const isSolved = thread.tags?.some(tag => tag.toLowerCase() === 'solved');
+
+  // Calculate total pages (assuming 20 posts per page)
+  const postsPerPage = 20;
+  const totalPages = Math.ceil((thread.replyCount + 1) / postsPerPage);
+  
+  // Get last 3 pages to display
+  const pagesToShow = totalPages > 3 
+    ? [totalPages - 2, totalPages - 1, totalPages]
+    : Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
     <div
       onClick={() => navigate(`/thread/${thread.id}`)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="transition-forum group relative border-b border-forum-border/20 cursor-pointer last:border-b-0 bg-transparent hover:bg-forum-card-alt/30"
+      className="transition-all duration-150 group relative border-b border-forum-border/20 cursor-pointer last:border-b-0 bg-transparent hover:bg-forum-hover/30"
     >
       {/* Left accent bar for pinned */}
       {thread.isPinned && (
-        <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-forum-pink/40" />
+        <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-forum-pink" />
       )}
 
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3 px-4 py-3 min-h-[64px]">
+      <div className="flex items-center gap-3 px-3 py-2.5">
+        {/* Thread Thumbnail - 75x50 */}
+        <div className="relative flex-shrink-0">
+          <img
+            src={thread.thumbnail || displayAvatar}
+            alt={thread.title}
+            className="w-[75px] h-[50px] rounded object-cover border border-forum-border/40"
+            style={{
+              backgroundColor: '#1a1a1a'
+            }}
+            onError={(e) => {
+              e.currentTarget.src = displayAvatar;
+            }}
+          />
+          {thread.hasUnread && (
+            <div className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-forum-pink" />
+          )}
+        </div>
 
-        {/* Mobile top row: Avatar + Title + Badges */}
-        <div className="flex items-start gap-3 flex-1 min-w-0">
+        {/* Main Content */}
+        <div className="flex-1 min-w-0 flex flex-col gap-1">
+          {/* Title Row */}
+          <div className="flex items-center gap-2">
+            {/* Category Badge */}
+            {thread.tags && thread.tags.length > 0 && (
+              <span className="inline-flex items-center rounded px-2 py-0.5 text-[13px] font-normal bg-blue-500 text-white flex-shrink-0">
+                {thread.tags[0]}
+              </span>
+            )}
+            
+            {/* Thread Title */}
+            <h3 className="text-[17px] font-normal text-forum-text group-hover:text-forum-pink transition-colors truncate flex-1">
+              {thread.title}
+            </h3>
 
-          {/* Avatar Area */}
-          <div className="relative flex-shrink-0 mt-0.5">
-            <img
-              src={displayAvatar}
-              alt={thread.author.username}
-              className={`h-10 w-10 sm:h-11 sm:w-11 rounded-md border object-cover transition-colors cursor-pointer ${isHovered ? 'border-forum-pink/50' : 'border-forum-border/40'
-                }`}
+            {/* Status Icons */}
+            {thread.isPinned && (
+              <Pin size={14} className="text-forum-muted flex-shrink-0" />
+            )}
+            {thread.isLocked && (
+              <Lock size={14} className="text-amber-500 flex-shrink-0" />
+            )}
+            {thread.isHot && (
+              <Flame size={14} className="text-orange-400 flex-shrink-0" />
+            )}
+            {isSolved && (
+              <CheckCircle2 size={14} className="text-emerald-400 flex-shrink-0" />
+            )}
+          </div>
+
+          {/* Meta Info Row */}
+          <div className="flex items-center gap-2 text-[13px] text-forum-muted">
+            {/* Author */}
+            <span
+              className="text-amber-400 hover:text-amber-300 transition-colors cursor-pointer flex items-center gap-1"
               onClick={(e) => {
                 e.stopPropagation();
                 navigate(`/user/${thread.author.id}`);
               }}
-              title={`View ${thread.author.username}'s profile`}
-            />
-            {thread.author.isOnline && (
-              <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-[2px] border-forum-card bg-emerald-400" />
+            >
+              {thread.author.username}
+              {thread.author.role === 'admin' && (
+                <Shield size={11} className="text-amber-400" />
+              )}
+            </span>
+
+            <span className="text-forum-border/60">·</span>
+
+            {/* Created Date */}
+            <time className="text-[13px]">
+              {formatTimeAgo(thread.createdAt)}
+            </time>
+            
+            {/* Page Numbers - Show last 3 pages */}
+            {totalPages > 1 && (
+              <>
+                <span className="text-forum-border/60 hidden sm:inline">·</span>
+                <div className="hidden sm:flex items-center gap-1">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/thread/${thread.id}?page=1`);
+                    }}
+                    className="flex items-center justify-center min-w-[20px] h-[20px] px-1.5 rounded text-[11px] font-medium bg-forum-card/50 border border-forum-border/30 text-forum-text hover:bg-forum-pink hover:text-white hover:border-forum-pink transition-all"
+                  >
+                    1
+                  </button>
+                  {totalPages > 4 && (
+                    <span className="text-[11px] text-forum-muted px-0.5">...</span>
+                  )}
+                  {pagesToShow.map((pageNum) => (
+                    <button
+                      key={pageNum}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/thread/${thread.id}?page=${pageNum}`);
+                      }}
+                      className="flex items-center justify-center min-w-[20px] h-[20px] px-1.5 rounded text-[11px] font-medium bg-forum-card/50 border border-forum-border/30 text-forum-text hover:bg-forum-pink hover:text-white hover:border-forum-pink transition-all"
+                    >
+                      {pageNum}
+                    </button>
+                  ))}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/thread/${thread.id}?page=${totalPages + 1}`);
+                    }}
+                    className="flex items-center gap-0.5 px-2 h-[20px] rounded text-[11px] font-medium bg-forum-card/50 border border-forum-border/30 text-forum-text hover:bg-forum-pink hover:text-white hover:border-forum-pink transition-all"
+                  >
+                    Next →
+                  </button>
+                </div>
+              </>
             )}
-            {/* Unread indicator overlaid or nearby */}
-            {thread.hasUnread && (
-              <div className="absolute -top-1 -right-1 h-3 w-3 rounded-full border-2 border-forum-card bg-forum-pink" title="Unread posts" />
-            )}
-          </div>
-
-          {/* Main Content Area */}
-          <div className="flex-1 min-w-0 flex flex-col justify-center">
-
-            <div className="flex items-center gap-2 flex-wrap mb-1">
-              {/* Badges */}
-              {thread.isPinned && (
-                <span className="inline-flex items-center gap-1 rounded bg-forum-pink/10 px-1.5 py-[2px] text-[9px] font-mono font-bold text-forum-pink">
-                  <Pin size={10} />
-                  Pinned
-                </span>
-              )}
-              {thread.isLocked && (
-                <span className="inline-flex items-center gap-1 rounded bg-amber-500/10 px-1.5 py-[2px] text-[9px] font-mono font-bold text-amber-500">
-                  <Lock size={10} />
-                  Locked
-                </span>
-              )}
-              {thread.isFeatured && (
-                <span className="inline-flex items-center gap-1 rounded bg-emerald-500/10 px-1.5 py-[2px] text-[9px] font-mono font-bold text-emerald-400">
-                  <Star size={10} />
-                  Featured
-                </span>
-              )}
-
-              {/* Thread title */}
-              <h4 className="text-[14px] sm:text-[15px] font-semibold text-forum-text flex-1 min-w-0 truncate group-hover:text-forum-pink transition-colors">
-                {thread.title}
-              </h4>
-            </div>
-
-            {/* Meta Info Line */}
-            <div className="flex items-center flex-wrap gap-2 text-[11px] font-mono text-forum-muted">
-              <span
-                className="hover:text-forum-pink transition-colors cursor-pointer text-forum-text/80"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigate(`/user/${thread.author.id}`);
-                }}
-              >
-                {thread.author.username}
-              </span>
-              <span className="text-forum-border/60">•</span>
-              <span className="flex items-center gap-1">
-                <Clock size={10} />
-                {formatTimeAgo(thread.createdAt)}
-              </span>
-
-              {/* Tags inline */}
-              {thread.tags && thread.tags.length > 0 && (
-                <>
-                  <span className="text-forum-border/60 hidden sm:inline">•</span>
-                  <div className="hidden sm:flex items-center gap-1.5">
-                    {thread.tags.filter(t => t.toLowerCase() !== 'solved').map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-[10px] text-forum-pink/70 hover:text-forum-pink transition-colors cursor-pointer"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          // navigate(`/tag/${tag}`);
-                        }}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
-
-            {/* Mobile Stats (Hidden on desktop) */}
-            <div className="flex sm:hidden items-center gap-3 mt-1.5 text-[10px] font-mono text-forum-muted">
-              <span className="flex items-center gap-1"><MessageCircle size={10} />{thread.replyCount}</span>
-              <span className="flex items-center gap-1"><Eye size={10} />{thread.viewCount.toLocaleString()}</span>
-              {thread.lastReplyAt && (
-                <span className="flex items-center gap-1 ml-auto">
-                  <Zap size={10} /> {formatTimeAgo(thread.lastReplyAt)}
-                </span>
-              )}
-            </div>
-
           </div>
         </div>
 
-        {/* Desktop Columns: Stats & Last Post */}
-        <div className="hidden sm:flex items-center gap-6 flex-shrink-0">
-
-          {/* Stats Column */}
-          <div className="flex flex-col items-end justify-center w-[80px] text-right">
-            <div className="text-[12px] font-mono font-medium text-forum-text/90">
-              Replies: <span className={`${thread.replyCount > 50 ? 'text-forum-pink' : ''}`}>{thread.replyCount}</span>
-            </div>
-            <div className="text-[11px] font-mono text-forum-muted">
-              Views: {thread.viewCount.toLocaleString()}
-            </div>
+        {/* Stats Section */}
+        <div className="hidden md:flex flex-col items-end gap-0.5 min-w-[80px] flex-shrink-0">
+          <div className="flex items-center gap-1.5 text-[11px] text-forum-muted">
+            <span>Replies:</span>
+            <span className="text-forum-text font-semibold">{thread.replyCount}</span>
           </div>
+          <div className="flex items-center gap-1.5 text-[11px] text-forum-muted">
+            <span>Views:</span>
+            <span className="text-forum-text font-semibold">
+              {thread.viewCount >= 1000 ? `${(thread.viewCount / 1000).toFixed(0)}K` : thread.viewCount}
+            </span>
+          </div>
+        </div>
 
-          {/* Divider */}
-          <div className="w-px h-8 bg-forum-border/30" />
-
-          {/* Last Post Column */}
-          <div className="flex items-center gap-2.5 w-[160px] pl-1">
-            <img
-              src={displayLastReplyByAvatar}
-              alt={thread.lastReplyBy.username}
-              className="h-8 w-8 rounded-md object-cover border border-forum-border/40 cursor-pointer hidden md:block"
+        {/* Last Activity Section */}
+        <div className="hidden lg:flex items-center gap-2.5 w-[140px] flex-shrink-0 pl-3 border-l border-forum-border/30">
+          <div className="flex flex-col min-w-0 flex-1 text-right">
+            <time className="text-[11px] text-forum-muted">
+              {formatTimeAgo(thread.lastReplyAt)}
+            </time>
+            <span
+              className="text-[13px] text-forum-text truncate hover:text-forum-pink cursor-pointer transition-colors"
               onClick={(e) => {
                 e.stopPropagation();
                 navigate(`/user/${thread.lastReplyBy.id}`);
               }}
-            />
-            <div className="flex flex-col min-w-0">
-              <span className="text-[11px] font-mono text-forum-text/80 truncate">
-                {formatTimeAgo(thread.lastReplyAt)}
-              </span>
-              <span
-                className="text-[11px] font-mono font-medium text-forum-text truncate hover:text-forum-pink cursor-pointer transition-colors"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigate(`/user/${thread.lastReplyBy.id}`);
-                }}
-              >
-                {thread.lastReplyBy.username}
-              </span>
-            </div>
+            >
+              {thread.lastReplyBy.username}
+            </span>
           </div>
-
+          <img
+            src={displayLastReplyByAvatar}
+            alt={thread.lastReplyBy.username}
+            className="h-9 w-9 rounded-full object-cover border border-forum-border/40 cursor-pointer flex-shrink-0"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/user/${thread.lastReplyBy.id}`);
+            }}
+          />
         </div>
-      </div>
 
-      {/* Quick actions (visible on hover) */}
-      <div
-        className="flex items-center gap-0.5 transition-forum absolute right-3 top-3 bg-forum-card/95 backdrop-blur-sm border border-forum-border/50 rounded-md px-1 py-0.5 shadow-lg"
-        style={{
-          opacity: isHovered ? 1 : 0,
-          transform: isHovered ? 'translateX(0)' : 'translateX(8px)',
-          pointerEvents: isHovered ? 'auto' : 'none',
-        }}
-      >
-        <button
-          onClick={(e) => e.stopPropagation()}
-          className="transition-forum rounded p-1.5 text-forum-muted hover:bg-forum-pink/10 hover:text-forum-pink"
-          title="Share"
-        >
-          <Share2 size={12} />
-        </button>
-        <button
-          onClick={(e) => e.stopPropagation()}
-          className="transition-forum rounded p-1.5 text-forum-muted hover:bg-red-500/10 hover:text-red-400"
-          title="Report"
-        >
-          <Flag size={12} />
-        </button>
+        {/* Mobile Stats */}
+        <div className="flex md:hidden flex-col items-end gap-0.5 text-[11px] text-forum-muted">
+          <div className="flex items-center gap-1">
+            <span className="text-[10px]">R:</span>
+            <span className="text-forum-text font-semibold">{thread.replyCount}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <span className="text-[10px]">V:</span>
+            <span className="text-forum-text font-semibold">
+              {thread.viewCount >= 1000 ? `${(thread.viewCount / 1000).toFixed(0)}K` : thread.viewCount}
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   );

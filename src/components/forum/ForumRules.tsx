@@ -74,7 +74,7 @@ const ruleSections: RuleSection[] = [
         id: 5,
         title: 'English Language Primary',
         description:
-          'Use English as the primary language for posts and threads to ensure everyone can participate. Code comments and technical terms in other languages are acceptable.',
+          'Use English as the primary language for posts and threads to ensure everyone can participate. Content in other languages is acceptable in designated international sections.',
         icon: Info,
         severity: 'moderate',
       },
@@ -91,7 +91,7 @@ const ruleSections: RuleSection[] = [
         id: 6,
         title: 'Write Clear, Descriptive Titles',
         description:
-          'Titles should summarize your question or topic. Bad: "Help!", "Error", "Question". Good: "React useState not updating after API call", "Best practices for PostgreSQL indexing".',
+          'Titles should summarize your topic clearly. Bad: "Help!", "Question", "Look at this". Good: "Best vacation spots in Europe", "How to start a garden", "Recommendations for beginner-friendly recipes".',
         icon: Info,
         severity: 'important',
       },
@@ -115,15 +115,15 @@ const ruleSections: RuleSection[] = [
         id: 9,
         title: 'Provide Context & Details',
         description:
-          'Include relevant information: what you\'re trying to do, what you\'ve tried, error messages, code snippets, environment details. The more context you provide, the better help you\'ll receive.',
+          'Include relevant information: what you\'re sharing, why it matters, relevant background, sources if applicable. The more context you provide, the better discussions you\'ll have.',
         icon: Info,
         severity: 'important',
       },
       {
         id: 10,
-        title: 'Format Code & Errors Properly',
+        title: 'Format Content Properly',
         description:
-          'Use code blocks with syntax highlighting for code snippets. Include complete error messages and stack traces. Format makes your post readable and helps others assist you faster.',
+          'Use proper formatting for readability. Break up long text into paragraphs, use lists for multiple points, and include images or links when relevant. Well-formatted posts get more engagement.',
         icon: Info,
         severity: 'important',
       },
@@ -180,7 +180,7 @@ const ruleSections: RuleSection[] = [
         id: 16,
         title: 'Respect Intellectual Property',
         description:
-          'Don\'t share pirated software, leaked content, or proprietary code without permission. Give proper attribution when using others\' work. Respect open-source licenses.',
+          'Don\'t share pirated content, leaked materials, or copyrighted work without permission. Give proper attribution when sharing others\' content. Respect creators\' rights.',
         icon: AlertTriangle,
         severity: 'critical',
       },
@@ -194,9 +194,9 @@ const ruleSections: RuleSection[] = [
       },
       {
         id: 18,
-        title: 'No Homework or Paid Work Requests',
+        title: 'No Homework or Assignment Requests',
         description:
-          'Don\'t ask others to complete your homework, assignments, or paid projects. We\'ll help you learn and debug, but we won\'t do your work for you.',
+          'Don\'t ask others to complete your homework, school assignments, or work projects. We\'re here for discussion and learning, not to do your work for you.',
         icon: XCircle,
         severity: 'important',
       },

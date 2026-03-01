@@ -81,10 +81,48 @@ export default function AdminCategoriesTab({ categories, onRefresh, onLogAction 
   const handleDelete = async (id: string) => {
     try {
       const cat = categories.find(c => c.id === id);
+      
+      // Count what will be deleted
+      const { count: topicCount } = await supabase
+        .from('topics')
+        .select('*', { count: 'exact', head: true })
+        .eq('category_id', id);
+      
+      const { count: threadCount } = await supabase
+        .from('threads')
+        .select('*', { count: 'exact', head: true })
+        .eq('category_id', id);
+      
+      // Get threads in this category to count posts
+      const { data: categoryThreads } = await supabase
+        .from('threads')
+        .select('id')
+        .eq('category_id', id);
+      
+      const threadIds = categoryThreads?.map(t => t.id) || [];
+      
+      let postCount = 0;
+      if (threadIds.length > 0) {
+        const { count } = await supabase
+          .from('posts')
+          .select('*', { count: 'exact', head: true })
+          .in('thread_id', threadIds);
+        postCount = count || 0;
+      }
+
+      const message = `Delete category "${cat?.name}"?\n\nThis will also delete:\n- ${topicCount || 0} topics\n- ${threadCount || 0} threads\n- ${postCount || 0} posts\n\nThis action cannot be undone!`;
+      
+      if (!confirm(message)) return;
+
       const { error } = await supabase.from('categories').delete().eq('id', id);
       if (error) throw error;
-      await onLogAction('category_delete', 'category', id, { name: cat?.name });
-      toast.success('Category deleted');
+      await onLogAction('category_delete', 'category', id, { 
+        name: cat?.name,
+        deletedTopics: topicCount,
+        deletedThreads: threadCount,
+        deletedPosts: postCount
+      });
+      toast.success('Category and all its content deleted');
       setDeleteConfirm(null);
       onRefresh();
     } catch (err: any) {

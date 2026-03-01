@@ -1,0 +1,83 @@
+{
+  "id": "1be3e6da-9f57-451d-a8e2-b2e3c646484c",
+  "name": "Untitled Page",
+  "storyboards": [
+    {
+      "id": "8ba5c60d-65a7-4c0c-ad6a-4246f7e15512",
+      "type": "APPLICATION",
+      "route": "/",
+      "width": 1512,
+      "height": 982,
+      "x": 0,
+      "y": 0,
+      "zIndex": 0
+    },
+    {
+      "id": "ba7aaa1f-fab7-47fa-99de-1407e704c3d1",
+      "name": "Storyboard1",
+      "type": "COMPONENT",
+      "width": 200,
+      "height": 40,
+      "x": 72.16241984284679,
+      "y": 1301.936378082099,
+      "zIndex": 10,
+      "importPath": "./Storyboard1-ba7aaa1f.tsx"
+    },
+    {
+      "id": "4881083c-5e9e-4657-9e6c-0ddb4e40635b",
+      "type": "COMPONENT",
+      "importPath": "./CategoryThreadsDemo-4881083c.tsx",
+      "name": "CategoryThreadsDemo",
+      "width": 1280,
+      "height": 900,
+      "x": 1600,
+      "y": 100,
+      "zIndex": 20
+    },
+    {
+      "id": "9218fcc3-2b67-41d5-a9a5-56fc30598f55",
+      "type": "COMPONENT",
+      "importPath": "./ThreadDetailDemo-9218fcc3.tsx",
+      "name": "ThreadDetailDemo",
+      "width": 1280,
+      "height": 900,
+      "x": 1600,
+      "y": 1100,
+      "zIndex": 30
+    },
+    {
+      "id": "beb75748-93af-4b1e-92f2-e3879f35b869",
+      "type": "COMPONENT",
+      "importPath": "./UserProfileDemo-beb75748.tsx",
+      "name": "UserProfileDemo",
+      "width": 1280,
+      "height": 900,
+      "x": 1600,
+      "y": 2100,
+      "zIndex": 40
+    },
+    {
+      "id": "adc180cb-2307-4059-80a1-944980029c8f",
+      "type": "COMPONENT",
+      "importPath": "./AuthLoginDemo-adc180cb.tsx",
+      "name": "AuthLoginDemo",
+      "width": 1280,
+      "height": 900,
+      "x": 3000,
+      "y": 100,
+      "zIndex": 50
+    },
+    {
+      "id": "93c2649c-154c-4cc8-8d64-a3332ae6408f",
+      "type": "COMPONENT",
+      "importPath": "./AuthSignupDemo-93c2649c.tsx",
+      "name": "AuthSignupDemo",
+      "width": 1280,
+      "height": 900,
+      "x": 3000,
+      "y": 1100,
+      "zIndex": 60
+    }
+  ],
+  "config_version": "1.0.0"
+}

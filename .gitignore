@@ -12,10 +12,6 @@ dist
 dist-ssr
 *.local
 
-# Environment variables
-.env.local
-.env.*.local
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -27,13 +23,14 @@ dist-ssr
 *.sln
 *.sw?
 
-!node_modules/.vite
+# Environment variables
+.env
+.env.local
+.env.production
 
-**/tempobook/dynamic/
-**/tempobook/storyboards/
-
-core
-
-.github/
-
-**/tempobook/**
+# Uploaded topic icons (optional - remove this line if you want to commit icons)
+# public/topic-icons/*.png
+# public/topic-icons/*.jpg
+# public/topic-icons/*.jpeg
+# public/topic-icons/*.gif
+# public/topic-icons/*.webp

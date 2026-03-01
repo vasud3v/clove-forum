@@ -1,13 +1,100 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Hash, TrendingUp } from 'lucide-react';
+import { Hash, TrendingUp, Flame } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
 interface Tag {
   name: string;
   count: number;
   hot?: boolean;
+  colorScheme: ColorScheme;
 }
+
+interface ColorScheme {
+  bg: string;
+  border: string;
+  text: string;
+  hover: string;
+  icon: string;
+}
+
+// Color schemes for tags
+const colorSchemes: ColorScheme[] = [
+  {
+    bg: 'bg-cyan-500/10',
+    border: 'border-cyan-500/30',
+    text: 'text-cyan-400',
+    hover: 'hover:bg-cyan-500/20 hover:border-cyan-500/50',
+    icon: 'text-cyan-400',
+  },
+  {
+    bg: 'bg-purple-500/10',
+    border: 'border-purple-500/30',
+    text: 'text-purple-400',
+    hover: 'hover:bg-purple-500/20 hover:border-purple-500/50',
+    icon: 'text-purple-400',
+  },
+  {
+    bg: 'bg-emerald-500/10',
+    border: 'border-emerald-500/30',
+    text: 'text-emerald-400',
+    hover: 'hover:bg-emerald-500/20 hover:border-emerald-500/50',
+    icon: 'text-emerald-400',
+  },
+  {
+    bg: 'bg-amber-500/10',
+    border: 'border-amber-500/30',
+    text: 'text-amber-400',
+    hover: 'hover:bg-amber-500/20 hover:border-amber-500/50',
+    icon: 'text-amber-400',
+  },
+  {
+    bg: 'bg-rose-500/10',
+    border: 'border-rose-500/30',
+    text: 'text-rose-400',
+    hover: 'hover:bg-rose-500/20 hover:border-rose-500/50',
+    icon: 'text-rose-400',
+  },
+  {
+    bg: 'bg-blue-500/10',
+    border: 'border-blue-500/30',
+    text: 'text-blue-400',
+    hover: 'hover:bg-blue-500/20 hover:border-blue-500/50',
+    icon: 'text-blue-400',
+  },
+  {
+    bg: 'bg-indigo-500/10',
+    border: 'border-indigo-500/30',
+    text: 'text-indigo-400',
+    hover: 'hover:bg-indigo-500/20 hover:border-indigo-500/50',
+    icon: 'text-indigo-400',
+  },
+  {
+    bg: 'bg-pink-500/10',
+    border: 'border-pink-500/30',
+    text: 'text-pink-400',
+    hover: 'hover:bg-pink-500/20 hover:border-pink-500/50',
+    icon: 'text-pink-400',
+  },
+];
+
+// Generate consistent color for a tag based on its name
+const getColorScheme = (tagName: string, isHot: boolean): ColorScheme => {
+  if (isHot) {
+    // Hot tags get the pink/forum color
+    return {
+      bg: 'bg-forum-pink/10',
+      border: 'border-forum-pink/40',
+      text: 'text-forum-pink',
+      hover: 'hover:bg-forum-pink/20 hover:border-forum-pink/60',
+      icon: 'text-forum-pink',
+    };
+  }
+  
+  // Use tag name to generate consistent color index
+  const hash = tagName.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return colorSchemes[hash % colorSchemes.length];
+};
 
 export default function PopularTags() {
   const navigate = useNavigate();
@@ -39,11 +126,15 @@ export default function PopularTags() {
 
         // Convert to array and sort by count
         const sortedTags = Array.from(tagCounts.entries())
-          .map(([name, count]) => ({
-            name,
-            count,
-            hot: count > 5, // Mark as hot if used more than 5 times
-          }))
+          .map(([name, count]) => {
+            const hot = count > 5;
+            return {
+              name,
+              count,
+              hot,
+              colorScheme: getColorScheme(name, hot),
+            };
+          })
           .sort((a, b) => b.count - a.count)
           .slice(0, 12); // Top 12 tags
 
@@ -81,33 +172,34 @@ export default function PopularTags() {
             </p>
           </div>
         ) : (
-          <div className="flex flex-wrap gap-1">
-            {popularTags.map((tag) => (
-              <button
-                key={tag.name}
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  console.log('Tag clicked:', tag.name);
-                  navigate(`/search?q=${encodeURIComponent(tag.name)}`);
-                }}
-                className={`group transition-forum flex items-center gap-1 rounded-sm px-2 py-[3px] text-[9px] font-mono hover:bg-forum-pink/10 hover:text-forum-pink hover:border-forum-pink/30 hover:shadow-[0_0_8px_rgba(255,45,146,0.15)] cursor-pointer active:scale-95 ${
-                  tag.hot
-                    ? 'bg-gradient-to-r from-forum-pink/10 to-forum-pink/[0.03] border border-forum-pink/25 text-forum-pink/80'
-                    : 'bg-forum-bg/50 border border-forum-border text-forum-muted'
-                }`}
-              >
-                {tag.hot && (
-                  <TrendingUp size={8} className="text-forum-pink/60 group-hover:text-forum-pink transition-forum" />
-                )}
-                <span className="group-hover:text-forum-pink transition-forum">
-                  #{tag.name}
-                </span>
-                <span className={`text-[7px] ${tag.hot ? 'text-forum-pink/40 bg-forum-pink/10 rounded-sm px-0.5' : 'opacity-50'}`}>
-                  {tag.count}
-                </span>
-              </button>
-            ))}
+          <div className="flex flex-wrap gap-1.5">
+            {popularTags.map((tag) => {
+              const { bg, border, text, hover, icon } = tag.colorScheme;
+              return (
+                <button
+                  key={tag.name}
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    console.log('Tag clicked:', tag.name);
+                    navigate(`/search?q=${encodeURIComponent(tag.name)}`);
+                  }}
+                  className={`group transition-all duration-200 flex items-center gap-1 rounded-md border px-2 py-1 text-[9px] font-mono cursor-pointer active:scale-95 ${bg} ${border} ${text} ${hover}`}
+                >
+                  {tag.hot ? (
+                    <Flame size={9} className={`${icon} animate-pulse`} />
+                  ) : (
+                    <Hash size={8} className={icon} />
+                  )}
+                  <span className="font-semibold">
+                    {tag.name}
+                  </span>
+                  <span className={`text-[7px] px-1 py-0.5 rounded ${bg} opacity-70`}>
+                    {tag.count}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         )}
       </div>

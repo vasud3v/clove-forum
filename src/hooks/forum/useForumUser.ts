@@ -10,7 +10,7 @@ const AVAILABLE_PAGE_SIZES = [5, 8, 10, 15, 20, 25];
 const fallbackUser: User = {
     id: 'guest',
     username: 'Guest',
-    avatar: getUserAvatar(null, 'Guest'),
+    avatar: getUserAvatar('', 'Guest'),
     postCount: 0,
     reputation: 0,
     joinDate: new Date().toISOString(),
@@ -35,7 +35,7 @@ export function useForumUser() {
 
         let cancelled = false;
 
-        (async () => {
+        const fetchUser = async () => {
             try {
                 const { data, error } = await supabase
                     .from('forum_users')
@@ -49,8 +49,8 @@ export function useForumUser() {
                         setForumUser({
                             id: data.id,
                             username: data.username,
-                            avatar: data.custom_avatar || data.avatar,
-                            banner: data.custom_banner || data.banner || undefined,
+                            avatar: data.avatar,
+                            banner: data.banner || undefined,
                             postCount: data.post_count,
                             reputation: data.reputation,
                             joinDate: data.join_date,
@@ -70,9 +70,46 @@ export function useForumUser() {
             } catch (err) {
                 console.warn('[useForumUser] Failed to fetch forum user:', err);
             }
-        })();
+        };
 
-        return () => { cancelled = true; };
+        fetchUser();
+
+        // Subscribe to realtime updates for current user
+        const channel = supabase
+            .channel(`user-${authUser.id}`)
+            .on(
+                'postgres_changes',
+                {
+                    event: 'UPDATE',
+                    schema: 'public',
+                    table: 'forum_users',
+                    filter: `id=eq.${authUser.id}`,
+                },
+                (payload) => {
+                    if (!cancelled) {
+                        const data = payload.new as any;
+                        console.log('[useForumUser] Received realtime update:', data.username);
+                        setForumUser({
+                            id: data.id,
+                            username: data.username,
+                            avatar: data.avatar,
+                            banner: data.banner || undefined,
+                            postCount: data.post_count,
+                            reputation: data.reputation,
+                            joinDate: data.join_date,
+                            isOnline: data.is_online,
+                            rank: data.rank || 'Newcomer',
+                            role: (data.role as UserRole) || 'member',
+                        });
+                    }
+                }
+            )
+            .subscribe();
+
+        return () => {
+            cancelled = true;
+            supabase.removeChannel(channel);
+        };
     }, [isAuthenticated, authUser?.id]);
 
     // Build the currentUser
@@ -85,7 +122,7 @@ export function useForumUser() {
             return {
                 id: authUser.id,
                 username,
-                avatar: getUserAvatar(null, username),
+                avatar: getUserAvatar('', username),
                 postCount: 0,
                 reputation: 0,
                 joinDate: authUser.created_at || new Date().toISOString(),
@@ -105,7 +142,7 @@ export function useForumUser() {
             try {
                 const { data, error } = await supabase
                     .from('profile_customizations')
-                    .select('user_id, custom_avatar, custom_banner')
+                    .select('user_id')
                     .eq('user_id', authUser.id)
                     .maybeSingle();
 
@@ -117,8 +154,8 @@ export function useForumUser() {
                 if (data) {
                     setProfileCustomizations({
                         [data.user_id]: {
-                            ...(data.custom_avatar ? { avatar: data.custom_avatar } : {}),
-                            ...(data.custom_banner ? { banner: data.custom_banner } : {}),
+                            ...(data.avatar ? { avatar: data.avatar } : {}),
+                            ...(data.banner ? { banner: data.banner } : {}),
                         },
                     });
                 }
@@ -172,8 +209,8 @@ export function useForumUser() {
 
         try {
             const updateData: any = {};
-            if (updates.avatar !== undefined) updateData.custom_avatar = updates.avatar || null;
-            if (updates.banner !== undefined) updateData.custom_banner = updates.banner || null;
+            if (updates.avatar !== undefined) updateData.avatar = updates.avatar || null;
+            if (updates.banner !== undefined) updateData.banner = updates.banner || null;
 
             const { error } = await supabase
                 .from('forum_users')
@@ -188,6 +225,7 @@ export function useForumUser() {
                     setForumUser({
                         ...forumUser,
                         avatar: updates.avatar !== undefined ? (updates.avatar || forumUser.avatar) : forumUser.avatar,
+                        banner: updates.banner !== undefined ? (updates.banner || forumUser.banner) : forumUser.banner,
                     });
                 }
             }

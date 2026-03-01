@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./components/home";
 import CategoryThreadsPage from "./components/forum/CategoryThreadsPage";
+import TopicThreadsPage from "./components/forum/TopicThreadsPage";
 import ThreadDetailPage from "./components/forum/ThreadDetailPage";
 import UserProfilePage from "./components/forum/UserProfilePage";
 import LoginPage from "./components/auth/LoginPage";
@@ -12,8 +13,13 @@ import ForumRulesPage from "./components/forum/ForumRulesPage";
 import SearchPage from "./components/forum/SearchPage";
 import PostBookmarksPage from "./components/forum/PostBookmarksPage";
 import WatchedThreadsPage from "./components/forum/WatchedThreadsPage";
+import SupportPage from "./components/forum/SupportPage";
 import AdminDashboard from "./components/forum/AdminDashboard";
 import AnalyticsDashboard from "./components/forum/AnalyticsDashboard";
+import { MessagesPage } from "./components/forum/MessagesPage";
+import { FollowRequestsPage } from "./components/forum/FollowRequestsPage";
+import { FollowingFeedPage } from "./components/forum/FollowingFeedPage";
+import CreateThreadPage from "./components/forum/CreateThreadPage";
 import { ForumProvider } from "@/context/ForumContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { NotificationProvider } from "@/context/NotificationContext";
@@ -33,10 +39,16 @@ function AppContent() {
           <Route path="/members" element={<MembersPage />} />
           <Route path="/rules" element={<ForumRulesPage />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/support" element={<SupportPage />} />
           <Route path="/bookmarks" element={<PostBookmarksPage />} />
           <Route path="/watched" element={<WatchedThreadsPage />} />
+          <Route path="/messages" element={<MessagesPage />} />
+          <Route path="/follow-requests" element={<FollowRequestsPage />} />
+          <Route path="/following-feed" element={<FollowingFeedPage />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/analytics" element={<AnalyticsDashboard />} />
+          <Route path="/create-thread" element={<CreateThreadPage />} />
+          <Route path="/category/:categoryId/topic/:topicId" element={<TopicThreadsPage />} />
           <Route path="/category/:categoryId" element={<CategoryThreadsPage />} />
           <Route path="/thread/:threadId" element={<ThreadDetailPage />} />
           <Route path="/user/:userId" element={<UserProfilePage />} />

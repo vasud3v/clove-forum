@@ -54,6 +54,9 @@ export interface User {
   isBanned?: boolean;
   banReason?: string;
   banExpiresAt?: string;
+  followerCount?: number;
+  followingCount?: number;
+  isPrivate?: boolean;
 }
 
 export interface Thread {
@@ -79,6 +82,8 @@ export interface Thread {
   trendingScore?: number;
   upvotes: number;
   downvotes: number;
+  banner?: string;
+  thumbnail?: string; // Thread-specific avatar/thumbnail
 }
 
 export interface Topic {
@@ -89,6 +94,22 @@ export interface Topic {
   postCount: number;
   lastActivity: string;
   lastPostBy?: string;
+  latestThreadId?: string;
+  latestThreadTitle?: string;
+  latestThreadAuthor?: string;
+  latestThreadAuthorAvatar?: string;
+  lastPostAvatar?: string;
+  icon?: string;
+  badge?: string;
+  lastPostAvatar?: string;
+  badges?: Array<{
+    label: string;
+    type: 'news' | 'request' | 'instagram' | 'cam' | 'default';
+  }>;
+  subLinks?: Array<{
+    label: string;
+    icon?: string;
+  }>;
 }
 
 export interface Category {

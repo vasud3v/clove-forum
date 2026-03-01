@@ -5,13 +5,9 @@ import ThreadRow from '@/components/forum/ThreadRow';
 import SortControls from '@/components/forum/SortControls';
 import FilterDropdown from '@/components/forum/FilterDropdown';
 import ForumPagination from '@/components/forum/ForumPagination';
-import SidebarStatsPanel from '@/components/forum/SidebarStatsPanel';
-import OnlineUsers from '@/components/forum/OnlineUsers';
 import RecentActivityFeed from '@/components/forum/RecentActivityFeed';
-import PopularTags from '@/components/forum/PopularTags';
-import FloatingActionButton from '@/components/forum/FloatingActionButton';
 import ForumRules from '@/components/forum/ForumRules';
-import NewThreadModal from '@/components/forum/NewThreadModal';
+import SelectTopicModal from '@/components/forum/SelectTopicModal';
 import { useForumContext } from '@/context/ForumContext';
 import { SortOption, FilterOption } from '@/types/forum';
 import {
@@ -34,6 +30,9 @@ import {
   Hash,
   SearchX,
   Construction,
+  Plus,
+  TrendingUp,
+  Sparkles,
 } from 'lucide-react';
 
 const iconMap: Record<string, React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>> = {
@@ -252,16 +251,24 @@ export default function CategoryThreadsPage() {
                 </div>
               </div>
 
-              {/* Quick Stats */}
+              {/* Quick Stats & Create Thread Button */}
               <div className="flex items-center gap-4 flex-shrink-0">
-                <div className="text-center">
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="transition-forum flex items-center gap-2 rounded-lg border border-forum-pink/40 bg-transparent px-4 py-2.5 text-[11px] font-mono font-semibold text-forum-pink hover:bg-forum-pink/10 hover:border-forum-pink/60 active:scale-95"
+                >
+                  <Plus size={16} />
+                  <span className="hidden sm:inline">Create Thread</span>
+                </button>
+                <div className="h-8 w-[1px] bg-forum-border hidden sm:block" />
+                <div className="text-center hidden sm:block">
                   <div className="text-[16px] font-bold text-forum-text font-mono">
                     {category.threadCount.toLocaleString()}
                   </div>
                   <div className="text-[8px] text-forum-muted font-mono uppercase tracking-wider">Threads</div>
                 </div>
-                <div className="h-8 w-[1px] bg-forum-border" />
-                <div className="text-center">
+                <div className="h-8 w-[1px] bg-forum-border hidden sm:block" />
+                <div className="text-center hidden sm:block">
                   <div className="text-[16px] font-bold text-forum-text font-mono">
                     {category.postCount.toLocaleString()}
                   </div>
@@ -365,18 +372,59 @@ export default function CategoryThreadsPage() {
               >
                 All Topics
               </button>
-              {category.topics.map((topic) => (
-                <button
-                  key={topic.id}
-                  onClick={() => { setSearchParams({ topic: topic.id }); setCurrentPage(1); }}
-                  className={`rounded-sm border px-2 py-0.5 text-[9px] font-mono font-medium transition-forum cursor-pointer ${activeTopic === topic.id
-                    ? 'border-forum-pink/40 bg-forum-pink/15 text-forum-pink'
-                    : 'border-forum-pink/10 bg-forum-pink/[0.04] text-forum-pink/70 hover:bg-forum-pink/10 hover:text-forum-pink hover:border-forum-pink/25'
-                    }`}
-                >
-                  {topic.name}
-                </button>
-              ))}
+              {category.topics.map((topic) => {
+                // Calculate topic badges
+                const isHotTopic = topic.threadCount > 10 && topic.postCount > 50;
+                const isTrendingTopic = topic.threadCount > 5 && topic.postCount > 20;
+                const isNewTopic = topic.threadCount < 5;
+                
+                let badgeIcon = null;
+                let badgeClass = '';
+                
+                if (isHotTopic) {
+                  badgeIcon = <Flame size={10} className="animate-pulse" />;
+                  badgeClass = 'text-orange-400';
+                } else if (isTrendingTopic) {
+                  badgeIcon = <TrendingUp size={10} />;
+                  badgeClass = 'text-emerald-400';
+                } else if (isNewTopic) {
+                  badgeIcon = <Sparkles size={10} className="animate-pulse" />;
+                  badgeClass = 'text-purple-400';
+                }
+                
+                return (
+                  <button
+                    key={topic.id}
+                    onClick={() => { setSearchParams({ topic: topic.id }); setCurrentPage(1); }}
+                    className={`rounded-sm border px-2.5 py-1.5 text-[9px] font-mono font-medium transition-forum cursor-pointer flex flex-col items-start gap-0.5 ${activeTopic === topic.id
+                      ? 'border-forum-pink/40 bg-forum-pink/15 text-forum-pink'
+                      : 'border-forum-pink/10 bg-forum-pink/[0.04] text-forum-pink/70 hover:bg-forum-pink/10 hover:text-forum-pink hover:border-forum-pink/25'
+                      }`}
+                  >
+                    <div className="flex items-center gap-1.5">
+                      {topic.icon && (
+                        <img 
+                          src={topic.icon} 
+                          alt="" 
+                          className="w-5 h-5 rounded object-contain flex-shrink-0"
+                          onError={(e) => e.currentTarget.style.display = 'none'}
+                        />
+                      )}
+                      <span>{topic.name}</span>
+                      {badgeIcon && (
+                        <span className={badgeClass}>
+                          {badgeIcon}
+                        </span>
+                      )}
+                    </div>
+                    {topic.latestThreadTitle && topic.latestThreadAuthor && (
+                      <span className="text-[8px] text-forum-muted/60 font-normal truncate max-w-[200px]">
+                        Latest: {topic.latestThreadTitle} by @{topic.latestThreadAuthor}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
         )}
@@ -573,10 +621,7 @@ export default function CategoryThreadsPage() {
               </div>
             </div>
 
-            <SidebarStatsPanel stats={forumStats} />
             <RecentActivityFeed />
-            <PopularTags />
-            <OnlineUsers />
           </div>
         </div>
       </div>
@@ -589,19 +634,16 @@ export default function CategoryThreadsPage() {
             onClick={() => setIsMobileMenuOpen(false)}
           />
           <div className="absolute right-0 top-0 bottom-0 w-[300px] overflow-y-auto border-l border-forum-border bg-forum-card p-4 space-y-4">
-            <SidebarStatsPanel stats={forumStats} />
             <RecentActivityFeed />
-            <PopularTags />
-            <OnlineUsers />
           </div>
         </div>
       )}
 
-      {/* Floating Action Button */}
-      <FloatingActionButton onClick={() => setIsModalOpen(true)} />
-
-      {/* New Thread Modal */}
-      <NewThreadModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      {/* Topic Selection Modal */}
+      <SelectTopicModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
     </div>
   );
 }
