@@ -41,29 +41,21 @@ export default function EditThreadModal({ isOpen, onClose, threadId }: EditThrea
       return;
     }
 
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error('Image size must be less than 5MB');
+    // Validate file size (max 10MB to match CreateThreadPage)
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('Image size must be less than 10MB');
       return;
     }
 
     setIsUploading(true);
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `thread-banner-${threadId}-${Date.now()}.${fileExt}`;
-      const filePath = `thread-banners/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('forum-uploads')
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const { data: { publicUrl } } = supabase.storage
-        .from('forum-uploads')
-        .getPublicUrl(filePath);
-
-      setBanner(publicUrl);
+      // Upload to ImgBB (same as CreateThreadPage)
+      const { uploadToImgBB } = await import('@/lib/avatarUpload');
+      const timestamp = Date.now();
+      const imageName = `thread-banner-${threadId}-${timestamp}`;
+      const imageUrl = await uploadToImgBB(file, imageName);
+      
+      setBanner(imageUrl);
       toast.success('Banner uploaded successfully');
     } catch (error) {
       console.error('Error uploading banner:', error);
