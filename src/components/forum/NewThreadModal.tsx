@@ -162,9 +162,8 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
     onClose();
   };
 
-  if (!isOpen) return null;
-
   // Debug: Log categories to check if topics are loaded (development only)
+  // MUST be before early return to follow Rules of Hooks
   useEffect(() => {
     if (isOpen && import.meta.env.DEV) {
       console.log('[NewThreadModal] Categories:', categories);
@@ -174,6 +173,8 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
       console.log('[NewThreadModal] Topics for selected category:', cat?.topics);
     }
   }, [isOpen, categories, selectedCategory]);
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
