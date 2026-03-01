@@ -19,6 +19,7 @@ export default function EditThreadModal({ isOpen, onClose, threadId }: EditThrea
   const [content, setContent] = useState('');
   const [tags, setTags] = useState('');
   const [banner, setBanner] = useState('');
+  const [thumbnail, setThumbnail] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -28,6 +29,7 @@ export default function EditThreadModal({ isOpen, onClose, threadId }: EditThrea
       setContent(thread.excerpt || ''); // Load existing content
       setTags(thread.tags?.join(', ') || '');
       setBanner(thread.banner || '');
+      setThumbnail(thread.thumbnail || '');
     }
   }, [thread, isOpen]);
 
@@ -65,6 +67,40 @@ export default function EditThreadModal({ isOpen, onClose, threadId }: EditThrea
     }
   };
 
+  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please upload an image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image size must be less than 5MB');
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      // Upload to ImgBB
+      const { uploadToImgBB } = await import('@/lib/avatarUpload');
+      const timestamp = Date.now();
+      const imageName = `thread-thumbnail-${threadId}-${timestamp}`;
+      const imageUrl = await uploadToImgBB(file, imageName);
+      
+      setThumbnail(imageUrl);
+      toast.success('Thumbnail uploaded successfully');
+    } catch (error) {
+      console.error('Error uploading thumbnail:', error);
+      toast.error('Failed to upload thumbnail');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   const handleRemoveBanner = () => {
     setBanner('');
   };
@@ -94,6 +130,7 @@ export default function EditThreadModal({ isOpen, onClose, threadId }: EditThrea
           excerpt: content.trim().substring(0, 200),
           tags: tagsArray.length > 0 ? tagsArray : null,
           banner: banner || null,
+          thumbnail: thumbnail || null,
         })
         .eq('id', threadId);
 
@@ -173,6 +210,45 @@ export default function EditThreadModal({ isOpen, onClose, threadId }: EditThrea
               className="w-full rounded-lg border border-forum-border bg-forum-bg px-4 py-2.5 text-[13px] font-mono text-forum-text placeholder-forum-muted/50 focus:border-forum-pink/40 focus:outline-none focus:ring-1 focus:ring-forum-pink/20 transition-forum"
               placeholder="e.g. discussion, help, announcement"
             />
+          </div>
+
+          {/* Thumbnail Upload */}
+          <div>
+            <label className="block text-[11px] font-mono font-semibold text-forum-text mb-2 uppercase tracking-wider">
+              Thread Thumbnail (75x50 preview)
+            </label>
+            <div className="flex items-center gap-3">
+              {thumbnail && (
+                <img
+                  src={thumbnail}
+                  alt="Thread thumbnail"
+                  className="h-16 w-16 rounded-md object-cover border border-forum-border"
+                  onError={() => {
+                    toast.error('Failed to load thumbnail');
+                    setThumbnail('');
+                  }}
+                />
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleThumbnailUpload}
+                disabled={isUploading}
+                className="flex-1 text-[11px] font-mono text-forum-text file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-[11px] file:font-medium file:bg-forum-bg file:text-forum-text hover:file:bg-forum-hover file:cursor-pointer disabled:opacity-50"
+              />
+              {thumbnail && (
+                <button
+                  type="button"
+                  onClick={() => setThumbnail('')}
+                  className="px-3 py-2 text-[11px] font-mono text-forum-muted hover:text-forum-pink transition-colors"
+                >
+                  Remove
+                </button>
+              )}
+            </div>
+            <p className="text-[9px] font-mono text-forum-muted/60 mt-1">
+              Upload a thumbnail for thread list preview (max 5MB)
+            </p>
           </div>
 
           {/* Banner Upload */}
