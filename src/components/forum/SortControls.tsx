@@ -24,10 +24,10 @@ export default function SortControls({ activeSort, onSortChange }: SortControlsP
             <button
               key={sort.value}
               onClick={() => onSortChange(sort.value)}
-              className={`transition-forum rounded-sm px-2.5 py-1.5 text-[10px] font-mono font-bold flex items-center gap-1.5 ${
+              className={`transition-forum  px-2.5 py-1.5 text-[10px] font-mono font-bold flex items-center gap-1.5 ${
                 activeSort === sort.value
-                  ? 'bg-gradient-to-r from-forum-pink to-forum-pink/90 text-white shadow-[0_0_14px_rgba(255,45,146,0.35)] border border-forum-pink/60'
-                  : 'border border-forum-border/50 bg-transparent text-forum-muted hover:bg-forum-hover hover:text-forum-text hover:border-forum-pink/30 hover:shadow-[0_0_8px_rgba(255,45,146,0.1)]'
+                  ? 'bg-primary to-forum-pink/90 text-white shadow-[0_0_14px_rgba(255,45,146,0.35)] border border-primary/60'
+                  : 'border border-forum-border/50 bg-transparent text-forum-muted hover:bg-forum-hover hover:text-forum-text hover:border-primary/30 hover:shadow-[0_0_8px_rgba(255,45,146,0.1)]'
               }`}
             >
               <Icon size={10} />

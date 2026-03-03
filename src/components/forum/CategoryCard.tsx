@@ -50,7 +50,7 @@ function getCategoryBadges(category: Category) {
     badges.push({
       label: 'Hot',
       icon: <Flame size={11} className="animate-pulse" />,
-      color: 'bg-gradient-to-r from-orange-500/15 to-red-500/15 border-orange-500/40 text-orange-400',
+      color: 'bg-gradient-to-r from-orange-500/15 to-red-500/15 border-orange-500/40 text-orange-700',
       bgGlow: 'shadow-[0_0_12px_rgba(251,146,60,0.3)]'
     });
   }
@@ -59,7 +59,7 @@ function getCategoryBadges(category: Category) {
     badges.push({
       label: 'Trending',
       icon: <TrendingUp size={11} />,
-      color: 'bg-gradient-to-r from-emerald-500/15 to-green-500/15 border-emerald-500/40 text-emerald-400',
+      color: 'bg-gradient-to-r from-emerald-600/30 to-emerald-600/20 border-emerald-600 text-white',
       bgGlow: 'shadow-[0_0_12px_rgba(52,211,153,0.3)]'
     });
   }
@@ -68,7 +68,7 @@ function getCategoryBadges(category: Category) {
     badges.push({
       label: 'Popular',
       icon: <Star size={11} className="fill-current" />,
-      color: 'bg-gradient-to-r from-blue-500/15 to-cyan-500/15 border-blue-500/40 text-blue-400',
+      color: 'bg-gradient-to-r from-blue-600/30 to-cyan-600/20 border-blue-600 text-white',
       bgGlow: 'shadow-[0_0_12px_rgba(59,130,246,0.3)]'
     });
   }
@@ -77,7 +77,7 @@ function getCategoryBadges(category: Category) {
     badges.push({
       label: 'New',
       icon: <Sparkles size={11} className="animate-pulse" />,
-      color: 'bg-gradient-to-r from-purple-500/15 to-pink-500/15 border-purple-500/40 text-purple-400',
+      color: 'bg-gradient-to-r from-purple-600/30 to-pink-600/20 border-purple-600 text-white',
       bgGlow: 'shadow-[0_0_12px_rgba(168,85,247,0.3)]'
     });
   }
@@ -106,7 +106,7 @@ export default function CategoryCard({ category }: CategoryCardProps) {
   return (
     <div className="hud-panel overflow-hidden">
       {/* Category Header */}
-      <div className="bg-gradient-to-r from-forum-card to-forum-bg border-b border-forum-border px-4 py-2.5 flex items-center justify-between">
+      <div className="bg-forum-card to-forum-bg border-b border-forum-border px-4 py-2.5 flex items-center justify-between">
         <h2 className="text-[11px] font-bold text-forum-text font-mono uppercase tracking-wider">
           {category.name}
         </h2>
@@ -117,7 +117,7 @@ export default function CategoryCard({ category }: CategoryCardProps) {
             {badges.map((badge, index) => (
               <span
                 key={index}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-[9px] font-mono font-bold uppercase tracking-wider transition-all ${badge.color} ${badge.bgGlow}`}
+                className={`flex items-center gap-1.5 px-2.5 py-1  border text-[9px] font-mono font-bold uppercase tracking-wider transition-all ${badge.color} ${badge.bgGlow}`}
               >
                 {badge.icon}
                 <span>{badge.label}</span>
@@ -134,14 +134,14 @@ export default function CategoryCard({ category }: CategoryCardProps) {
       >
         {/* Icon */}
         <div className="flex-shrink-0">
-          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-forum-pink/20 to-forum-pink/5 border border-forum-pink/30 group-hover:border-forum-pink/50 transition-forum">
-            <Icon size={20} className="text-forum-pink" />
+          <div className="flex h-12 w-12 items-center justify-center  bg-gradient-to-br from-forum-pink/20 to-forum-pink/5 border border-primary/30 group-hover:border-primary/50 transition-forum">
+            <Icon size={20} className="text-primary" />
           </div>
         </div>
 
         {/* Category Info */}
         <div className="flex-1 min-w-0">
-          <h3 className="text-[13px] font-bold text-forum-text font-mono group-hover:text-forum-pink transition-forum mb-1">
+          <h3 className="text-[13px] font-bold text-forum-text font-mono group-hover:text-primary transition-forum mb-1">
             {category.name}
           </h3>
           <p className="text-[10px] text-forum-muted font-mono leading-relaxed">
@@ -172,14 +172,14 @@ export default function CategoryCard({ category }: CategoryCardProps) {
               <Link
                 to={`/thread/${latestThread.id}`}
                 onClick={(e) => e.stopPropagation()}
-                className="text-[10px] font-medium text-forum-text font-mono hover:text-forum-pink transition-forum line-clamp-1 mb-1"
+                className="text-[10px] font-medium text-forum-text font-mono hover:text-primary transition-forum line-clamp-1 mb-1"
               >
                 {latestThread.title}
               </Link>
               <div className="flex items-center justify-end gap-1.5 text-[9px] text-forum-muted font-mono">
                 <span>{formatTimeAgo(latestThread.lastReplyAt)}</span>
                 <span>by</span>
-                <span className="text-forum-pink">{latestThread.lastReplyBy.username}</span>
+                <span className="text-primary">{latestThread.lastReplyBy.username}</span>
               </div>
             </div>
           ) : (
@@ -202,13 +202,13 @@ export default function CategoryCard({ category }: CategoryCardProps) {
               {/* Thread Status Icons */}
               <div className="flex-shrink-0 flex items-center gap-1">
                 {thread.isPinned && (
-                  <Pin size={12} className="text-forum-pink" fill="currentColor" />
+                  <Pin size={12} className="text-primary" fill="currentColor" />
                 )}
                 {thread.isLocked && (
                   <Lock size={12} className="text-forum-muted" />
                 )}
                 {thread.isHot && (
-                  <TrendingUp size={12} className="text-orange-400" />
+                  <TrendingUp size={12} className="text-orange-700" />
                 )}
                 {!thread.isPinned && !thread.isLocked && !thread.isHot && (
                   <MessageSquare size={12} className="text-forum-muted" />
@@ -217,11 +217,11 @@ export default function CategoryCard({ category }: CategoryCardProps) {
 
               {/* Thread Info */}
               <div className="flex-1 min-w-0">
-                <h5 className="text-[11px] font-medium text-forum-text font-mono group-hover:text-forum-pink transition-forum truncate mb-0.5">
+                <h5 className="text-[11px] font-medium text-forum-text font-mono group-hover:text-primary transition-forum truncate mb-0.5">
                   {thread.title}
                 </h5>
                 <div className="flex items-center gap-2 text-[9px] text-forum-muted font-mono">
-                  <span className="hover:text-forum-pink transition-forum">
+                  <span className="hover:text-primary transition-forum">
                     {thread.author.username}
                   </span>
                   <span>•</span>
@@ -250,7 +250,7 @@ export default function CategoryCard({ category }: CategoryCardProps) {
                 <div className="text-[9px] text-forum-muted font-mono">
                   {formatTimeAgo(thread.lastReplyAt)}
                 </div>
-                <div className="text-[9px] text-forum-pink font-mono truncate">
+                <div className="text-[9px] text-primary font-mono truncate">
                   {thread.lastReplyBy.username}
                 </div>
               </div>

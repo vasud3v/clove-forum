@@ -1,11 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <defs>
-    <linearGradient id="c-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ff2d92"/>
-      <stop offset="100%" stop-color="#ff6ba6"/>
-    </linearGradient>
-  </defs>
-  <rect width="64" height="64" fill="#1a1a2e"/>
-  <path d="M 46 12 A 22 22 0 0 0 18 32 A 22 22 0 0 0 46 52" fill="none" stroke="url(#c-grad)" stroke-width="5" stroke-linecap="round"/>
-  <path d="M 42 18 A 18 18 0 0 0 22 32 A 18 18 0 0 0 42 46" fill="none" stroke="url(#c-grad)" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- Neo-Brutalism Logo: Bold geometric grid design, scaled for larger size -->
+  
+  <!-- Outer border -->
+  <rect x="4" y="4" width="120" height="120" fill="none" stroke="#000000" stroke-width="6"/>
+  
+  <!-- Inner frame -->
+  <rect x="12" y="12" width="104" height="104" fill="#FFFFFF" stroke="#000000" stroke-width="4"/>
+  
+  <!-- Grid structure -->
+  <g stroke="#000000" stroke-width="3" fill="none">
+    <!-- Vertical lines -->
+    <line x1="44" y1="20" x2="44" y2="108" />
+    <line x1="84" y1="20" x2="84" y2="108" />
+    <!-- Horizontal lines -->
+    <line x1="20" y1="44" x2="108" y2="44" />
+    <line x1="20" y1="84" x2="108" y2="84" />
+  </g>
+  
+  <!-- Diagonal structural lines for brutalist asymmetry -->
+  <g stroke="#000000" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.6">
+    <line x1="28" y1="16" x2="16" y2="28" />
+    <line x1="112" y1="16" x2="100" y2="28" />
+    <line x1="16" y1="100" x2="28" y2="112" />
+    <line x1="112" y1="100" x2="100" y2="112" />
+  </g>
+  
+  <!-- Central brutalist block - hot pink -->
+  <rect x="50" y="50" width="28" height="28" fill="#ff2d92" stroke="#000000" stroke-width="3"/>
+  
+  <!-- Corner accent squares -->
+  <g fill="#000000">
+    <rect x="24" y="24" width="4" height="4" />
+    <rect x="100" y="24" width="4" height="4" />
+    <rect x="24" y="100" width="4" height="4" />
+    <rect x="100" y="100" width="4" height="4" />
+  </g>
 </svg>

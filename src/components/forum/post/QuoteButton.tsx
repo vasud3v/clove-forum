@@ -27,7 +27,7 @@ const QuoteButton = memo(({ onQuote, onPartialQuote }: QuoteButtonProps) => {
       variant="ghost"
       size="sm"
       onClick={handleClick}
-      className="text-forum-muted hover:text-forum-pink transition-forum text-[10px] font-mono gap-1.5"
+      className="text-forum-muted hover:text-primary transition-forum text-[10px] font-mono gap-1.5"
       title="Quote this post (or select text for partial quote)"
     >
       <Quote size={12} />

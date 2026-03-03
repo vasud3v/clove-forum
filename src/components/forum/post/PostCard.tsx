@@ -71,9 +71,9 @@ const PostCard = memo(({
     const element = document.getElementById(parentId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      element.classList.add('ring-2', 'ring-forum-pink', 'ring-opacity-50');
+      element.classList.add('ring-2', 'ring-primary', 'ring-opacity-50');
       setTimeout(() => {
-        element.classList.remove('ring-2', 'ring-forum-pink', 'ring-opacity-50');
+        element.classList.remove('ring-2', 'ring-primary', 'ring-opacity-50');
       }, 2000);
     }
   };
@@ -81,7 +81,7 @@ const PostCard = memo(({
   return (
     <div
       id={post.id}
-      className={`hud-panel scroll-mt-24 flex flex-col md:flex-row relative rounded-xl ${indentClass}`}
+      className={`hud-panel scroll-mt-24 flex flex-col md:flex-row relative  ${indentClass}`}
       style={{ 
         marginLeft: depth > 0 ? `${Math.min(depth, 3) * 24}px` : '0',
       }}
@@ -89,7 +89,7 @@ const PostCard = memo(({
       {/* Enhanced connecting line for nested replies */}
       {depth > 0 && (
         <div 
-          className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-forum-pink/30 via-forum-border/30 to-transparent rounded-l"
+          className="absolute left-0 top-0 bottom-0 w-1 bg-forum-card via-forum-border/30 to-transparent rounded-l"
           style={{ left: '-12px' }}
         />
       )}

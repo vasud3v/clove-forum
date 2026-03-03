@@ -148,12 +148,15 @@ export default function AdminSystemTab() {
             .select('*', { count: 'exact', head: true })
             .eq('category_id', cat.id);
 
+          // Get post count for this category
           const { count: postCount } = await supabase
             .from('posts')
-            .select('p.*, t.category_id', { count: 'exact', head: true })
-            .from('posts as p')
-            .innerJoin('threads as t', 'p.thread_id', 't.id')
-            .eq('t.category_id', cat.id);
+            .select('id', { count: 'exact', head: true })
+            .in('thread_id', (await supabase
+              .from('threads')
+              .select('id')
+              .eq('category_id', cat.id)
+            ).data?.map(t => t.id) || []);
 
           await supabase
             .from('categories')
@@ -173,7 +176,7 @@ export default function AdminSystemTab() {
   if (isLoading || !health) {
     return (
       <div className="hud-panel flex items-center justify-center py-20">
-        <RefreshCw size={20} className="text-forum-pink animate-spin" />
+        <RefreshCw size={20} className="text-primary animate-spin" />
         <span className="ml-3 text-[12px] font-mono text-forum-muted">Loading system health...</span>
       </div>
     );
@@ -185,12 +188,12 @@ export default function AdminSystemTab() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <div className="hud-panel p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Database size={14} className={health.database === 'healthy' ? 'text-emerald-400' : 'text-red-400'} />
+            <Database size={14} className={health.database === 'healthy' ? 'text-black' : 'text-red-600'} />
             <span className="text-[10px] font-mono text-forum-muted uppercase">Database</span>
           </div>
           <div className="flex items-center gap-2">
             {health.database === 'healthy' ? (
-              <CheckCircle size={16} className="text-emerald-400" />
+              <CheckCircle size={16} className="text-black" />
             ) : (
               <AlertTriangle size={16} className="text-red-400" />
             )}
@@ -200,7 +203,7 @@ export default function AdminSystemTab() {
 
         <div className="hud-panel p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Server size={14} className="text-blue-400" />
+            <Server size={14} className="text-black" />
             <span className="text-[10px] font-mono text-forum-muted uppercase">API Status</span>
           </div>
           <div className="flex items-center gap-2">
@@ -211,7 +214,7 @@ export default function AdminSystemTab() {
 
         <div className="hud-panel p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Activity size={14} className="text-purple-400" />
+            <Activity size={14} className="text-purple-600" />
             <span className="text-[10px] font-mono text-forum-muted uppercase">Performance</span>
           </div>
           <div className="flex items-center gap-2">
@@ -224,7 +227,7 @@ export default function AdminSystemTab() {
       {/* Table Statistics */}
       <div className="hud-panel p-4">
         <h3 className="text-[12px] font-mono font-bold text-forum-text mb-3 flex items-center gap-2">
-          <HardDrive size={12} className="text-forum-pink" /> Database Tables
+          <HardDrive size={12} className="text-primary" /> Database Tables
         </h3>
         <div className="space-y-2">
           {health.tables.map((table, idx) => (
@@ -246,7 +249,7 @@ export default function AdminSystemTab() {
           <button
             onClick={handleExportData}
             disabled={isExporting}
-            className="transition-forum flex items-center justify-center gap-2 rounded-md border border-forum-border px-4 py-3 text-[11px] font-mono text-forum-text hover:border-forum-pink hover:text-forum-pink disabled:opacity-50"
+            className="transition-forum flex items-center justify-center gap-2  border border-forum-border px-4 py-3 text-[11px] font-mono text-forum-text hover:border-primary hover:text-primary disabled:opacity-50"
           >
             {isExporting ? <RefreshCw size={14} className="animate-spin" /> : <Download size={14} />}
             {isExporting ? 'Exporting...' : 'Export All Data'}
@@ -254,7 +257,7 @@ export default function AdminSystemTab() {
 
           <button
             onClick={handleOptimize}
-            className="transition-forum flex items-center justify-center gap-2 rounded-md border border-forum-border px-4 py-3 text-[11px] font-mono text-forum-text hover:border-blue-500 hover:text-blue-400"
+            className="transition-forum flex items-center justify-center gap-2  border border-forum-border px-4 py-3 text-[11px] font-mono text-forum-text hover:border-blue-600 hover:text-black"
           >
             <Activity size={14} />
             Optimize Database
@@ -263,7 +266,7 @@ export default function AdminSystemTab() {
           <button
             onClick={() => handleCleanup('old_posts')}
             disabled={isCleaning}
-            className="transition-forum flex items-center justify-center gap-2 rounded-md border border-forum-border px-4 py-3 text-[11px] font-mono text-forum-text hover:border-amber-500 hover:text-amber-400 disabled:opacity-50"
+            className="transition-forum flex items-center justify-center gap-2  border border-forum-border px-4 py-3 text-[11px] font-mono text-forum-text hover:border-amber-600 hover:text-amber-600 disabled:opacity-50"
           >
             <Trash2 size={14} />
             Clean Old Posts
@@ -272,7 +275,7 @@ export default function AdminSystemTab() {
           <button
             onClick={() => handleCleanup('deleted_users')}
             disabled={isCleaning}
-            className="transition-forum flex items-center justify-center gap-2 rounded-md border border-forum-border px-4 py-3 text-[11px] font-mono text-forum-text hover:border-red-500 hover:text-red-400 disabled:opacity-50"
+            className="transition-forum flex items-center justify-center gap-2  border border-forum-border px-4 py-3 text-[11px] font-mono text-forum-text hover:border-red-500 hover:text-red-400 disabled:opacity-50"
           >
             <Trash2 size={14} />
             Clean Banned Users

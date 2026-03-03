@@ -23,18 +23,18 @@ interface Ticket {
 }
 
 const categories = [
-  { value: 'hiring', label: 'Job Application', icon: Briefcase, color: 'text-emerald-400', desc: 'Apply for moderator or staff positions' },
-  { value: 'report', label: 'Report Content', icon: Shield, color: 'text-red-400', desc: 'Report rule violations or inappropriate content' },
-  { value: 'bug', label: 'Bug Report', icon: Bug, color: 'text-orange-400', desc: 'Report technical issues or bugs' },
-  { value: 'feature', label: 'Feature Request', icon: Lightbulb, color: 'text-cyan-400', desc: 'Suggest new features or improvements' },
-  { value: 'account', label: 'Account Issue', icon: User, color: 'text-purple-400', desc: 'Account-related problems or questions' },
-  { value: 'general', label: 'General Support', icon: HelpCircle, color: 'text-forum-pink', desc: 'Other questions or concerns' },
+  { value: 'hiring', label: 'Job Application', icon: Briefcase, color: 'text-emerald-700', desc: 'Apply for moderator or staff positions' },
+  { value: 'report', label: 'Report Content', icon: Shield, color: 'text-red-600', desc: 'Report rule violations or inappropriate content' },
+  { value: 'bug', label: 'Bug Report', icon: Bug, color: 'text-orange-700', desc: 'Report technical issues or bugs' },
+  { value: 'feature', label: 'Feature Request', icon: Lightbulb, color: 'text-cyan-600', desc: 'Suggest new features or improvements' },
+  { value: 'account', label: 'Account Issue', icon: User, color: 'text-purple-600', desc: 'Account-related problems or questions' },
+  { value: 'general', label: 'General Support', icon: HelpCircle, color: 'text-primary', desc: 'Other questions or concerns' },
 ];
 
 const statusConfig = {
-  open: { label: 'Open', icon: Clock, color: 'text-cyan-400', bg: 'bg-cyan-500/10', border: 'border-cyan-500/30' },
-  in_progress: { label: 'In Progress', icon: AlertCircle, color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/30' },
-  resolved: { label: 'Resolved', icon: CheckCircle, color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/30' },
+  open: { label: 'Open', icon: Clock, color: 'text-cyan-600', bg: 'bg-cyan-500/10', border: 'border-cyan-500/30' },
+  in_progress: { label: 'In Progress', icon: AlertCircle, color: 'text-amber-600', bg: 'bg-amber-500/10', border: 'border-amber-500/30' },
+  resolved: { label: 'Resolved', icon: CheckCircle, color: 'text-emerald-700', bg: 'bg-emerald-500/10', border: 'border-emerald-500/30' },
   closed: { label: 'Closed', icon: XCircle, color: 'text-forum-muted', bg: 'bg-forum-muted/10', border: 'border-forum-muted/30' },
 };
 
@@ -132,8 +132,8 @@ export default function SupportPage() {
       <div className="mx-auto max-w-4xl px-4 py-4 lg:px-6">
         {/* Breadcrumb */}
         <div className="flex items-center gap-1.5 text-[10px] font-mono text-forum-muted mb-4">
-          <Home size={11} className="text-forum-pink" />
-          <span className="text-forum-text hover:text-forum-pink transition-forum cursor-pointer" onClick={() => navigate('/')}>
+          <Home size={11} className="text-primary" />
+          <span className="text-forum-text hover:text-primary transition-forum cursor-pointer" onClick={() => navigate('/')}>
             Forums
           </span>
           <ChevronRight size={10} />
@@ -143,8 +143,8 @@ export default function SupportPage() {
         {/* Header */}
         <div className="hud-panel p-6 mb-4">
           <div className="flex items-center gap-3 mb-2">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-forum-pink/15 border border-forum-pink/25">
-              <HelpCircle size={24} className="text-forum-pink" />
+            <div className="flex h-12 w-12 items-center justify-center  bg-primary/15 border border-primary/25">
+              <HelpCircle size={24} className="text-primary" />
             </div>
             <div>
               <h1 className="text-[18px] font-mono font-bold text-forum-text">Support Center</h1>
@@ -156,9 +156,9 @@ export default function SupportPage() {
           <div className="flex gap-2 mt-4">
             <button
               onClick={() => setView('form')}
-              className={`px-4 py-2 rounded-md text-[11px] font-mono transition-all ${
+              className={`px-4 py-2  text-[11px] font-mono transition-all ${
                 view === 'form'
-                  ? 'bg-forum-pink/10 border border-forum-pink/30 text-forum-pink'
+                  ? 'bg-primary/10 border border-primary/30 text-primary'
                   : 'bg-forum-bg border border-forum-border text-forum-muted hover:bg-forum-hover'
               }`}
             >
@@ -166,9 +166,9 @@ export default function SupportPage() {
             </button>
             <button
               onClick={() => setView('tickets')}
-              className={`px-4 py-2 rounded-md text-[11px] font-mono transition-all ${
+              className={`px-4 py-2  text-[11px] font-mono transition-all ${
                 view === 'tickets'
-                  ? 'bg-forum-pink/10 border border-forum-pink/30 text-forum-pink'
+                  ? 'bg-primary/10 border border-primary/30 text-primary'
                   : 'bg-forum-bg border border-forum-border text-forum-muted hover:bg-forum-hover'
               }`}
             >
@@ -190,9 +190,9 @@ export default function SupportPage() {
                     <button
                       key={cat.value}
                       onClick={() => setFormData({ ...formData, category: cat.value })}
-                      className={`p-4 rounded-lg border transition-all text-left ${
+                      className={`p-4  border transition-all text-left ${
                         formData.category === cat.value
-                          ? 'border-forum-pink/40 bg-forum-pink/5'
+                          ? 'border-primary/40 bg-primary/5'
                           : 'border-forum-border bg-forum-bg hover:bg-forum-hover'
                       }`}
                     >
@@ -225,7 +225,7 @@ export default function SupportPage() {
                     type="text"
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    className="w-full px-3 py-2 bg-forum-bg border border-forum-border rounded-md text-[12px] font-mono text-forum-text focus:border-forum-pink focus:outline-none"
+                    className="w-full px-3 py-2 bg-forum-bg border border-forum-border  text-[12px] font-mono text-forum-text focus:border-primary focus:outline-none"
                     placeholder="Brief description of your request"
                     required
                   />
@@ -236,7 +236,7 @@ export default function SupportPage() {
                   <textarea
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full px-3 py-2 bg-forum-bg border border-forum-border rounded-md text-[12px] font-mono text-forum-text focus:border-forum-pink focus:outline-none"
+                    className="w-full px-3 py-2 bg-forum-bg border border-forum-border  text-[12px] font-mono text-forum-text focus:border-primary focus:outline-none"
                     rows={8}
                     placeholder="Provide detailed information about your request..."
                     required
@@ -246,7 +246,7 @@ export default function SupportPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-md bg-forum-pink/10 border border-forum-pink/30 text-forum-pink hover:bg-forum-pink/20 transition-all text-[12px] font-mono font-bold disabled:opacity-50"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3  bg-primary/10 border border-primary/30 text-primary hover:bg-primary/20 transition-all text-[12px] font-mono font-bold disabled:opacity-50"
                 >
                   <Send size={14} />
                   {loading ? 'Submitting...' : 'Submit Ticket'}
@@ -269,7 +269,7 @@ export default function SupportPage() {
                 <p className="text-[12px] font-mono text-forum-muted">No tickets yet</p>
                 <button
                   onClick={() => setView('form')}
-                  className="mt-4 px-4 py-2 rounded-md bg-forum-pink/10 border border-forum-pink/30 text-forum-pink hover:bg-forum-pink/20 transition-all text-[11px] font-mono"
+                  className="mt-4 px-4 py-2  bg-primary/10 border border-primary/30 text-primary hover:bg-primary/20 transition-all text-[11px] font-mono"
                 >
                   Create Your First Ticket
                 </button>
@@ -282,14 +282,14 @@ export default function SupportPage() {
                 const CategoryIcon = category?.icon || HelpCircle;
 
                 return (
-                  <div key={ticket.id} className="hud-panel p-4 hover:border-forum-pink/30 transition-all cursor-pointer">
+                  <div key={ticket.id} className="hud-panel p-4 hover:border-primary/30 transition-all cursor-pointer">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex items-start gap-3 flex-1">
                         <CategoryIcon size={18} className={category?.color || 'text-forum-muted'} />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
                             <span className="text-[10px] font-mono text-forum-muted">{ticket.ticket_number}</span>
-                            <span className={`text-[8px] font-mono px-2 py-0.5 rounded-full ${status.bg} ${status.border} border ${status.color}`}>
+                            <span className={`text-[8px] font-mono px-2 py-0.5  ${status.bg} ${status.border} border ${status.color}`}>
                               {status.label}
                             </span>
                           </div>

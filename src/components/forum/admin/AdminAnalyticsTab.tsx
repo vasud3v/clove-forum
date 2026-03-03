@@ -141,7 +141,7 @@ export default function AdminAnalyticsTab() {
   if (isLoading || !analytics) {
     return (
       <div className="hud-panel flex items-center justify-center py-20">
-        <Activity size={20} className="text-forum-pink animate-spin" />
+        <Activity size={20} className="text-primary animate-spin" />
         <span className="ml-3 text-[12px] font-mono text-forum-muted">Loading analytics...</span>
       </div>
     );
@@ -151,15 +151,15 @@ export default function AdminAnalyticsTab() {
     <div className="space-y-4">
       {/* Time Range Selector */}
       <div className="flex items-center gap-2">
-        <Calendar size={14} className="text-forum-pink" />
+        <Calendar size={14} className="text-primary" />
         <span className="text-[10px] font-mono text-forum-muted">Time Range:</span>
         {(['7d', '30d', '90d'] as const).map(range => (
           <button
             key={range}
             onClick={() => setTimeRange(range)}
-            className={`transition-forum rounded-md px-3 py-1 text-[10px] font-mono ${
+            className={`transition-forum  px-3 py-1 text-[10px] font-mono ${
               timeRange === range
-                ? 'bg-forum-pink text-white'
+                ? 'bg-primary text-black'
                 : 'text-forum-muted hover:text-forum-text hover:bg-forum-hover'
             }`}
           >
@@ -172,45 +172,45 @@ export default function AdminAnalyticsTab() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="hud-panel p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Users size={14} className="text-blue-400" />
+            <Users size={14} className="text-blue-600" />
             <span className="text-[10px] font-mono text-forum-muted uppercase">Total Users</span>
           </div>
           <div className="text-[20px] font-mono font-bold text-forum-text">{analytics.totalUsers.toLocaleString()}</div>
-          <div className="text-[9px] font-mono text-emerald-400 mt-1">+{analytics.newUsers7d} this week</div>
+          <div className="text-[9px] font-mono text-emerald-700 mt-1">+{analytics.newUsers7d} this week</div>
         </div>
 
         <div className="hud-panel p-4">
           <div className="flex items-center gap-2 mb-2">
-            <MessageSquare size={14} className="text-forum-pink" />
+            <MessageSquare size={14} className="text-primary" />
             <span className="text-[10px] font-mono text-forum-muted uppercase">Total Threads</span>
           </div>
           <div className="text-[20px] font-mono font-bold text-forum-text">{analytics.totalThreads.toLocaleString()}</div>
-          <div className="text-[9px] font-mono text-emerald-400 mt-1">+{analytics.newThreads7d} this week</div>
+          <div className="text-[9px] font-mono text-black mt-1">+{analytics.newThreads7d} this week</div>
         </div>
 
         <div className="hud-panel p-4">
           <div className="flex items-center gap-2 mb-2">
-            <BarChart3 size={14} className="text-purple-400" />
+            <BarChart3 size={14} className="text-purple-600" />
             <span className="text-[10px] font-mono text-forum-muted uppercase">Total Posts</span>
           </div>
           <div className="text-[20px] font-mono font-bold text-forum-text">{analytics.totalPosts.toLocaleString()}</div>
-          <div className="text-[9px] font-mono text-emerald-400 mt-1">+{analytics.newPosts7d} this week</div>
+          <div className="text-[9px] font-mono text-emerald-700 mt-1">+{analytics.newPosts7d} this week</div>
         </div>
 
         <div className="hud-panel p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Eye size={14} className="text-amber-400" />
+            <Eye size={14} className="text-amber-600" />
             <span className="text-[10px] font-mono text-forum-muted uppercase">Total Views</span>
           </div>
           <div className="text-[20px] font-mono font-bold text-forum-text">{analytics.totalViews.toLocaleString()}</div>
-          <div className="text-[9px] font-mono text-blue-400 mt-1">{analytics.activeUsers24h} active today</div>
+          <div className="text-[9px] font-mono text-black mt-1">{analytics.activeUsers24h} active today</div>
         </div>
       </div>
 
       {/* Activity Chart */}
       <div className="hud-panel p-4">
         <h3 className="text-[12px] font-mono font-bold text-forum-text mb-4 flex items-center gap-2">
-          <TrendingUp size={12} className="text-forum-pink" /> Activity Over Time
+          <TrendingUp size={12} className="text-primary" /> Activity Over Time
         </h3>
         <div className="space-y-2">
           {analytics.activityByDay.map((day, idx) => {
@@ -221,9 +221,9 @@ export default function AdminAnalyticsTab() {
             return (
               <div key={idx} className="flex items-center gap-3">
                 <span className="text-[9px] font-mono text-forum-muted w-20">{new Date(day.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-                <div className="flex-1 h-6 bg-forum-hover rounded-md overflow-hidden relative">
+                <div className="flex-1 h-6 bg-forum-hover  overflow-hidden relative">
                   <div
-                    className="h-full bg-gradient-to-r from-forum-pink/60 to-forum-pink/20 transition-all duration-300"
+                    className="h-full bg-primary to-forum-pink/20 transition-all duration-300"
                     style={{ width: `${percentage}%` }}
                   />
                   <div className="absolute inset-0 flex items-center px-2 gap-3 text-[8px] font-mono">
@@ -242,7 +242,7 @@ export default function AdminAnalyticsTab() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="hud-panel p-4">
           <h3 className="text-[12px] font-mono font-bold text-forum-text mb-3 flex items-center gap-2">
-            <BarChart3 size={12} className="text-forum-pink" /> Top Categories
+            <BarChart3 size={12} className="text-primary" /> Top Categories
           </h3>
           <div className="space-y-2">
             {analytics.topCategories.map((cat, idx) => (
@@ -259,7 +259,7 @@ export default function AdminAnalyticsTab() {
 
         <div className="hud-panel p-4">
           <h3 className="text-[12px] font-mono font-bold text-forum-text mb-3 flex items-center gap-2">
-            <Award size={12} className="text-forum-pink" /> Top Contributors
+            <Award size={12} className="text-primary" /> Top Contributors
           </h3>
           <div className="space-y-2">
             {analytics.topUsers.map((user, idx) => (
@@ -267,7 +267,7 @@ export default function AdminAnalyticsTab() {
                 <span className="text-forum-text">{user.username}</span>
                 <div className="flex items-center gap-3 text-forum-muted">
                   <span>{user.postCount} posts</span>
-                  <span className="text-forum-pink">{user.reputation} rep</span>
+                  <span className="text-primary">{user.reputation} rep</span>
                 </div>
               </div>
             ))}

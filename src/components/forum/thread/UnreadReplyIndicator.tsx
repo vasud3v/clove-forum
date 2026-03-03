@@ -16,12 +16,12 @@ const UnreadReplyIndicator = memo(({ count, onClick }: UnreadReplyIndicatorProps
       type="button"
       onClick={onClick}
       disabled={!onClick}
-      className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-forum-pink/10 border border-forum-pink/30 hover:bg-forum-pink/20 transition-colors disabled:cursor-default"
+      className="flex items-center gap-1.5 px-2.5 py-1  bg-primary/10 border border-primary/30 hover:bg-primary/20 transition-colors disabled:cursor-default"
       title={`${count} unread ${count === 1 ? 'reply' : 'replies'}`}
       aria-label={`${count} unread ${count === 1 ? 'reply' : 'replies'}`}
     >
-      <Circle size={8} className="text-forum-pink fill-forum-pink animate-pulse" />
-      <span className="text-[10px] font-mono font-bold text-forum-pink">
+      <Circle size={8} className="text-primary fill-forum-pink animate-pulse" />
+      <span className="text-[10px] font-mono font-bold text-primary">
         {displayCount} new
       </span>
     </button>

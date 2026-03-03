@@ -71,7 +71,7 @@ export default function ThreadHeader({
                 />
               </div>
               {/* Dark gradient overlay for text readability */}
-              <div className="absolute inset-0 h-64 bg-gradient-to-b from-black/20 via-black/30 to-forum-card pointer-events-none" />
+              <div className="absolute inset-0 h-64 bg-background via-black/30 to-forum-card pointer-events-none" />
             </>
           ) : thread.banner && bannerError ? (
             <>
@@ -80,7 +80,7 @@ export default function ThreadHeader({
                 <div className="text-center text-forum-muted/40">
                   <div className="text-[10px] font-mono mb-1">Banner unavailable</div>
                   {isAuthor && isSupabaseStorageBanner && (
-                    <div className="text-[9px] font-mono text-forum-pink/60">
+                    <div className="text-[9px] font-mono text-primary/60">
                       Click "Edit" to upload a new banner
                     </div>
                   )}
@@ -97,19 +97,19 @@ export default function ThreadHeader({
             {/* Badges */}
             <div className="flex items-center gap-2 flex-wrap mb-3" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
               {thread.isPinned && (
-                <span className="badge-shine inline-flex items-center gap-1.5 rounded-sm bg-gradient-to-r from-forum-pink/20 to-forum-pink/10 border border-forum-pink/40 px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-forum-pink badge-glow-pink">
+                <span className="badge-shine inline-flex items-center gap-1.5  bg-primary to-forum-pink/10 border border-primary/40 px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-primary badge-glow-pink">
                   <Pin size={11} className="drop-shadow-[0_0_3px_rgba(255,45,146,0.6)]" />
                   Pinned
                 </span>
               )}
               {thread.isLocked && (
-                <span className="badge-shine inline-flex items-center gap-1.5 rounded-sm bg-gradient-to-r from-amber-500/15 to-amber-500/5 border border-amber-500/35 px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-amber-400 badge-glow-amber">
+                <span className="badge-shine inline-flex items-center gap-1.5  bg-gradient-to-r from-amber-500/15 to-amber-500/5 border border-amber-500/35 px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-amber-600 badge-glow-amber">
                   <Lock size={11} className="drop-shadow-[0_0_3px_rgba(245,158,11,0.6)]" />
                   Locked
                 </span>
               )}
               {thread.isHot && (
-                <span className="badge-shine inline-flex items-center gap-1.5 rounded-sm bg-gradient-to-br from-orange-500/35 via-red-500/28 to-amber-500/18 border border-orange-500/65 px-3 py-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-orange-300 badge-glow-orange shadow-lg shadow-orange-500/35 hover:shadow-orange-500/55 transition-all duration-250">
+                <span className="badge-shine inline-flex items-center gap-1.5  bg-gradient-to-br from-orange-500/35 via-red-500/28 to-amber-500/18 border border-orange-500/65 px-3 py-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-orange-300 badge-glow-orange shadow-brutal shadow-orange-500/35 hover:shadow-orange-500/55 transition-all duration-250">
                   <Flame size={12} className="animate-flame text-orange-300 drop-shadow-[0_0_5px_rgba(249,115,22,0.7)]" />
                   <span className="bg-gradient-to-r from-orange-300 via-red-300 to-orange-200 bg-clip-text text-transparent font-extrabold">
                     Hot
@@ -117,13 +117,13 @@ export default function ThreadHeader({
                 </span>
               )}
               {isSolved && (
-                <span className="badge-shine inline-flex items-center gap-1.5 rounded-sm bg-gradient-to-r from-emerald-500/20 to-emerald-500/5 border border-emerald-500/40 px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-400 badge-glow-emerald">
+                <span className="badge-shine inline-flex items-center gap-1.5  bg-gradient-to-r from-emerald-500/20 to-emerald-500/5 border border-emerald-500/40 px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-400 badge-glow-emerald">
                   <CheckCircle2 size={11} className="drop-shadow-[0_0_3px_rgba(52,211,153,0.6)]" />
                   Solved
                 </span>
               )}
               {thread.replyCount > 100 && (
-                <span className="badge-shine inline-flex items-center gap-1.5 rounded-sm bg-gradient-to-r from-cyan-500/15 to-blue-500/10 border border-cyan-500/35 px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-cyan-400 badge-glow-cyan">
+                <span className="badge-shine inline-flex items-center gap-1.5  bg-gradient-to-r from-cyan-500/15 to-blue-500/10 border border-cyan-500/35 px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-cyan-600 badge-glow-cyan">
                   <TrendingUp size={11} className="drop-shadow-[0_0_3px_rgba(34,211,238,0.6)]" />
                   Popular
                 </span>
@@ -141,14 +141,14 @@ export default function ThreadHeader({
               <img
                 src={thread.author.avatar || getUserAvatar('', thread.author.username)}
                 alt={thread.author.username}
-                className="h-7 w-7 rounded-md border border-forum-border object-cover"
+                className="h-7 w-7  border border-forum-border object-cover"
               />
               <span className="text-[11px] font-mono font-semibold text-forum-text">
                 {thread.author.username}
               </span>
               {thread.author.rank && (
                 <span
-                  className={`badge-shine inline-flex items-center gap-0.5 rounded-sm border px-1.5 py-[2px] text-[8px] font-mono font-bold uppercase tracking-wider ${getRankColor(thread.author.rank)}`}
+                  className={`badge-shine inline-flex items-center gap-0.5  border px-1.5 py-[2px] text-[8px] font-mono font-bold uppercase tracking-wider ${getRankColor(thread.author.rank)}`}
                 >
                   {getRankIcon(thread.author.rank)}
                   {thread.author.rank}
@@ -186,7 +186,7 @@ export default function ThreadHeader({
                 {thread.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-sm border border-forum-pink/15 bg-forum-pink/[0.05] px-2 py-0.5 text-[9px] font-mono font-medium text-forum-pink/80 hover:bg-forum-pink/10 hover:text-forum-pink transition-forum cursor-pointer"
+                    className=" border border-primary/15 bg-primary/[0.05] px-2 py-0.5 text-[9px] font-mono font-medium text-black hover:bg-primary/10 hover:text-primary transition-forum cursor-pointer"
                   >
                     #{tag}
                   </span>
@@ -199,7 +199,7 @@ export default function ThreadHeader({
               {isAuthor && (
                 <button
                   onClick={() => setIsEditModalOpen(true)}
-                  className="transition-forum flex items-center gap-1 rounded-md px-2.5 py-1 text-[10px] font-mono text-forum-muted border border-forum-border/30 hover:text-forum-pink hover:bg-forum-pink/5 hover:border-forum-pink/25"
+                  className="transition-forum flex items-center gap-1  px-2.5 py-1 text-[10px] font-mono text-forum-muted border border-forum-border/30 hover:text-primary hover:bg-primary/5 hover:border-primary/25"
                 >
                   <Edit size={11} />
                   Edit
@@ -208,9 +208,9 @@ export default function ThreadHeader({
               
               <button
                 onClick={onToggleWatch}
-                className={`transition-forum flex items-center gap-1 rounded-md px-2.5 py-1 text-[10px] font-mono border ${isWatching
-                  ? 'text-forum-pink bg-forum-pink/10 border-forum-pink/25'
-                  : 'text-forum-muted hover:text-forum-pink hover:bg-forum-pink/5 border-forum-border/30'
+                className={`transition-forum flex items-center gap-1  px-2.5 py-1 text-[10px] font-mono border ${isWatching
+                  ? 'text-primary bg-primary/10 border-primary/25'
+                  : 'text-forum-muted hover:text-primary hover:bg-primary/5 border-forum-border/30'
                   }`}
               >
                 {isWatching ? <BellOff size={11} /> : <Bell size={11} />}
@@ -219,7 +219,7 @@ export default function ThreadHeader({
 
               <button
                 onClick={onShare}
-                className="transition-forum flex items-center gap-1 rounded-md px-2.5 py-1 text-[10px] font-mono text-forum-muted border border-forum-border/30 hover:text-forum-pink hover:bg-forum-pink/5"
+                className="transition-forum flex items-center gap-1  px-2.5 py-1 text-[10px] font-mono text-forum-muted border border-forum-border/30 hover:text-primary hover:bg-primary/5"
               >
                 <Share2 size={11} />
                 Share

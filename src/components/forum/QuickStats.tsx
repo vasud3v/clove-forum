@@ -6,9 +6,9 @@ export default function QuickStats() {
   
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-      <div className="hud-panel px-4 py-3 flex items-center gap-3 group hover:border-forum-pink/30 transition-forum cursor-default">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-forum-pink/10 border border-forum-pink/20">
-          <MessageSquare size={15} className="text-forum-pink" />
+      <div className="hud-panel px-4 py-3 flex items-center gap-3 group hover:border-primary/30 transition-forum cursor-default">
+        <div className="flex h-9 w-9 items-center justify-center  bg-primary/10 border border-primary/20">
+          <MessageSquare size={15} className="text-primary" />
         </div>
         <div>
           <div className="text-[15px] font-bold text-forum-text font-mono">
@@ -19,7 +19,7 @@ export default function QuickStats() {
       </div>
 
       <div className="hud-panel px-4 py-3 flex items-center gap-3 group transition-forum cursor-default">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-forum-bg border border-forum-border">
+        <div className="flex h-9 w-9 items-center justify-center  bg-forum-bg border border-forum-border">
           <Users size={15} className="text-forum-muted" />
         </div>
         <div>
@@ -31,7 +31,7 @@ export default function QuickStats() {
       </div>
 
       <div className="hud-panel px-4 py-3 flex items-center gap-3 group transition-forum cursor-default">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-forum-bg border border-forum-border">
+        <div className="flex h-9 w-9 items-center justify-center  bg-forum-bg border border-forum-border">
           <Eye size={15} className="text-forum-muted" />
         </div>
         <div>
@@ -43,7 +43,7 @@ export default function QuickStats() {
       </div>
 
       <div className="hud-panel px-4 py-3 flex items-center gap-3 group transition-forum cursor-default">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-forum-bg border border-forum-border">
+        <div className="flex h-9 w-9 items-center justify-center  bg-forum-bg border border-forum-border">
           <Zap size={15} className="text-forum-muted" />
         </div>
         <div>

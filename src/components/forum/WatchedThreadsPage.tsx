@@ -164,12 +164,12 @@ export default function WatchedThreadsPage() {
       {/* Breadcrumb */}
       <div className="mx-auto max-w-7xl px-4 lg:px-6 pt-4 pb-2">
         <div className="flex items-center gap-1.5 text-[10px] font-mono text-forum-muted">
-          <HomeIcon size={11} className="text-forum-pink" />
-          <span className="text-forum-text hover:text-forum-pink transition-forum cursor-pointer" onClick={() => navigate('/')}>
+          <HomeIcon size={11} className="text-primary" />
+          <span className="text-forum-text hover:text-primary transition-forum cursor-pointer" onClick={() => navigate('/')}>
             Forums
           </span>
           <ChevronRight size={10} />
-          <span className="text-forum-pink">Watched Threads</span>
+          <span className="text-primary">Watched Threads</span>
         </div>
       </div>
 
@@ -180,8 +180,8 @@ export default function WatchedThreadsPage() {
             {/* Header */}
             <div className="hud-panel p-6">
               <div className="flex items-center gap-3 mb-2">
-                <div className="h-10 w-10 rounded-lg bg-forum-pink/10 flex items-center justify-center">
-                  <Bell size={20} className="text-forum-pink" />
+                <div className="h-10 w-10  bg-primary/10 flex items-center justify-center">
+                  <Bell size={20} className="text-primary" />
                 </div>
                 <div>
                   <h1 className="text-[18px] font-bold text-forum-text font-mono">Watched Threads</h1>
@@ -198,13 +198,13 @@ export default function WatchedThreadsPage() {
             {/* Watched threads */}
             {loading ? (
               <div className="hud-panel p-12 text-center">
-                <Loader2 size={32} className="text-forum-pink animate-spin mx-auto mb-4" />
+                <Loader2 size={32} className="text-primary animate-spin mx-auto mb-4" />
                 <p className="text-[11px] text-forum-muted font-mono">Loading watched threads...</p>
               </div>
             ) : watchedThreads.length === 0 ? (
               <div className="hud-panel p-12 text-center">
                 <div className="flex justify-center mb-4">
-                  <div className="h-16 w-16 rounded-full bg-forum-pink/10 flex items-center justify-center">
+                  <div className="h-16 w-16  bg-primary/10 flex items-center justify-center">
                     <Inbox size={32} className="text-forum-muted" />
                   </div>
                 </div>
@@ -214,7 +214,7 @@ export default function WatchedThreadsPage() {
                 </p>
                 <button
                   onClick={() => navigate('/')}
-                  className="transition-forum rounded-md bg-forum-pink px-5 py-2.5 text-[11px] font-mono font-semibold text-white hover:shadow-pink-glow active:scale-95 border border-forum-pink/50"
+                  className="transition-forum  bg-primary px-5 py-2.5 text-[11px] font-mono font-semibold text-white hover:shadow-brutal-sm active:scale-95 border border-primary/50"
                 >
                   Browse Forums
                 </button>
@@ -239,7 +239,7 @@ export default function WatchedThreadsPage() {
       {/* Mobile sidebar drawer */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
+          <div className="absolute inset-0 bg-black/60 " onClick={() => setIsMobileMenuOpen(false)} />
           <div className="absolute right-0 top-0 bottom-0 w-[300px] overflow-y-auto border-l border-forum-border bg-forum-card p-4 space-y-4">
             <SidebarStatsPanel stats={forumStats} />
             <OnlineUsers />

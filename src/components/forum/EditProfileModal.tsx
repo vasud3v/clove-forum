@@ -108,7 +108,7 @@ export default function EditProfileModal({ isOpen, onClose, currentUsername, use
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/60 "
         onClick={onClose}
       />
 
@@ -117,7 +117,7 @@ export default function EditProfileModal({ isOpen, onClose, currentUsername, use
         {/* Header */}
         <div className="sticky top-0 bg-forum-card border-b border-forum-border px-6 py-4 flex items-center justify-between z-10">
           <h2 className="text-[14px] font-mono font-bold text-forum-text flex items-center gap-2">
-            <User size={14} className="text-forum-pink" />
+            <User size={14} className="text-primary" />
             Edit Profile
           </h2>
           <button
@@ -147,9 +147,9 @@ export default function EditProfileModal({ isOpen, onClose, currentUsername, use
                   checkUsernameAvailability(username);
                 }
               }}
-              className={`w-full rounded-md border ${
+              className={`w-full  border ${
                 usernameError ? 'border-red-500/50' : 'border-forum-border'
-              } bg-forum-bg px-3 py-2 text-[11px] font-mono text-forum-text outline-none focus:border-forum-pink`}
+              } bg-forum-bg px-3 py-2 text-[11px] font-mono text-forum-text outline-none focus:border-primary`}
               placeholder="Enter username"
               required
             />
@@ -172,7 +172,7 @@ export default function EditProfileModal({ isOpen, onClose, currentUsername, use
             <textarea
               value={bio}
               onChange={(e) => setBio(e.target.value)}
-              className="w-full rounded-md border border-forum-border bg-forum-bg px-3 py-2 text-[11px] font-mono text-forum-text outline-none focus:border-forum-pink resize-none"
+              className="w-full  border border-forum-border bg-forum-bg px-3 py-2 text-[11px] font-mono text-forum-text outline-none focus:border-primary resize-none"
               placeholder="Tell us about yourself..."
               rows={4}
               maxLength={500}
@@ -191,7 +191,7 @@ export default function EditProfileModal({ isOpen, onClose, currentUsername, use
               type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              className="w-full rounded-md border border-forum-border bg-forum-bg px-3 py-2 text-[11px] font-mono text-forum-text outline-none focus:border-forum-pink"
+              className="w-full  border border-forum-border bg-forum-bg px-3 py-2 text-[11px] font-mono text-forum-text outline-none focus:border-primary"
               placeholder="e.g., San Francisco, CA"
               maxLength={100}
             />
@@ -206,17 +206,17 @@ export default function EditProfileModal({ isOpen, onClose, currentUsername, use
               type="url"
               value={website}
               onChange={(e) => setWebsite(e.target.value)}
-              className="w-full rounded-md border border-forum-border bg-forum-bg px-3 py-2 text-[11px] font-mono text-forum-text outline-none focus:border-forum-pink"
+              className="w-full  border border-forum-border bg-forum-bg px-3 py-2 text-[11px] font-mono text-forum-text outline-none focus:border-primary"
               placeholder="https://example.com"
             />
           </div>
 
           {/* Info Box */}
-          <div className="bg-forum-pink/5 border border-forum-pink/20 rounded-md p-3">
+          <div className="bg-primary/5 border border-primary/20  p-3">
             <div className="flex items-start gap-2">
-              <AlertCircle size={12} className="text-forum-pink flex-shrink-0 mt-0.5" />
+              <AlertCircle size={12} className="text-primary flex-shrink-0 mt-0.5" />
               <div className="text-[9px] font-mono text-forum-muted leading-relaxed">
-                <p className="text-forum-pink font-bold mb-1">Important:</p>
+                <p className="text-primary font-bold mb-1">Important:</p>
                 <p>Changing your username will update it across the entire forum. Your old username may become available for others to use.</p>
               </div>
             </div>
@@ -227,7 +227,7 @@ export default function EditProfileModal({ isOpen, onClose, currentUsername, use
             <button
               type="submit"
               disabled={isSubmitting || !!usernameError || !username.trim()}
-              className="flex-1 transition-forum flex items-center justify-center gap-2 rounded-md bg-forum-pink px-4 py-2.5 text-[11px] font-mono font-bold text-white hover:bg-forum-pink/90 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 transition-forum flex items-center justify-center gap-2  bg-primary px-4 py-2.5 text-[11px] font-mono font-bold text-white hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <>Saving...</>
@@ -241,7 +241,7 @@ export default function EditProfileModal({ isOpen, onClose, currentUsername, use
             <button
               type="button"
               onClick={onClose}
-              className="transition-forum rounded-md border border-forum-border px-4 py-2.5 text-[11px] font-mono text-forum-muted hover:text-forum-text hover:bg-forum-hover"
+              className="transition-forum  border border-forum-border px-4 py-2.5 text-[11px] font-mono text-forum-muted hover:text-forum-text hover:bg-forum-hover"
             >
               Cancel
             </button>

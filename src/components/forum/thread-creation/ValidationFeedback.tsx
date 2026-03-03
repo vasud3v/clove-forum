@@ -17,7 +17,7 @@ export function ValidationFeedback({ errors = [], warnings = [], suggestions = [
     <div className={`space-y-2 ${className}`}>
       {/* Errors */}
       {errors.map((error, i) => (
-        <div key={`error-${i}`} className="rounded-lg border border-red-500/50 bg-red-500/10 px-4 py-3">
+        <div key={`error-${i}`} className=" border border-red-500/50 bg-red-500/10 px-4 py-3">
           <div className="flex items-start gap-2">
             <AlertCircle size={16} className="text-red-400 mt-0.5 flex-shrink-0" />
             <div className="flex-1 min-w-0">
@@ -32,13 +32,13 @@ export function ValidationFeedback({ errors = [], warnings = [], suggestions = [
 
       {/* Warnings */}
       {warnings.map((warning, i) => (
-        <div key={`warning-${i}`} className="rounded-lg border border-orange-500/50 bg-orange-500/10 px-4 py-3">
+        <div key={`warning-${i}`} className=" border border-orange-500/50 bg-orange-500/10 px-4 py-3">
           <div className="flex items-start gap-2">
-            <AlertTriangle size={16} className="text-orange-400 mt-0.5 flex-shrink-0" />
+            <AlertTriangle size={16} className="text-orange-700 mt-0.5 flex-shrink-0" />
             <div className="flex-1 min-w-0">
-              <p className="text-[11px] font-mono font-bold text-orange-400">{warning.message}</p>
+              <p className="text-[11px] font-mono font-bold text-orange-700">{warning.message}</p>
               {warning.suggestion && (
-                <p className="text-[10px] font-mono text-orange-400/70 mt-1">{warning.suggestion}</p>
+                <p className="text-[10px] font-mono text-orange-700/70 mt-1">{warning.suggestion}</p>
               )}
             </div>
           </div>
@@ -47,7 +47,7 @@ export function ValidationFeedback({ errors = [], warnings = [], suggestions = [
 
       {/* Suggestions */}
       {suggestions.length > 0 && (
-        <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 px-4 py-3">
+        <div className=" border border-blue-500/30 bg-blue-500/5 px-4 py-3">
           <div className="flex items-start gap-2">
             <Lightbulb size={16} className="text-blue-400 mt-0.5 flex-shrink-0" />
             <div className="flex-1 min-w-0">
@@ -82,7 +82,7 @@ export function FieldValidation({ error, warning, suggestion }: FieldValidationP
         </p>
       )}
       {warning && !error && (
-        <p className="text-[10px] text-orange-400 font-mono flex items-center gap-1">
+        <p className="text-[10px] text-orange-700 font-mono flex items-center gap-1">
           <AlertTriangle size={10} /> {warning}
         </p>
       )}
@@ -111,7 +111,7 @@ export function CharacterCounter({ current, max, warningThreshold = 0.9 }: Chara
       isError 
         ? 'text-red-400 font-bold' 
         : isWarning 
-        ? 'text-orange-400' 
+        ? 'text-orange-700' 
         : 'text-forum-muted/40'
     }`}>
       {current.toLocaleString()}/{max.toLocaleString()}
@@ -128,7 +128,7 @@ export function QualityIndicator({ score, label = 'Quality' }: QualityIndicatorP
   const getColor = () => {
     if (score >= 80) return 'text-emerald-400 border-emerald-400/30 bg-emerald-400/10';
     if (score >= 60) return 'text-blue-400 border-blue-400/30 bg-blue-400/10';
-    if (score >= 40) return 'text-orange-400 border-orange-400/30 bg-orange-400/10';
+    if (score >= 40) return 'text-orange-700 border-orange-400/30 bg-orange-400/10';
     return 'text-red-400 border-red-400/30 bg-red-400/10';
   };
 

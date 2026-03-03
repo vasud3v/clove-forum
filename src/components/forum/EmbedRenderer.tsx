@@ -60,7 +60,7 @@ function EmbedHeader({ icon, label, url }: { icon: React.ReactNode; label: strin
         href={url}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-forum-muted hover:text-forum-pink transition-forum"
+        className="text-forum-muted hover:text-primary transition-forum"
         title="Open in new tab"
       >
         <ExternalLink size={10} />
@@ -75,8 +75,8 @@ function EmbedPlaceholder({ onClick, label }: { onClick: () => void; label: stri
       onClick={onClick}
       className="flex items-center justify-center gap-2 w-full py-8 bg-forum-bg/40 hover:bg-forum-bg/60 transition-forum group"
     >
-      <div className="flex items-center justify-center h-10 w-10 rounded-full bg-forum-pink/10 group-hover:bg-forum-pink/20 transition-forum">
-        <Play size={18} className="text-forum-pink ml-0.5" />
+      <div className="flex items-center justify-center h-10 w-10  bg-primary/10 group-hover:bg-primary/20 transition-forum">
+        <Play size={18} className="text-primary ml-0.5" />
       </div>
       <span className="text-[11px] font-mono text-forum-muted group-hover:text-forum-text transition-forum">
         Click to load {label}
@@ -92,7 +92,7 @@ function YouTubeEmbed({ videoId, url }: { videoId: string; url: string }) {
   const [loaded, setLoaded] = useState(false);
 
   return (
-    <div ref={ref} className="my-3 rounded-md border border-forum-border/40 overflow-hidden bg-forum-bg/50">
+    <div ref={ref} className="my-3  border border-forum-border/40 overflow-hidden bg-forum-bg/50">
       <EmbedHeader
         icon={
           <div className="h-4 w-4 rounded bg-red-500 flex items-center justify-center">
@@ -130,7 +130,7 @@ function YouTubeEmbed({ videoId, url }: { videoId: string; url: string }) {
 
 function TwitterEmbed({ url }: { url: string }) {
   return (
-    <div className="my-3 rounded-md border border-forum-border/40 overflow-hidden bg-forum-bg/50">
+    <div className="my-3  border border-forum-border/40 overflow-hidden bg-forum-bg/50">
       <EmbedHeader
         icon={
           <svg className="h-3.5 w-3.5 text-[#1DA1F2]" fill="currentColor" viewBox="0 0 24 24">
@@ -145,7 +145,7 @@ function TwitterEmbed({ url }: { url: string }) {
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-[11px] font-mono text-forum-pink hover:text-forum-pink/80 transition-forum"
+          className="inline-flex items-center gap-2 text-[11px] font-mono text-primary hover:text-primary/80 transition-forum"
         >
           <ExternalLink size={12} />
           View Tweet on Twitter/X
@@ -173,7 +173,7 @@ function GitHubEmbed({ url }: { url: string }) {
   else if (pathType === 'tree') description += ` - Tree`;
 
   return (
-    <div className="my-3 rounded-md border border-forum-border/40 overflow-hidden bg-forum-bg/50">
+    <div className="my-3  border border-forum-border/40 overflow-hidden bg-forum-bg/50">
       <EmbedHeader
         icon={<Github size={14} className="text-forum-text" />}
         label="GitHub"
@@ -188,7 +188,7 @@ function GitHubEmbed({ url }: { url: string }) {
         >
           <Github size={16} className="text-forum-muted shrink-0" />
           <div className="min-w-0">
-            <span className="text-[11px] font-mono text-forum-pink group-hover:text-forum-pink/80 transition-forum font-semibold">
+            <span className="text-[11px] font-mono text-primary group-hover:text-primary/80 transition-forum font-semibold">
               {description}
             </span>
             <p className="text-[9px] font-mono text-forum-muted/60 truncate">{url}</p>
@@ -208,7 +208,7 @@ function CodePenEmbed({ url }: { url: string }) {
   const username = penMatch ? penMatch[1] : null;
 
   return (
-    <div ref={ref} className="my-3 rounded-md border border-forum-border/40 overflow-hidden bg-forum-bg/50">
+    <div ref={ref} className="my-3  border border-forum-border/40 overflow-hidden bg-forum-bg/50">
       <EmbedHeader
         icon={<Code size={14} className="text-forum-text" />}
         label="CodePen"
@@ -242,7 +242,7 @@ function CodePenEmbed({ url }: { url: string }) {
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[11px] font-mono text-forum-pink hover:text-forum-pink/80 transition-forum break-all"
+            className="text-[11px] font-mono text-primary hover:text-primary/80 transition-forum break-all"
           >
             {url}
           </a>
@@ -265,16 +265,16 @@ function LinkPreview({ url }: { url: string }) {
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="my-2 flex items-center gap-2.5 rounded-md border border-forum-border/30 bg-forum-bg/40 hover:bg-forum-bg/60 px-3 py-2 transition-forum group"
+      className="my-2 flex items-center gap-2.5  border border-forum-border/30 bg-forum-bg/40 hover:bg-forum-bg/60 px-3 py-2 transition-forum group"
     >
-      <Globe size={14} className="text-forum-muted shrink-0 group-hover:text-forum-pink transition-forum" />
+      <Globe size={14} className="text-forum-muted shrink-0 group-hover:text-primary transition-forum" />
       <div className="min-w-0 flex-1">
-        <span className="text-[11px] font-mono text-forum-pink group-hover:underline decoration-forum-pink/30 truncate block">
+        <span className="text-[11px] font-mono text-primary group-hover:underline decoration-forum-pink/30 truncate block">
           {hostname}
         </span>
         <span className="text-[9px] font-mono text-forum-muted/50 truncate block">{url}</span>
       </div>
-      <ExternalLink size={10} className="text-forum-muted/40 shrink-0 group-hover:text-forum-pink/60 transition-forum" />
+      <ExternalLink size={10} className="text-forum-muted/40 shrink-0 group-hover:text-primary/60 transition-forum" />
     </a>
   );
 }

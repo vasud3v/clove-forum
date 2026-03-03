@@ -33,7 +33,7 @@ export default function RoleBadge({ role, size = 'sm', showIcon = true, showLabe
   if (role === 'admin') {
     return (
       <span
-        className={`inline-flex items-center rounded-md border font-mono font-bold uppercase tracking-wider relative overflow-hidden group ${sizeClasses}`}
+        className={`inline-flex items-center  border font-mono font-bold uppercase tracking-wider relative overflow-hidden group ${sizeClasses}`}
         style={{
           background: 'linear-gradient(135deg, #ffd700 0%, #ffed4e 25%, #ffd700 50%, #ffed4e 75%, #ffd700 100%)',
           backgroundSize: '200% 200%',
@@ -61,8 +61,8 @@ export default function RoleBadge({ role, size = 'sm', showIcon = true, showLabe
         {/* Sparkles */}
         {showIcon && size === 'md' && (
           <>
-            <Sparkles size={6} className="absolute -top-0.5 -left-0.5 text-yellow-300 animate-ping" />
-            <Sparkles size={6} className="absolute -top-0.5 -right-0.5 text-yellow-300 animate-ping" style={{ animationDelay: '0.5s' }} />
+            <Sparkles size={6} className="absolute -top-0.5 -left-0.5 text-amber-700 animate-ping" />
+            <Sparkles size={6} className="absolute -top-0.5 -right-0.5 text-amber-700 animate-ping" style={{ animationDelay: '0.5s' }} />
           </>
         )}
         
@@ -89,7 +89,7 @@ export default function RoleBadge({ role, size = 'sm', showIcon = true, showLabe
   // Regular badges for other roles
   return (
     <span
-      className={`inline-flex items-center rounded-sm border font-mono font-semibold uppercase tracking-wider ${colorClass} ${bgClass} ${sizeClasses}`}
+      className={`inline-flex items-center  border font-mono font-semibold uppercase tracking-wider ${colorClass} ${bgClass} ${sizeClasses}`}
       title={label}
     >
       {showIcon && Icon && <Icon size={iconSize} />}

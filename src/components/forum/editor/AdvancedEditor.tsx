@@ -21,6 +21,7 @@ import { Eye, X, Upload, Loader2, Trash2 } from 'lucide-react';
 import { ColorPicker } from './ColorPicker';
 import { toast } from '../Toast';
 import { uploadMedia } from '@/lib/uploadMedia';
+import { isValidUrlOrPath } from '@/lib/utils';
 
 
 
@@ -103,8 +104,8 @@ function ToolBtn({ onClick, active, title, children }: {
   return (
     <button type="button" onClick={onClick} title={title}
       className={`p-1 rounded transition-all text-[10px] font-mono ${active
-          ? 'bg-pink-500/20 text-pink-400 ring-1 ring-pink-500/30'
-          : 'text-zinc-400 hover:text-pink-400 hover:bg-pink-500/10'
+          ? 'bg-primary/40 text-white ring-1 ring-primary'
+          : 'text-foreground hover:text-white hover:bg-primary/20'
         }`}>
       {children}
     </button>
@@ -139,7 +140,7 @@ function Modal({ title, onClose, onConfirm, confirmLabel = 'Insert', confirmDisa
       aria-modal="true"
       aria-labelledby="modal-title"
     >
-      <div className="bg-zinc-900 rounded-xl border border-zinc-700 p-6 w-full max-w-md shadow-2xl">
+      <div className="bg-zinc-900  border border-zinc-700 p-6 w-full max-w-md shadow-brutal-lg">
         <div className="flex items-center justify-between mb-4">
           <h3 id="modal-title" className="text-[15px] font-semibold text-zinc-100">{title}</h3>
           <button 
@@ -156,7 +157,7 @@ function Modal({ title, onClose, onConfirm, confirmLabel = 'Insert', confirmDisa
           <div className="flex justify-end gap-3 mt-5">
             <button type="button" onClick={onClose} className="px-4 py-2 text-[13px] text-zinc-400 hover:text-zinc-100 transition-colors">Cancel</button>
             <button type="button" onClick={onConfirm!} disabled={confirmDisabled}
-              className="px-4 py-2 text-[13px] bg-teal-600 hover:bg-teal-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-lg transition-colors">
+              className="px-4 py-2 text-[13px] bg-teal-600 hover:bg-teal-500 disabled:opacity-40 disabled:cursor-not-allowed text-white  transition-colors">
               {confirmLabel}
             </button>
           </div>
@@ -171,7 +172,7 @@ function Field({ label, ...props }: { label: string } & React.InputHTMLAttribute
     <div className="mb-4">
       <label className="block text-[12px] text-zinc-400 mb-1.5">{label}</label>
       <input {...props}
-        className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-[13px] text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-teal-500/60 focus:ring-1 focus:ring-teal-500/20 transition-all" />
+        className="w-full  border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-[13px] text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-teal-500/60 focus:ring-1 focus:ring-teal-500/20 transition-all" />
     </div>
   );
 }
@@ -197,7 +198,7 @@ function TablePicker({ onInsert, onClose }: { onInsert: (r: number, c: number) =
 
   return (
     <div 
-      className="absolute top-full left-0 mt-1.5 z-[100] bg-zinc-900 border border-zinc-700/70 rounded-xl p-3 shadow-2xl" 
+      className="absolute top-full left-0 mt-1.5 z-[100] bg-zinc-900 border border-zinc-700/70  p-3 shadow-brutal-lg" 
       onMouseLeave={handleMouseLeave}
       onMouseEnter={handleMouseEnter}
     >
@@ -280,7 +281,7 @@ export function AdvancedEditor({
     // Configure Link separately with custom settings
     TiptapLink.configure({
       openOnClick: false,
-      HTMLAttributes: { class: 'text-teal-400 underline hover:text-teal-300 cursor-pointer' },
+      HTMLAttributes: { class: 'text-teal-600 underline hover:text-teal-700 cursor-pointer' },
       validate: href => /^https?:\/\//.test(href),
     }),
     CustomImage.configure({
@@ -395,11 +396,9 @@ export function AdvancedEditor({
   const insertLink = () => {
     if (!linkUrl || !editor) return;
     
-    // Validate URL format
-    try {
-      new URL(linkUrl);
-    } catch {
-      toast.error('Please enter a valid URL');
+    // Validate URL format (supports full URLs, absolute paths, relative paths)
+    if (!isValidUrlOrPath(linkUrl)) {
+      toast.error('Please enter a valid URL or path (https://..., /path/to/resource, or relative/path)');
       return;
     }
     
@@ -422,11 +421,9 @@ export function AdvancedEditor({
   const insertImage = () => {
     if (!imageUrl || !editor) return;
     
-    // Validate URL format
-    try {
-      new URL(imageUrl);
-    } catch {
-      toast.error('Please enter a valid URL');
+    // Validate URL format (supports full URLs, absolute paths, relative paths, data URLs)
+    if (!isValidUrlOrPath(imageUrl)) {
+      toast.error('Please enter a valid image URL or path (https://..., /path, relative/path, or data:image/...)');
       return;
     }
     
@@ -447,11 +444,9 @@ export function AdvancedEditor({
   const insertVideo = () => {
     if (!videoUrl || !editor) return;
     
-    // Validate URL format
-    try {
-      new URL(videoUrl);
-    } catch {
-      toast.error('Please enter a valid URL');
+    // Validate URL format (supports full URLs, absolute paths, relative paths)
+    if (!isValidUrlOrPath(videoUrl)) {
+      toast.error('Please enter a valid video URL or path (https://..., /path, or relative/path)');
       return;
     }
     
@@ -786,7 +781,7 @@ export function AdvancedEditor({
         {/* Preview */}
         {onPreview && (
           <button type="button" onClick={onPreview} title="Preview"
-            className="flex items-center gap-1 rounded-lg px-2 py-1 text-[10px] font-mono text-zinc-400 hover:text-pink-400 hover:bg-pink-500/10 transition-all">
+            className="flex items-center gap-1  px-2 py-1 text-[10px] font-mono text-foreground hover:text-white hover:bg-primary/20 transition-all">
             <Eye size={10} /><span>Preview</span>
           </button>
         )}
@@ -803,7 +798,7 @@ export function AdvancedEditor({
         <button
           type="button"
           onClick={() => setShowClearConfirm(true)}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-mono text-zinc-400 hover:text-red-400 hover:bg-red-500/10 border border-zinc-700 hover:border-red-500/40 rounded-lg transition-all"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-mono text-zinc-400 hover:text-red-400 hover:bg-red-500/10 border border-zinc-700 hover:border-red-500/40  transition-all"
         >
           <Trash2 size={12} />
           Clear All
@@ -856,7 +851,7 @@ export function AdvancedEditor({
                 type="button"
                 onClick={() => imageFileInputRef.current?.click()}
                 disabled={isUploading}
-                className="w-full flex items-center justify-center gap-2 rounded-lg border-2 border-dashed border-zinc-700 bg-zinc-800/50 px-4 py-3 text-[13px] text-zinc-300 hover:border-teal-500/50 hover:bg-zinc-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-2  border-2 border-dashed border-zinc-700 bg-zinc-800/50 px-4 py-3 text-[13px] text-zinc-300 hover:border-teal-500/50 hover:bg-zinc-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isUploading ? (
                   <>
@@ -907,7 +902,7 @@ export function AdvancedEditor({
                 type="button"
                 onClick={() => videoFileInputRef.current?.click()}
                 disabled={isUploading}
-                className="w-full flex items-center justify-center gap-2 rounded-lg border-2 border-dashed border-zinc-700 bg-zinc-800/50 px-4 py-3 text-[13px] text-zinc-300 hover:border-teal-500/50 hover:bg-zinc-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-2  border-2 border-dashed border-zinc-700 bg-zinc-800/50 px-4 py-3 text-[13px] text-zinc-300 hover:border-teal-500/50 hover:bg-zinc-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isUploading ? (
                   <>

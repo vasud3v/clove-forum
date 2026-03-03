@@ -55,7 +55,7 @@ export default function ForumPagination({
       <button
         onClick={() => onPageChange(1)}
         disabled={currentPage === 1}
-        className="transition-forum flex items-center justify-center rounded border border-forum-border bg-forum-card w-8 h-8 text-[10px] font-mono font-semibold text-forum-muted hover:bg-forum-hover hover:text-forum-text hover:border-forum-pink/30 disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:bg-forum-card disabled:hover:border-forum-border"
+        className="transition-forum flex items-center justify-center rounded border border-forum-border bg-forum-card w-8 h-8 text-[10px] font-mono font-semibold text-forum-muted hover:bg-forum-hover hover:text-forum-text hover:border-primary/30 disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:bg-forum-card disabled:hover:border-forum-border"
         title="First page"
       >
         <ChevronsLeft size={12} />
@@ -65,7 +65,7 @@ export default function ForumPagination({
       <button
         onClick={() => onPageChange(Math.max(1, currentPage - 1))}
         disabled={currentPage === 1}
-        className="transition-forum flex items-center gap-1 rounded border border-forum-border bg-forum-card px-2.5 h-8 text-[10px] font-mono font-semibold text-forum-muted hover:bg-forum-hover hover:text-forum-text hover:border-forum-pink/30 disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:bg-forum-card disabled:hover:border-forum-border"
+        className="transition-forum flex items-center gap-1 rounded border border-forum-border bg-forum-card px-2.5 h-8 text-[10px] font-mono font-semibold text-forum-muted hover:bg-forum-hover hover:text-forum-text hover:border-primary/30 disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:bg-forum-card disabled:hover:border-forum-border"
       >
         <ChevronLeft size={12} />
         <span className="hidden sm:inline">Prev</span>
@@ -87,10 +87,10 @@ export default function ForumPagination({
             <button
               key={page}
               onClick={() => onPageChange(page)}
-              className={`transition-forum rounded-sm w-8 h-8 text-[10px] font-mono font-bold ${
+              className={`transition-forum  w-8 h-8 text-[10px] font-mono font-bold ${
                 currentPage === page
-                  ? 'bg-gradient-to-r from-forum-pink to-forum-pink/90 text-white shadow-[0_0_12px_rgba(255,45,146,0.3)] border border-forum-pink/60'
-                  : 'border border-forum-border bg-forum-card text-forum-muted hover:bg-forum-hover hover:text-forum-text hover:border-forum-pink/30'
+                  ? 'bg-primary to-forum-pink/90 text-white shadow-[0_0_12px_rgba(255,45,146,0.3)] border border-primary/60'
+                  : 'border border-forum-border bg-forum-card text-forum-muted hover:bg-forum-hover hover:text-forum-text hover:border-primary/30'
               }`}
             >
               {page}
@@ -103,7 +103,7 @@ export default function ForumPagination({
       <button
         onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
         disabled={currentPage === totalPages}
-        className="transition-forum flex items-center gap-1 rounded border border-forum-border bg-forum-card px-2.5 h-8 text-[10px] font-mono font-semibold text-forum-muted hover:bg-forum-hover hover:text-forum-text hover:border-forum-pink/30 disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:bg-forum-card disabled:hover:border-forum-border"
+        className="transition-forum flex items-center gap-1 rounded border border-forum-border bg-forum-card px-2.5 h-8 text-[10px] font-mono font-semibold text-forum-muted hover:bg-forum-hover hover:text-forum-text hover:border-primary/30 disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:bg-forum-card disabled:hover:border-forum-border"
       >
         <span className="hidden sm:inline">Next</span>
         <ChevronRight size={12} />
@@ -113,7 +113,7 @@ export default function ForumPagination({
       <button
         onClick={() => onPageChange(totalPages)}
         disabled={currentPage === totalPages}
-        className="transition-forum flex items-center justify-center rounded border border-forum-border bg-forum-card w-8 h-8 text-[10px] font-mono font-semibold text-forum-muted hover:bg-forum-hover hover:text-forum-text hover:border-forum-pink/30 disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:bg-forum-card disabled:hover:border-forum-border"
+        className="transition-forum flex items-center justify-center rounded border border-forum-border bg-forum-card w-8 h-8 text-[10px] font-mono font-semibold text-forum-muted hover:bg-forum-hover hover:text-forum-text hover:border-primary/30 disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:bg-forum-card disabled:hover:border-forum-border"
         title="Last page"
       >
         <ChevronsRight size={12} />

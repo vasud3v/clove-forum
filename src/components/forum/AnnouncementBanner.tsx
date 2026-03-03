@@ -16,7 +16,7 @@ interface Banner {
 const bannerConfig = {
   info: {
     icon: Info,
-    color: 'text-cyan-400',
+    color: 'text-white',
     bg: 'from-cyan-500/5 via-transparent to-cyan-500/5',
     border: 'border-cyan-500/25',
     iconBg: 'bg-cyan-500/15 border-cyan-500/25',
@@ -24,23 +24,23 @@ const bannerConfig = {
   },
   hiring: {
     icon: Briefcase,
-    color: 'text-emerald-400',
-    bg: 'from-emerald-500/5 via-transparent to-emerald-500/5',
-    border: 'border-emerald-500/25',
-    iconBg: 'bg-emerald-500/15 border-emerald-500/25',
+    color: 'text-white',
+    bg: 'from-emerald-600/20 via-transparent to-emerald-600/20',
+    border: 'border-emerald-600',
+    iconBg: 'bg-emerald-600/30 border-emerald-600',
     glow: 'shadow-emerald-glow',
   },
   announcement: {
     icon: Megaphone,
-    color: 'text-forum-pink',
+    color: 'text-primary',
     bg: 'from-forum-pink/5 via-transparent to-forum-pink/5',
-    border: 'border-forum-pink/25',
-    iconBg: 'bg-forum-pink/15 border-forum-pink/25',
-    glow: 'shadow-pink-glow',
+    border: 'border-primary/25',
+    iconBg: 'bg-primary/15 border-primary/25',
+    glow: 'shadow-brutal-sm',
   },
   warning: {
     icon: AlertTriangle,
-    color: 'text-amber-400',
+    color: 'text-amber-600',
     bg: 'from-amber-500/5 via-transparent to-amber-500/5',
     border: 'border-amber-500/25',
     iconBg: 'bg-amber-500/15 border-amber-500/25',
@@ -142,7 +142,7 @@ export default function AnnouncementBanner() {
       <div className="relative flex items-center gap-4 px-5 py-4">
         {/* Icon */}
         <div className="flex-shrink-0">
-          <div className={`flex h-11 w-11 items-center justify-center rounded-lg border ${config.iconBg} ${config.glow}`}>
+          <div className={`flex h-11 w-11 items-center justify-center  border ${config.iconBg} ${config.glow}`}>
             <Icon size={20} className={config.color} />
           </div>
         </div>
@@ -154,7 +154,7 @@ export default function AnnouncementBanner() {
               <span className={`${config.color}`}>{banner.title}</span>
             </h3>
             {banner.type === 'hiring' && (
-              <span className="flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[8px] font-mono font-semibold uppercase tracking-wider text-emerald-400">
+              <span className="flex items-center gap-1  border border-emerald-600 bg-emerald-600/30 px-2 py-0.5 text-[8px] font-mono font-semibold uppercase tracking-wider text-black">
                 Open
               </span>
             )}
@@ -186,7 +186,7 @@ export default function AnnouncementBanner() {
         {banner.is_dismissible && (
           <button
             onClick={handleDismiss}
-            className="flex-shrink-0 transition-forum rounded-md p-1.5 text-forum-muted hover:bg-forum-hover hover:text-forum-pink"
+            className="flex-shrink-0 transition-forum  p-1.5 text-forum-muted hover:bg-forum-hover hover:text-primary"
           >
             <X size={14} />
           </button>

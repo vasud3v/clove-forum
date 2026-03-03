@@ -68,9 +68,9 @@ function ReactionsBar({ reactions: initialReactions }: { reactions: { emoji: str
         <button
           key={r.emoji}
           onClick={() => toggleReaction(r.emoji, r.label)}
-          className={`transition-forum flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-mono border ${r.reacted
-            ? 'border-forum-pink/30 bg-forum-pink/10 text-forum-pink'
-            : 'border-forum-border/30 bg-forum-bg/50 text-forum-muted hover:border-forum-pink/20 hover:text-forum-text'
+          className={`transition-forum flex items-center gap-1  px-2 py-0.5 text-[9px] font-mono border ${r.reacted
+            ? 'border-primary/30 bg-primary/10 text-primary'
+            : 'border-forum-border/30 bg-forum-bg/50 text-forum-muted hover:border-primary/20 hover:text-forum-text'
             }`}
           title={r.label}
         >
@@ -81,7 +81,7 @@ function ReactionsBar({ reactions: initialReactions }: { reactions: { emoji: str
       <div className="relative">
         <button
           onClick={() => setShowPicker(!showPicker)}
-          className="transition-forum flex items-center justify-center h-5 w-5 rounded-full border border-forum-border/30 bg-forum-bg/50 text-forum-muted hover:border-forum-pink/20 hover:text-forum-pink"
+          className="transition-forum flex items-center justify-center h-5 w-5  border border-forum-border/30 bg-forum-bg/50 text-forum-muted hover:border-primary/20 hover:text-primary"
           title="Add reaction"
         >
           <Smile size={9} />
@@ -92,7 +92,7 @@ function ReactionsBar({ reactions: initialReactions }: { reactions: { emoji: str
               <button
                 key={r.emoji}
                 onClick={() => toggleReaction(r.emoji, r.label)}
-                className="transition-forum h-6 w-6 rounded flex items-center justify-center hover:bg-forum-pink/10 text-[13px]"
+                className="transition-forum h-6 w-6 rounded flex items-center justify-center hover:bg-primary/10 text-[13px]"
                 title={r.label}
               >
                 {r.emoji}
@@ -118,7 +118,7 @@ function RelatedThreads({ currentThread, categoryId }: { currentThread: string; 
   return (
     <div className="hud-panel p-4 space-y-3">
       <h4 className="text-[11px] font-mono font-bold text-forum-text uppercase tracking-wider flex items-center gap-2">
-        <LinkIcon size={12} className="text-forum-pink" />
+        <LinkIcon size={12} className="text-primary" />
         Related Threads
       </h4>
       <div className="space-y-2">
@@ -126,9 +126,9 @@ function RelatedThreads({ currentThread, categoryId }: { currentThread: string; 
           <button
             key={thread.id}
             onClick={() => navigate(`/thread/${thread.id}`)}
-            className="transition-forum w-full text-left group rounded-md border border-forum-border/20 bg-forum-bg/30 px-3 py-2 hover:border-forum-pink/20 hover:bg-forum-pink/[0.03]"
+            className="transition-forum w-full text-left group  border border-forum-border/20 bg-forum-bg/30 px-3 py-2 hover:border-primary/20 hover:bg-primary/[0.03]"
           >
-            <div className="text-[10px] font-mono text-forum-text/90 group-hover:text-forum-pink line-clamp-2 leading-relaxed">
+            <div className="text-[10px] font-mono text-forum-text/90 group-hover:text-primary line-clamp-2 leading-relaxed">
               {thread.title}
             </div>
             <div className="flex items-center gap-2 mt-1">
@@ -359,9 +359,9 @@ export default function ThreadDetailPage() {
           if (element) {
             element.scrollIntoView({ behavior: 'smooth', block: 'center' });
             // Highlight the post briefly
-            element.classList.add('ring-2', 'ring-forum-pink', 'ring-opacity-50');
+            element.classList.add('ring-2', 'ring-primary', 'ring-opacity-50');
             setTimeout(() => {
-              element.classList.remove('ring-2', 'ring-forum-pink', 'ring-opacity-50');
+              element.classList.remove('ring-2', 'ring-primary', 'ring-opacity-50');
             }, 2000);
           }
         }, 500);
@@ -599,11 +599,11 @@ export default function ThreadDetailPage() {
       <div className="min-h-screen bg-forum-bg flex items-center justify-center">
         <div className="hud-panel px-10 py-12 text-center">
           <div className="text-[40px] mb-4">
-            <SearchX size={40} className="text-forum-pink mx-auto" />
+            <SearchX size={40} className="text-primary mx-auto" />
           </div>
           <h2 className="text-[16px] font-bold text-forum-text font-mono mb-2">Thread Not Found</h2>
           <p className="text-[12px] text-forum-muted font-mono mb-6">The thread you&apos;re looking for doesn&apos;t exist.</p>
-          <button onClick={() => navigate('/')} className="transition-forum rounded bg-forum-pink px-5 py-2.5 text-[11px] font-mono font-semibold text-white hover:shadow-pink-glow active:scale-95 border border-forum-pink/50">
+          <button onClick={() => navigate('/')} className="transition-forum rounded bg-primary px-5 py-2.5 text-[11px] font-mono font-semibold text-white hover:shadow-brutal-sm active:scale-95 border border-primary/50">
             Back to Forums
           </button>
         </div>
@@ -621,19 +621,19 @@ export default function ThreadDetailPage() {
       <div className="mx-auto max-w-7xl px-4 lg:px-6 pt-4 pb-2">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-1.5 text-[10px] font-mono text-forum-muted">
-            <HomeIcon size={11} className="text-forum-pink" />
-            <span onClick={() => navigate('/')} className="text-forum-text hover:text-forum-pink transition-forum cursor-pointer">Forums</span>
+            <HomeIcon size={11} className="text-primary" />
+            <span onClick={() => navigate('/')} className="text-forum-text hover:text-primary transition-forum cursor-pointer">Forums</span>
             <ChevronRight size={10} />
-            <span onClick={() => navigate(`/category/${category.id}`)} className="text-forum-text hover:text-forum-pink transition-forum cursor-pointer">{category.name}</span>
+            <span onClick={() => navigate(`/category/${category.id}`)} className="text-forum-text hover:text-primary transition-forum cursor-pointer">{category.name}</span>
             <ChevronRight size={10} />
-            <span className="text-forum-pink truncate max-w-[200px]">{thread.title}</span>
+            <span className="text-primary truncate max-w-[200px]">{thread.title}</span>
           </div>
           
           {/* Create Thread Button */}
           {currentUser.id !== 'guest' && (
             <button
               onClick={() => setIsModalOpen(true)}
-              className="transition-forum flex items-center gap-1.5 rounded-md bg-forum-pink px-3 py-1.5 text-[11px] font-mono font-bold text-white hover:bg-forum-pink/90 hover:shadow-pink-glow border border-forum-pink/60 whitespace-nowrap"
+              className="transition-forum flex items-center gap-1.5  bg-primary px-3 py-1.5 text-[11px] font-mono font-bold text-white hover:bg-primary/90 hover:shadow-brutal-sm border border-primary/60 whitespace-nowrap"
             >
               <MessageCircle size={13} />
               <span className="hidden sm:inline">Create Thread</span>
@@ -688,7 +688,7 @@ export default function ThreadDetailPage() {
                 <PostSkeleton />
               </>
             ) : posts.length === 0 ? (
-              <div className="hud-panel p-8 text-center text-gray-400">No posts yet. Be the first to reply!</div>
+              <div className="hud-panel p-8 text-center text-black">No posts yet. Be the first to reply!</div>
             ) : (
               <>
                 <PostSortingBar
@@ -756,7 +756,7 @@ export default function ThreadDetailPage() {
             {/* Thread Info */}
             <div className="hud-panel p-4 space-y-3">
               <h4 className="text-[11px] font-mono font-bold text-forum-text uppercase tracking-wider flex items-center gap-2">
-                <Award size={12} className="text-forum-pink" />
+                <Award size={12} className="text-primary" />
                 Thread Info
               </h4>
               <div className="space-y-2.5">
@@ -772,12 +772,12 @@ export default function ThreadDetailPage() {
                 <div className="h-[1px] bg-forum-border/50" />
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-mono text-forum-muted">Category</span>
-                  <span onClick={() => navigate(`/category/${category.id}`)} className="text-[10px] font-mono text-forum-pink cursor-pointer hover:underline">{category.name.split('—')[0].trim()}</span>
+                  <span onClick={() => navigate(`/category/${category.id}`)} className="text-[10px] font-mono text-primary cursor-pointer hover:underline">{category.name.split('—')[0].trim()}</span>
                 </div>
                 <div className="h-[1px] bg-forum-border/50" />
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-mono text-forum-muted">Watching</span>
-                  <span className={`text-[10px] font-mono ${isWatching ? 'text-forum-pink' : 'text-forum-muted'}`}>{isWatching ? 'Yes' : 'No'}</span>
+                  <span className={`text-[10px] font-mono ${isWatching ? 'text-primary' : 'text-forum-muted'}`}>{isWatching ? 'Yes' : 'No'}</span>
                 </div>
               </div>
             </div>
@@ -785,7 +785,7 @@ export default function ThreadDetailPage() {
             {/* Participants */}
             <div className="hud-panel p-4 space-y-3">
               <h4 className="text-[11px] font-mono font-bold text-forum-text uppercase tracking-wider flex items-center gap-2">
-                <MessageCircle size={12} className="text-forum-pink" />
+                <MessageCircle size={12} className="text-primary" />
                 Participants ({Array.from(new Set(posts.map((p) => p.author.id))).length})
               </h4>
               <div className="flex flex-wrap gap-1.5">
@@ -794,10 +794,10 @@ export default function ThreadDetailPage() {
                   if (!author) return null;
                   const postsByAuthor = posts.filter((p) => p.author.id === authorId).length;
                   return (
-                    <div key={authorId} className="flex items-center gap-1.5 rounded-md bg-forum-bg/50 border border-forum-border/30 px-2 py-1 group hover:border-forum-pink/20 transition-forum">
+                    <div key={authorId} className="flex items-center gap-1.5  bg-forum-bg/50 border border-forum-border/30 px-2 py-1 group hover:border-primary/20 transition-forum">
                       <img src={author.avatar} alt={author.username} className="h-5 w-5 rounded object-cover border border-forum-border" />
                       <div className="flex flex-col">
-                        <span className="text-[9px] font-mono text-forum-text group-hover:text-forum-pink transition-forum">{author.username}</span>
+                        <span className="text-[9px] font-mono text-forum-text group-hover:text-primary transition-forum">{author.username}</span>
                         <span className="text-[7px] font-mono text-forum-muted">{postsByAuthor} post{postsByAuthor !== 1 ? 's' : ''}</span>
                       </div>
                     </div>
@@ -810,12 +810,12 @@ export default function ThreadDetailPage() {
             {thread.tags && thread.tags.length > 0 && (
               <div className="hud-panel p-4 space-y-3">
                 <h4 className="text-[11px] font-mono font-bold text-forum-text uppercase tracking-wider flex items-center gap-2">
-                  <Hash size={12} className="text-forum-pink" />
+                  <Hash size={12} className="text-primary" />
                   Thread Tags
                 </h4>
                 <div className="flex flex-wrap gap-1.5">
                   {thread.tags.map((tag) => (
-                    <span key={tag} className="rounded-sm border border-forum-pink/15 bg-forum-pink/[0.05] px-2 py-1 text-[9px] font-mono font-medium text-forum-pink/80 hover:bg-forum-pink/10 hover:text-forum-pink transition-forum cursor-pointer">
+                    <span key={tag} className=" border border-primary/15 bg-primary/[0.05] px-2 py-1 text-[9px] font-mono font-medium text-black hover:bg-primary/10 hover:text-primary transition-forum cursor-pointer">
                       #{tag}
                     </span>
                   ))}
@@ -831,7 +831,7 @@ export default function ThreadDetailPage() {
       {/* Mobile sidebar drawer */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
+          <div className="absolute inset-0 bg-black/60 " onClick={() => setIsMobileMenuOpen(false)} />
           <div className="absolute right-0 top-0 bottom-0 w-[300px] overflow-y-auto border-l border-forum-border bg-forum-card p-4 space-y-4">
             {/* Mobile sidebar content - empty for thread pages */}
           </div>

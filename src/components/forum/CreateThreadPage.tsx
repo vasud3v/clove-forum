@@ -200,23 +200,23 @@ export default function CreateThreadPage() {
       {/* Breadcrumb */}
       <div className="mx-auto max-w-7xl px-4 lg:px-6 pt-4 pb-2">
         <div className="flex items-center gap-1.5 text-[10px] font-mono text-forum-muted">
-          <Link to="/" className="hover:text-forum-pink transition-forum">
-            <HomeIcon size={11} className="text-forum-pink" />
+          <Link to="/" className="hover:text-primary transition-forum">
+            <HomeIcon size={11} className="text-primary" />
           </Link>
           <ChevronRight size={10} />
-          <Link to="/" className="hover:text-forum-pink transition-forum">
+          <Link to="/" className="hover:text-primary transition-forum">
             Forums
           </Link>
           {category && (
             <>
               <ChevronRight size={10} />
-              <Link to={`/category/${selectedCategory}`} className="hover:text-forum-pink transition-forum">
+              <Link to={`/category/${selectedCategory}`} className="hover:text-primary transition-forum">
                 {category.name}
               </Link>
             </>
           )}
           <ChevronRight size={10} />
-          <span className="text-forum-pink">Create Thread</span>
+          <span className="text-primary">Create Thread</span>
         </div>
       </div>
 
@@ -224,14 +224,14 @@ export default function CreateThreadPage() {
         {/* Back Button */}
         <button
           onClick={() => navigate(-1)}
-          className="mb-4 flex items-center gap-2 text-[11px] font-mono text-forum-muted hover:text-forum-pink transition-forum"
+          className="mb-4 flex items-center gap-2 text-[11px] font-mono text-forum-muted hover:text-primary transition-forum"
         >
           <ArrowLeft size={14} />
           Back
         </button>
 
         {/* Create Thread Form */}
-        <div className="bg-zinc-900 rounded-lg border border-zinc-800 overflow-visible">
+        <div className="bg-zinc-900  border border-zinc-800 overflow-visible">
           {/* Header */}
           <div className="border-b border-zinc-800 px-6 py-4">
             <h1 className="text-[18px] font-semibold text-zinc-100">
@@ -244,7 +244,7 @@ export default function CreateThreadPage() {
             <div>
               <select
                 disabled
-                className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-[13px] text-zinc-400 outline-none cursor-not-allowed"
+                className="w-full  border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-[13px] text-zinc-400 outline-none cursor-not-allowed"
               >
                 <option>Prefixes...</option>
               </select>
@@ -259,7 +259,7 @@ export default function CreateThreadPage() {
                 placeholder="Thread title"
                 required
                 maxLength={THREAD_VALIDATION.TITLE_MAX_LENGTH}
-                className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-[14px] text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-pink-500/50 focus:ring-1 focus:ring-pink-500/20 transition-all"
+                className="w-full  border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-[14px] text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-pink-500/50 focus:ring-1 focus:ring-pink-500/20 transition-all"
               />
               <p className="text-[11px] text-zinc-500 mt-1">
                 {title.length}/{THREAD_VALIDATION.TITLE_MAX_LENGTH} characters
@@ -295,7 +295,7 @@ export default function CreateThreadPage() {
                 value={tags}
                 onChange={(e) => setTags(e.target.value)}
                 placeholder=""
-                className="w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-[13px] text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-pink-500/50 focus:ring-1 focus:ring-pink-500/20 transition-all"
+                className="w-full  border border-zinc-700 bg-zinc-800 px-3 py-2.5 text-[13px] text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-pink-500/50 focus:ring-1 focus:ring-pink-500/20 transition-all"
               />
               <p className="text-[11px] text-zinc-500 mt-1">
                 Multiple tags may be separated by commas.
@@ -312,14 +312,14 @@ export default function CreateThreadPage() {
                   <img
                     src={thumbnail}
                     alt="Thread thumbnail"
-                    className="h-16 w-16 rounded-md object-cover border border-zinc-700"
+                    className="h-16 w-16  object-cover border border-zinc-700"
                   />
                 )}
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleThumbnailUpload}
-                  className="flex-1 text-[13px] text-zinc-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-[13px] file:font-medium file:bg-zinc-800 file:text-zinc-300 hover:file:bg-zinc-700 file:cursor-pointer"
+                  className="flex-1 text-[13px] text-zinc-300 file:mr-4 file:py-2 file:px-4 file: file:border-0 file:text-[13px] file:font-medium file:bg-zinc-800 file:text-zinc-300 hover:file:bg-zinc-700 file:cursor-pointer"
                 />
                 {thumbnail && (
                   <button
@@ -346,7 +346,7 @@ export default function CreateThreadPage() {
                   <img
                     src={banner}
                     alt="Thread banner"
-                    className="w-full h-32 rounded-md object-cover border border-zinc-700"
+                    className="w-full h-32  object-cover border border-zinc-700"
                     onError={() => {
                       toast.error('Failed to load banner image');
                       setBanner('');
@@ -358,7 +358,7 @@ export default function CreateThreadPage() {
                     type="file"
                     accept="image/*"
                     onChange={handleBannerUpload}
-                    className="flex-1 text-[13px] text-zinc-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-[13px] file:font-medium file:bg-zinc-800 file:text-zinc-300 hover:file:bg-zinc-700 file:cursor-pointer"
+                    className="flex-1 text-[13px] text-zinc-300 file:mr-4 file:py-2 file:px-4 file: file:border-0 file:text-[13px] file:font-medium file:bg-zinc-800 file:text-zinc-300 hover:file:bg-zinc-700 file:cursor-pointer"
                   />
                   {banner && (
                     <button
@@ -417,7 +417,7 @@ export default function CreateThreadPage() {
               <button
                 type="submit"
                 disabled={isSubmitting || !title.trim() || !content.trim() || !selectedCategory || !selectedTopic}
-                className="flex items-center gap-2 rounded-md bg-teal-600 hover:bg-teal-700 px-5 py-2.5 text-[13px] font-medium text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                className="flex items-center gap-2  bg-teal-600 hover:bg-teal-700 px-5 py-2.5 text-[13px] font-medium text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
                 <Send size={14} />
                 {isSubmitting ? 'Posting...' : 'Post Thread'}
@@ -430,7 +430,7 @@ export default function CreateThreadPage() {
       {/* Preview Modal */}
       {showPreview && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80">
-          <div className="bg-zinc-900 rounded-lg border border-zinc-800 w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+          <div className="bg-zinc-900  border border-zinc-800 w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
             {/* Modal Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800">
               <h2 className="text-[18px] font-semibold text-zinc-100">Preview</h2>
@@ -444,7 +444,7 @@ export default function CreateThreadPage() {
 
             {/* Modal Content */}
             <div className="flex-1 overflow-y-auto p-6">
-              <div className="bg-zinc-800/50 rounded-lg border border-zinc-700 p-6">
+              <div className="bg-zinc-800/50  border border-zinc-700 p-6">
                 {/* Thread Title */}
                 <h1 className="text-[20px] font-semibold text-zinc-100 mb-4">
                   {title || 'Untitled Thread'}
@@ -463,7 +463,7 @@ export default function CreateThreadPage() {
                       return trimmedTag ? (
                         <span
                           key={index}
-                          className="inline-flex items-center rounded-md bg-zinc-700 px-2.5 py-1 text-[11px] font-medium text-zinc-300"
+                          className="inline-flex items-center  bg-zinc-700 px-2.5 py-1 text-[11px] font-medium text-zinc-300"
                         >
                           {trimmedTag}
                         </span>
@@ -478,7 +478,7 @@ export default function CreateThreadPage() {
             <div className="flex justify-end gap-3 px-6 py-4 border-t border-zinc-800">
               <button
                 onClick={() => setShowPreview(false)}
-                className="rounded-md bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 px-5 py-2.5 text-[13px] font-medium text-zinc-300 transition-all"
+                className=" bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 px-5 py-2.5 text-[13px] font-medium text-zinc-300 transition-all"
               >
                 Close
               </button>

@@ -95,14 +95,14 @@ export default function PostEditHistoryModal({
   return createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/60 "
         onClick={onClose}
       />
       <div className="relative hud-panel w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-forum-border/20">
           <span className="text-[12px] font-mono font-bold text-forum-text flex items-center gap-2">
-            <History size={13} className="text-forum-pink" /> Edit History
+            <History size={13} className="text-primary" /> Edit History
             <span className="text-forum-muted">({currentVersion} versions)</span>
           </span>
           <button
@@ -117,7 +117,7 @@ export default function PostEditHistoryModal({
         <div className="flex-1 overflow-y-auto">
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-forum-pink"></div>
+              <div className="animate-spin  h-8 w-8 border-b-2 border-primary"></div>
             </div>
           ) : history.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -129,10 +129,10 @@ export default function PostEditHistoryModal({
           ) : (
             <div className="p-4 space-y-3">
               {/* Current version */}
-              <div className="border border-forum-pink/30 rounded-md overflow-hidden bg-forum-pink/5">
-                <div className="flex items-center justify-between px-4 py-2.5 bg-forum-pink/10 border-b border-forum-pink/20">
+              <div className="border border-primary/30  overflow-hidden bg-primary/5">
+                <div className="flex items-center justify-between px-4 py-2.5 bg-primary/10 border-b border-primary/20">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono font-bold text-forum-pink uppercase tracking-wider">
+                    <span className="text-[10px] font-mono font-bold text-primary uppercase tracking-wider">
                       Current Version (v{currentVersion})
                     </span>
                   </div>
@@ -151,8 +151,8 @@ export default function PostEditHistoryModal({
               {history.map((entry) => (
                 <div
                   key={entry.id}
-                  className={`border rounded-md overflow-hidden transition-forum ${selectedVersion === entry.version
-                      ? 'border-forum-pink/30 bg-forum-pink/5'
+                  className={`border  overflow-hidden transition-forum ${selectedVersion === entry.version
+                      ? 'border-primary/30 bg-primary/5'
                       : 'border-forum-border/30 bg-forum-bg/50'
                     }`}
                 >
@@ -190,7 +190,7 @@ export default function PostEditHistoryModal({
                             selectedVersion === entry.version ? null : entry.version
                           )
                         }
-                        className="text-[9px] font-mono text-forum-pink hover:text-forum-pink/80 transition-forum"
+                        className="text-[9px] font-mono text-primary hover:text-primary/80 transition-forum"
                       >
                         {selectedVersion === entry.version ? 'Hide' : 'View'}
                       </button>
@@ -222,7 +222,7 @@ export default function PostEditHistoryModal({
           </span>
           <button
             onClick={onClose}
-            className="transition-forum rounded-md px-4 py-2 text-[10px] font-mono text-forum-muted border border-forum-border/30 hover:text-forum-text hover:border-forum-border/50"
+            className="transition-forum  px-4 py-2 text-[10px] font-mono text-forum-muted border border-forum-border/30 hover:text-forum-text hover:border-forum-border/50"
           >
             Close
           </button>

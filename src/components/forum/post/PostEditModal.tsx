@@ -41,11 +41,11 @@ const PostEditModal = memo(({
 
   return createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/60 " onClick={onClose} />
       <div className="relative hud-panel w-full max-w-3xl max-h-[90vh] flex flex-col" style={{ overflow: 'visible' }}>
         <div className="flex items-center justify-between px-4 py-3 border-b border-forum-border/20">
           <span className="text-[12px] font-mono font-bold text-forum-text flex items-center gap-2">
-            <Pencil size={13} className="text-forum-pink" /> Edit Post
+            <Pencil size={13} className="text-primary" /> Edit Post
           </span>
           <button
             onClick={onClose}
@@ -84,11 +84,11 @@ const PostEditModal = memo(({
               type="text"
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className="w-full bg-forum-bg border border-forum-border/30 rounded-md px-3 py-2 text-[11px] font-mono text-forum-text placeholder:text-forum-muted/40 focus:outline-none focus:border-forum-pink/50 focus:ring-1 focus:ring-forum-pink/20 transition-forum"
+              className="w-full bg-forum-bg border border-forum-border/30  px-3 py-2 text-[11px] font-mono text-forum-text placeholder:text-forum-muted/40 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary transition-forum"
               placeholder="Brief explanation of what you changed..."
             />
             {requireReason && (
-              <p className="text-[9px] font-mono text-amber-400 mt-1 flex items-center gap-1">
+              <p className="text-[9px] font-mono text-amber-600 mt-1 flex items-center gap-1">
                 <AlertTriangle size={9} />
                 Edit reason required for posts older than 5 minutes
               </p>
@@ -100,18 +100,18 @@ const PostEditModal = memo(({
           <button
             onClick={onClose}
             disabled={isSaving}
-            className="transition-forum rounded-md px-4 py-2 text-[10px] font-mono text-forum-muted border border-forum-border/30 hover:text-forum-text hover:border-forum-border/50 disabled:opacity-50"
+            className="transition-forum  px-4 py-2 text-[10px] font-mono text-forum-muted border border-forum-border/30 hover:text-forum-text hover:border-forum-border/50 disabled:opacity-50"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
             disabled={isSaving || !content.trim() || content.trim().length < 5 || (requireReason && !reason.trim())}
-            className="transition-forum rounded-md bg-forum-pink px-4 py-2 text-[10px] font-mono font-semibold text-white hover:shadow-pink-glow active:scale-95 border border-forum-pink/50 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5"
+            className="transition-forum  bg-primary px-4 py-2 text-[10px] font-mono font-semibold text-white hover:shadow-brutal-sm active:scale-95 border border-primary/50 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5"
           >
             {isSaving ? (
               <>
-                <div className="inline-block animate-spin rounded-full h-3 w-3 border-b border-white"></div>
+                <div className="inline-block animate-spin  h-3 w-3 border-b border-white"></div>
                 Saving...
               </>
             ) : (

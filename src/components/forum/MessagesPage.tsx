@@ -166,10 +166,10 @@ export function MessagesPage() {
                     <img
                       src={conv.other_participant?.avatar}
                       alt={conv.other_participant?.username}
-                      className="w-12 h-12 rounded-full"
+                      className="w-12 h-12 "
                     />
                     {conv.other_participant?.is_online && (
-                      <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-background" />
+                      <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500  border-2 border-background" />
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -178,7 +178,7 @@ export function MessagesPage() {
                         {conv.other_participant?.username}
                       </h3>
                       {conv.unread_count > 0 && (
-                        <span className="bg-primary text-primary-foreground text-xs rounded-full px-2 py-0.5">
+                        <span className="bg-primary text-primary-foreground text-xs  px-2 py-0.5">
                           {conv.unread_count}
                         </span>
                       )}
@@ -217,7 +217,7 @@ export function MessagesPage() {
                 <img
                   src={selectedConversation?.other_participant?.avatar}
                   alt={selectedConversation?.other_participant?.username}
-                  className="w-10 h-10 rounded-full"
+                  className="w-10 h-10 "
                 />
                 <div>
                   <h3 className="font-semibold">
@@ -286,7 +286,7 @@ export function MessagesPage() {
                         <img
                           src={message.sender?.avatar}
                           alt={message.sender?.username}
-                          className="w-8 h-8 rounded-full flex-shrink-0"
+                          className="w-8 h-8  flex-shrink-0"
                         />
                         <div className="flex-1">
                           {message.reply_to && (

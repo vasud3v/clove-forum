@@ -24,11 +24,11 @@ export default function InlineReplyForm({
   };
 
   return (
-    <div className="mt-2 rounded-md border border-forum-pink/20 bg-forum-card/80 overflow-hidden">
-      <div className="flex items-center justify-between px-3 py-1.5 bg-forum-pink/[0.04] border-b border-forum-border/15">
+    <div className="mt-2  border border-primary/20 bg-forum-card/80 overflow-hidden">
+      <div className="flex items-center justify-between px-3 py-1.5 bg-primary/[0.04] border-b border-forum-border/15">
         <span className="text-[9px] font-mono text-forum-muted flex items-center gap-1.5">
-          <Reply size={10} className="text-forum-pink" />
-          Replying to <span className="text-forum-pink font-semibold">@{parentAuthor}</span>
+          <Reply size={10} className="text-primary" />
+          Replying to <span className="text-primary font-semibold">@{parentAuthor}</span>
         </span>
         <button
           type="button"
@@ -57,11 +57,11 @@ export default function InlineReplyForm({
             type="button"
             onClick={handleSubmit}
             disabled={!text.trim() || isSubmitting}
-            className="transition-forum rounded bg-forum-pink px-3 py-1 text-[9px] font-mono font-semibold text-white hover:shadow-pink-glow active:scale-95 border border-forum-pink/50 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5"
+            className="transition-forum rounded bg-primary px-3 py-1 text-[9px] font-mono font-semibold text-white hover:shadow-brutal-sm active:scale-95 border border-primary/50 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5"
           >
             {isSubmitting ? (
               <>
-                <div className="inline-block animate-spin rounded-full h-2.5 w-2.5 border-b-2 border-white" />
+                <div className="inline-block animate-spin  h-2.5 w-2.5 border-b-2 border-white" />
                 Posting...
               </>
             ) : (

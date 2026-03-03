@@ -36,9 +36,9 @@ export default function TrendingTicker() {
     return (
       <div className="hud-panel overflow-hidden">
         <div className="flex items-stretch">
-          <div className="flex items-center gap-1.5 bg-gradient-to-r from-forum-pink/10 to-orange-500/10 border-r border-forum-border px-4 py-2.5 flex-shrink-0 w-[140px]">
-            <Flame size={12} className="text-orange-400 animate-pulse" />
-            <span className="text-[10px] font-mono font-bold text-orange-400 uppercase tracking-wider whitespace-nowrap">
+          <div className="flex items-center gap-1.5 bg-primary to-orange-500/10 border-r border-forum-border px-4 py-2.5 flex-shrink-0 w-[140px]">
+            <Flame size={12} className="text-white animate-pulse" />
+            <span className="text-[10px] font-mono font-bold text-white uppercase tracking-wider whitespace-nowrap">
               Trending
             </span>
           </div>
@@ -56,9 +56,9 @@ export default function TrendingTicker() {
     <div className="hud-panel overflow-hidden">
       <div className="flex items-stretch">
         {/* Label */}
-        <div className="flex items-center gap-1.5 bg-gradient-to-r from-forum-pink/10 to-orange-500/10 border-r border-forum-border px-4 py-2.5 flex-shrink-0 w-[140px]">
-          <Flame size={12} className="text-orange-400 animate-pulse" />
-          <span className="text-[10px] font-mono font-bold text-orange-400 uppercase tracking-wider whitespace-nowrap">
+        <div className="flex items-center gap-1.5 bg-primary to-orange-500/10 border-r border-forum-border px-4 py-2.5 flex-shrink-0 w-[140px]">
+          <Flame size={12} className="text-white animate-pulse" />
+          <span className="text-[10px] font-mono font-bold text-white uppercase tracking-wider whitespace-nowrap">
             Trending
           </span>
         </div>
@@ -73,9 +73,9 @@ export default function TrendingTicker() {
                 className="flex items-center gap-2 whitespace-nowrap group transition-all duration-200 hover:scale-105"
               >
                 {thread.isHot && (
-                  <Flame size={10} className="text-orange-400 flex-shrink-0" />
+                  <Flame size={10} className="text-white flex-shrink-0" />
                 )}
-                <span className="text-[11px] font-mono text-forum-text group-hover:text-forum-pink transition-colors">
+                <span className="text-[11px] font-mono text-forum-text group-hover:text-primary transition-colors">
                   {thread.title.length > 50 ? thread.title.slice(0, 50) + '...' : thread.title}
                 </span>
                 <span className="text-[9px] font-mono text-forum-muted/60 flex items-center gap-0.5">
@@ -86,7 +86,7 @@ export default function TrendingTicker() {
             ))}
           </div>
           {/* Fade edges */}
-          <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-forum-card to-transparent pointer-events-none z-10" />
+          <div className="absolute left-0 top-0 bottom-0 w-12 bg-forum-card to-transparent pointer-events-none z-10" />
           <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-forum-card to-transparent pointer-events-none z-10" />
         </div>
       </div>

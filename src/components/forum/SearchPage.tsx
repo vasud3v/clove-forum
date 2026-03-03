@@ -58,7 +58,7 @@ function HighlightText({ text, query }: { text: string; query: string }) {
             <>
                 {parts.map((part, i) =>
                     regex.test(part) ? (
-                        <mark key={i} className="bg-forum-pink/20 text-forum-pink rounded-sm px-0.5 font-medium">
+                        <mark key={i} className="bg-primary/20 text-primary  px-0.5 font-medium">
                             {part}
                         </mark>
                     ) : (
@@ -363,9 +363,9 @@ export default function SearchPage() {
             {/* Breadcrumb */}
             <div className="mx-auto max-w-7xl px-4 lg:px-6 pt-4 pb-2">
                 <div className="flex items-center gap-1.5 text-[10px] font-mono text-forum-muted">
-                    <HomeIcon size={11} className="text-forum-pink" />
+                    <HomeIcon size={11} className="text-primary" />
                     <span
-                        className="text-forum-text hover:text-forum-pink transition-forum cursor-pointer"
+                        className="text-forum-text hover:text-primary transition-forum cursor-pointer"
                         onClick={() => navigate('/')}
                     >
                         Forums
@@ -377,9 +377,9 @@ export default function SearchPage() {
 
             <div className="mx-auto max-w-4xl px-4 py-4 lg:px-6 pb-24 lg:pb-8 space-y-4">
                 {/* Search Header */}
-                <div className="hud-panel p-6 shadow-lg">
+                <div className="hud-panel p-6 shadow-brutal">
                     <h1 className="text-[18px] font-mono font-bold text-forum-text mb-4 flex items-center gap-2">
-                        <Search size={18} className="text-forum-pink" />
+                        <Search size={18} className="text-primary" />
                         Search Forum
                     </h1>
                     <form onSubmit={handleSearchSubmit} className="relative">
@@ -391,13 +391,13 @@ export default function SearchPage() {
                             value={pageSearchQuery}
                             onChange={(e) => setPageSearchQuery(e.target.value)}
                             maxLength={200}
-                            className="transition-all duration-200 w-full rounded-lg border border-forum-border bg-forum-bg/40 hover:bg-forum-bg/60 hover:border-forum-border/80 py-3 pl-11 pr-10 text-[13px] font-mono text-forum-text placeholder-forum-muted/70 outline-none focus:border-forum-pink focus:bg-forum-bg focus:placeholder-forum-muted focus:shadow-lg focus:shadow-forum-pink/20 focus:ring-2 focus:ring-forum-pink/30"
+                            className="transition-all duration-200 w-full  border border-forum-border bg-forum-bg/40 hover:bg-forum-bg/60 hover:border-forum-border/80 py-3 pl-11 pr-10 text-[13px] font-mono text-forum-text placeholder-forum-muted/70 outline-none focus:border-primary focus:bg-forum-bg focus:placeholder-forum-muted focus:shadow-brutal focus:shadow-brutal-sm focus:ring-2 focus:ring-primary"
                         />
                         {pageSearchQuery && (
                             <button
                                 type="button"
                                 onClick={handleClearSearch}
-                                className="absolute right-4 top-1/2 -translate-y-1/2 text-forum-muted hover:text-forum-pink transition-forum"
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-forum-muted hover:text-primary transition-forum"
                                 aria-label="Clear search"
                             >
                                 <X size={14} />
@@ -426,15 +426,15 @@ export default function SearchPage() {
 
                 {/* Recent Searches (when query is empty) */}
                 {showRecentSearches && (
-                    <div className="hud-panel p-4 shadow-md">
+                    <div className="hud-panel p-4 shadow-brutal-sm">
                         <div className="flex items-center justify-between mb-3">
                             <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-forum-muted flex items-center gap-1.5">
-                                <Clock size={11} className="text-forum-pink/60" />
+                                <Clock size={11} className="text-primary/60" />
                                 Recent Searches
                             </span>
                             <button
                                 onClick={clearRecentSearches}
-                                className="text-[9px] font-mono text-forum-muted hover:text-forum-pink transition-forum flex items-center gap-1"
+                                className="text-[9px] font-mono text-forum-muted hover:text-primary transition-forum flex items-center gap-1"
                                 aria-label="Clear all recent searches"
                             >
                                 <Trash2 size={9} />
@@ -449,9 +449,9 @@ export default function SearchPage() {
                                         setPageSearchQuery(term);
                                         navigate(`/search?q=${encodeURIComponent(term)}`);
                                     }}
-                                    className="group flex items-center gap-1.5 rounded-md border border-forum-border/40 bg-forum-bg px-3 py-1.5 text-[11px] font-mono text-forum-text hover:border-forum-pink/30 hover:bg-forum-pink/5 hover:text-forum-pink transition-forum"
+                                    className="group flex items-center gap-1.5  border border-forum-border/40 bg-forum-bg px-3 py-1.5 text-[11px] font-mono text-forum-text hover:border-primary/30 hover:bg-primary/5 hover:text-primary transition-forum"
                                 >
-                                    <Clock size={10} className="text-forum-muted group-hover:text-forum-pink transition-colors" />
+                                    <Clock size={10} className="text-forum-muted group-hover:text-primary transition-colors" />
                                     <span className="max-w-[200px] truncate">{term}</span>
                                     <button
                                         onClick={(e) => {
@@ -476,9 +476,9 @@ export default function SearchPage() {
                             <button
                                 key={tab.key}
                                 onClick={() => handleTabChange(tab.key)}
-                                className={`transition-forum flex items-center gap-1.5 rounded-md px-3 py-2 text-[11px] font-mono font-medium ${
+                                className={`transition-forum flex items-center gap-1.5  px-3 py-2 text-[11px] font-mono font-medium ${
                                     activeTab === tab.key
-                                        ? 'bg-forum-pink/10 text-forum-pink border border-forum-pink/20 shadow-sm'
+                                        ? 'bg-primary/10 text-primary border border-primary/20 shadow-sm'
                                         : 'text-forum-muted hover:text-forum-text hover:bg-forum-hover border border-transparent'
                                 }`}
                             >
@@ -497,7 +497,7 @@ export default function SearchPage() {
                                 }
                             }}
                             disabled={!pageSearchQuery.trim() || isLoading}
-                            className="transition-forum flex items-center gap-1.5 rounded-md px-3 py-2 text-[10px] font-mono text-forum-muted hover:text-forum-pink border border-forum-border/30 hover:border-forum-pink/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="transition-forum flex items-center gap-1.5  px-3 py-2 text-[10px] font-mono text-forum-muted hover:text-primary border border-forum-border/30 hover:border-primary/30 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             <ArrowUpDown size={10} />
                             Sort: {sortBy}
@@ -509,7 +509,7 @@ export default function SearchPage() {
                 <div className="space-y-2">
                     {isLoading ? (
                         <div className="hud-panel flex flex-col items-center justify-center py-16">
-                            <Loader2 size={32} className="text-forum-pink animate-spin mb-3" />
+                            <Loader2 size={32} className="text-primary animate-spin mb-3" />
                             <span className="text-[12px] font-mono text-forum-muted">Searching...</span>
                         </div>
                     ) : results.length > 0 ? (
@@ -518,7 +518,7 @@ export default function SearchPage() {
                                 <button
                                     key={`${result.type}-${result.id}`}
                                     onClick={() => navigate(result.link)}
-                                    className="transition-forum w-full text-left hud-panel p-4 hover:border-forum-pink/30 hover:bg-forum-pink/[0.02] hover:shadow-md group"
+                                    className="transition-forum w-full text-left hud-panel p-4 hover:border-primary/30 hover:bg-primary/[0.02] hover:shadow-md group"
                                 >
                                     <div className="flex items-start gap-3">
                                         {result.type === 'user' || result.authorAvatar ? (
@@ -532,26 +532,26 @@ export default function SearchPage() {
                                                 }}
                                             />
                                         ) : (
-                                            <div className="h-10 w-10 rounded-md border border-forum-border/30 bg-forum-bg flex items-center justify-center flex-shrink-0">
+                                            <div className="h-10 w-10  border border-forum-border/30 bg-forum-bg flex items-center justify-center flex-shrink-0">
                                                 {result.type === 'thread' ? (
-                                                    <FileText size={16} className="text-forum-pink/50" />
+                                                    <FileText size={16} className="text-primary/50" />
                                                 ) : (
-                                                    <MessageCircle size={16} className="text-forum-pink/50" />
+                                                    <MessageCircle size={16} className="text-primary/50" />
                                                 )}
                                             </div>
                                         )}
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2 mb-1 flex-wrap">
-                                                <span className="text-[7px] font-mono font-bold uppercase tracking-wider px-1.5 py-[1px] rounded-sm border border-forum-border/30 text-forum-muted bg-forum-bg">
+                                                <span className="text-[7px] font-mono font-bold uppercase tracking-wider px-1.5 py-[1px]  border border-forum-border/30 text-forum-muted bg-forum-bg">
                                                     {result.type}
                                                 </span>
                                                 {result.categoryName && (
-                                                    <span className="text-[8px] font-mono text-forum-pink/60 truncate max-w-[150px]">
+                                                    <span className="text-[8px] font-mono text-primary/60 truncate max-w-[150px]">
                                                         {result.categoryName}
                                                     </span>
                                                 )}
                                             </div>
-                                            <h3 className="text-[13px] font-mono font-semibold text-forum-text group-hover:text-forum-pink transition-colors line-clamp-2 break-words">
+                                            <h3 className="text-[13px] font-mono font-semibold text-forum-text group-hover:text-primary transition-colors line-clamp-2 break-words">
                                                 <HighlightText text={result.title} query={pageSearchQuery} />
                                             </h3>
                                             {result.excerpt && (
@@ -587,7 +587,7 @@ export default function SearchPage() {
                         </>
                     ) : pageSearchQuery.trim() && !error ? (
                         <div className="hud-panel flex flex-col items-center justify-center py-16">
-                            <Inbox size={48} className="text-forum-pink/20 mb-4" />
+                            <Inbox size={48} className="text-primary/20 mb-4" />
                             <h3 className="text-[14px] font-bold text-forum-text font-mono mb-2">
                                 No results found
                             </h3>
@@ -597,7 +597,7 @@ export default function SearchPage() {
                         </div>
                     ) : !showRecentSearches && !error ? (
                         <div className="hud-panel flex flex-col items-center justify-center py-16">
-                            <Search size={48} className="text-forum-pink/20 mb-4" />
+                            <Search size={48} className="text-primary/20 mb-4" />
                             <h3 className="text-[14px] font-bold text-forum-text font-mono mb-2">
                                 Search the forum
                             </h3>
@@ -611,7 +611,7 @@ export default function SearchPage() {
                 {/* Result count */}
                 {!isLoading && results.length > 0 && (
                     <div className="text-[10px] font-mono text-forum-muted text-center py-2 flex items-center justify-center gap-2">
-                        <TrendingUp size={10} className="text-forum-pink/60" />
+                        <TrendingUp size={10} className="text-primary/60" />
                         Showing {results.length} result{results.length !== 1 ? 's' : ''} for "{pageSearchQuery}"
                     </div>
                 )}

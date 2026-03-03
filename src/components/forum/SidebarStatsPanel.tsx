@@ -22,11 +22,11 @@ export default function SidebarStatsPanel({ stats }: SidebarStatsPanelProps) {
       {/* Header */}
       <div className="border-b border-forum-border px-3 py-2 flex items-center justify-between">
         <div className="flex items-center gap-1.5">
-          <Activity size={11} className="text-forum-pink" />
+          <Activity size={11} className="text-primary" />
           <h4 className="text-[10px] font-bold text-forum-text font-mono uppercase tracking-wider">Statistics</h4>
         </div>
         <div className="flex items-center gap-1 text-[8px] font-mono text-forum-muted">
-          <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-400 animate-dot-pulse" />
+          <span className="flex h-1.5 w-1.5  bg-emerald-400 animate-dot-pulse" />
           Live
         </div>
       </div>
@@ -53,14 +53,14 @@ export default function SidebarStatsPanel({ stats }: SidebarStatsPanelProps) {
           <div className="flex items-center justify-between">
             <span className="text-[9px] text-forum-muted">Engagement</span>
             <div className="flex items-center gap-1">
-              <span className="text-[11px] font-bold text-cyan-400 font-mono">{postsPerThread}</span>
+              <span className="text-[11px] font-bold text-cyan-600 font-mono">{postsPerThread}</span>
               <span className="text-[8px] text-forum-muted">posts/thread</span>
             </div>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-[9px] text-forum-muted">Activity Rate</span>
             <div className="flex items-center gap-1">
-              <span className="text-[11px] font-bold text-emerald-400 font-mono">{onlinePercentage}%</span>
+              <span className="text-[11px] font-bold text-black font-mono">{onlinePercentage}%</span>
               <span className="text-[8px] text-forum-muted">online</span>
             </div>
           </div>
@@ -71,10 +71,10 @@ export default function SidebarStatsPanel({ stats }: SidebarStatsPanelProps) {
           <div className="pt-2 border-t border-forum-border/50">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1">
-                <Sparkles size={10} className="text-forum-pink" />
+                <Sparkles size={10} className="text-primary" />
                 <span className="text-[9px] text-forum-muted">Today's Posts</span>
               </div>
-              <span className="text-[12px] font-bold text-forum-pink font-mono">
+              <span className="text-[12px] font-bold text-primary font-mono">
                 +{stats.newPostsToday}
               </span>
             </div>

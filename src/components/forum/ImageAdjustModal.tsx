@@ -149,7 +149,7 @@ export default function ImageAdjustModal({ isOpen, onClose, imageUrl, type, onSa
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/80 " onClick={onClose} />
 
       {/* Modal */}
       <div className="relative hud-panel w-full max-w-4xl">
@@ -172,8 +172,8 @@ export default function ImageAdjustModal({ isOpen, onClose, imageUrl, type, onSa
           <div className="mb-4 flex justify-center">
             <div
               ref={containerRef}
-              className={`relative overflow-hidden bg-forum-bg border-2 border-forum-pink/30 cursor-move ${
-                isAvatar ? 'rounded-lg' : 'rounded'
+              className={`relative overflow-hidden bg-forum-bg border-2 border-primary/30 cursor-move ${
+                isAvatar ? '' : 'rounded'
               }`}
               style={{
                 width: `${containerWidth}px`,
@@ -201,14 +201,14 @@ export default function ImageAdjustModal({ isOpen, onClose, imageUrl, type, onSa
               {/* Loading indicator */}
               {!imageLoaded && (
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-forum-pink"></div>
+                  <div className="animate-spin  h-8 w-8 border-b-2 border-primary"></div>
                 </div>
               )}
 
               {/* Overlay hint */}
               {!isDragging && (
                 <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-                  <div className="bg-black/50 backdrop-blur-sm px-4 py-2 rounded text-[10px] font-mono text-white">
+                  <div className="bg-black/50  px-4 py-2 rounded text-[10px] font-mono text-white">
                     Drag to reposition • Scroll to zoom
                   </div>
                 </div>
@@ -250,14 +250,14 @@ export default function ImageAdjustModal({ isOpen, onClose, imageUrl, type, onSa
               max="300"
               value={scale * 100}
               onChange={(e) => setScale(Number(e.target.value) / 100)}
-              className="w-full h-2 bg-forum-bg rounded-lg appearance-none cursor-pointer accent-forum-pink"
+              className="w-full h-2 bg-forum-bg  appearance-none cursor-pointer accent-forum-pink"
             />
           </div>
 
           {/* Info */}
-          <div className="bg-forum-pink/5 border border-forum-pink/20 rounded-md p-3 mb-4">
+          <div className="bg-primary/5 border border-primary/20  p-3 mb-4">
             <div className="text-[9px] font-mono text-forum-muted leading-relaxed">
-              <p className="text-forum-pink font-bold mb-1">Tips:</p>
+              <p className="text-primary font-bold mb-1">Tips:</p>
               <ul className="list-disc list-inside space-y-0.5">
                 <li>Click and drag to reposition the image</li>
                 <li>Use mouse wheel or buttons to zoom in/out</li>
@@ -271,14 +271,14 @@ export default function ImageAdjustModal({ isOpen, onClose, imageUrl, type, onSa
             <button
               onClick={handleSave}
               disabled={!imageLoaded}
-              className="flex-1 transition-forum flex items-center justify-center gap-2 rounded-md bg-forum-pink px-4 py-2.5 text-[11px] font-mono font-bold text-white hover:bg-forum-pink/90 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 transition-forum flex items-center justify-center gap-2  bg-primary px-4 py-2.5 text-[11px] font-mono font-bold text-white hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Save size={12} />
               Apply Changes
             </button>
             <button
               onClick={onClose}
-              className="transition-forum rounded-md border border-forum-border px-4 py-2.5 text-[11px] font-mono text-forum-muted hover:text-forum-text hover:bg-forum-hover"
+              className="transition-forum  border border-forum-border px-4 py-2.5 text-[11px] font-mono text-forum-muted hover:text-forum-text hover:bg-forum-hover"
             >
               Cancel
             </button>

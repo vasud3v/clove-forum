@@ -51,11 +51,11 @@ const ParentPostPreview = memo(({ parentPost, onClose }: ParentPostPreviewProps)
   const previewText = truncateContent(parentPost.content);
 
   return (
-    <div className="mb-2 rounded-md border border-forum-pink/20 bg-forum-card/80 overflow-hidden">
-      <div className="flex items-center justify-between px-3 py-1.5 bg-forum-pink/[0.04] border-b border-forum-border/15">
+    <div className="mb-2  border border-primary/20 bg-forum-card/80 overflow-hidden">
+      <div className="flex items-center justify-between px-3 py-1.5 bg-primary/[0.04] border-b border-forum-border/15">
         <span className="text-[9px] font-mono text-forum-muted flex items-center gap-1.5">
-          <Reply size={10} className="text-forum-pink" />
-          Replying to <span className="text-forum-pink font-semibold">@{parentPost.author?.username || 'Unknown'}</span>
+          <Reply size={10} className="text-primary" />
+          Replying to <span className="text-primary font-semibold">@{parentPost.author?.username || 'Unknown'}</span>
         </span>
         <button
           type="button"

@@ -217,8 +217,8 @@ export default function AdminDashboard() {
       {/* Breadcrumb */}
       <div className="mx-auto max-w-7xl px-4 lg:px-6 pt-4 pb-2">
         <div className="flex items-center gap-1.5 text-[10px] font-mono text-forum-muted">
-          <HomeIcon size={11} className="text-forum-pink" />
-          <span className="text-forum-text hover:text-forum-pink transition-forum cursor-pointer" onClick={() => navigate('/')}>Forums</span>
+          <HomeIcon size={11} className="text-primary" />
+          <span className="text-forum-text hover:text-primary transition-forum cursor-pointer" onClick={() => navigate('/')}>Forums</span>
           <ChevronRight size={10} />
           <span className="text-forum-muted">Admin Dashboard</span>
         </div>
@@ -229,14 +229,14 @@ export default function AdminDashboard() {
         <div className="hud-panel p-6 flex items-center justify-between">
           <div>
             <h1 className="text-[18px] font-mono font-bold text-forum-text flex items-center gap-2">
-              <Shield size={18} className="text-forum-pink" /> Admin Dashboard
+              <Shield size={18} className="text-primary" /> Admin Dashboard
             </h1>
             <p className="text-[11px] font-mono text-forum-muted mt-1">
-              Full control panel • Logged in as <span className="text-forum-pink">{currentUser.username}</span> ({currentUser.role})
+              Full control panel • Logged in as <span className="text-primary">{currentUser.username}</span> ({currentUser.role})
             </p>
           </div>
           <button onClick={loadData} disabled={isLoading}
-            className="transition-forum flex items-center gap-1.5 rounded-md border border-forum-border px-3 py-1.5 text-[10px] font-mono text-forum-muted hover:text-forum-pink hover:border-forum-pink/30 disabled:opacity-40">
+            className="transition-forum flex items-center gap-1.5  border border-forum-border px-3 py-1.5 text-[10px] font-mono text-forum-muted hover:text-primary hover:border-primary/30 disabled:opacity-40">
             <RefreshCw size={12} className={isLoading ? 'animate-spin' : ''} /> Refresh
           </button>
         </div>
@@ -245,15 +245,15 @@ export default function AdminDashboard() {
         <div className="flex items-center gap-1 overflow-x-auto pb-1">
           {tabs.filter(t => t.show).map((tab) => (
             <button key={tab.key} onClick={() => setActiveTab(tab.key)}
-              className={`transition-forum flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[11px] font-mono font-medium whitespace-nowrap ${
+              className={`transition-forum flex items-center gap-1.5  px-3 py-1.5 text-[11px] font-mono font-medium whitespace-nowrap ${
                 activeTab === tab.key
-                  ? 'bg-forum-pink/10 text-forum-pink border border-forum-pink/20'
+                  ? 'bg-primary/10 text-primary border border-primary/20'
                   : 'text-forum-muted hover:text-forum-text hover:bg-forum-hover'
               }`}>
               <tab.icon size={12} />
               {tab.label}
               {tab.key === 'reports' && stats.pendingReports > 0 && (
-                <span className="rounded-full bg-red-500 px-1.5 py-[1px] text-[8px] text-white ml-1">{stats.pendingReports}</span>
+                <span className=" bg-red-500 px-1.5 py-[1px] text-[8px] text-black ml-1">{stats.pendingReports}</span>
               )}
             </button>
           ))}
@@ -262,7 +262,7 @@ export default function AdminDashboard() {
         {/* Loading */}
         {isLoading ? (
           <div className="hud-panel flex items-center justify-center py-20">
-            <RefreshCw size={20} className="text-forum-pink animate-spin" />
+            <RefreshCw size={20} className="text-primary animate-spin" />
             <span className="ml-3 text-[12px] font-mono text-forum-muted">Loading admin data...</span>
           </div>
         ) : (

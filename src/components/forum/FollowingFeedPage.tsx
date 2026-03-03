@@ -157,7 +157,7 @@ export function FollowingFeedPage() {
                   <img
                     src={post.author.avatar}
                     alt={post.author.username}
-                    className="w-6 h-6 rounded-full"
+                    className="w-6 h-6 "
                   />
                   <span className="font-semibold">{post.author.username}</span>
                   <span>posted in</span>

@@ -94,10 +94,10 @@ export default function AdminPostsTab({ posts, onRefresh, onLogAction, formatDat
         <div className="relative flex-1 max-w-xs">
           <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-forum-muted" />
           <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search posts..."
-            className="w-full rounded-md border border-forum-border bg-forum-bg pl-8 pr-3 py-1.5 text-[10px] font-mono text-forum-text outline-none focus:border-forum-pink" />
+            className="w-full  border border-forum-border bg-forum-bg pl-8 pr-3 py-1.5 text-[10px] font-mono text-forum-text outline-none focus:border-primary" />
         </div>
         <select value={filterAuthor} onChange={e => setFilterAuthor(e.target.value)}
-          className="rounded-md border border-forum-border bg-forum-bg px-3 py-1.5 text-[10px] font-mono text-forum-text outline-none focus:border-forum-pink">
+          className=" border border-forum-border bg-forum-bg px-3 py-1.5 text-[10px] font-mono text-forum-text outline-none focus:border-primary">
           <option value="all">All Authors</option>
           {authors.map(a => <option key={a} value={a}>{a}</option>)}
         </select>
@@ -125,10 +125,10 @@ export default function AdminPostsTab({ posts, onRefresh, onLogAction, formatDat
               minHeight="200px"
             />
             <div className="flex gap-2">
-              <button onClick={handleEdit} disabled={isSubmitting} className="transition-forum rounded-md bg-forum-pink px-4 py-1.5 text-[10px] font-mono font-bold text-white hover:bg-forum-pink/90 disabled:opacity-40">
+              <button onClick={handleEdit} disabled={isSubmitting} className="transition-forum  bg-primary px-4 py-1.5 text-[10px] font-mono font-bold text-black hover:bg-primary/90 disabled:opacity-40">
                 {isSubmitting ? 'Saving...' : 'Save'}
               </button>
-              <button onClick={() => setEditingPost(null)} className="transition-forum rounded-md border border-forum-border px-4 py-1.5 text-[10px] font-mono text-forum-muted hover:text-forum-text">Cancel</button>
+              <button onClick={() => setEditingPost(null)} className="transition-forum  border border-forum-border px-4 py-1.5 text-[10px] font-mono text-forum-muted hover:text-forum-text">Cancel</button>
             </div>
           </div>
         </div>
@@ -150,7 +150,7 @@ export default function AdminPostsTab({ posts, onRefresh, onLogAction, formatDat
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-[10px] font-mono font-semibold text-forum-text">{post.authorName}</span>
                     <span className="text-[8px] font-mono text-forum-muted">in</span>
-                    <span className="text-[10px] font-mono text-forum-pink truncate">{post.threadTitle}</span>
+                    <span className="text-[10px] font-mono text-primary truncate">{post.threadTitle}</span>
                   </div>
                   <p className="text-[10px] font-mono text-forum-muted line-clamp-2">{post.content.replace(/<[^>]*>/g, '').slice(0, 200)}</p>
                   <div className="flex items-center gap-3 text-[8px] font-mono text-forum-muted mt-1">
@@ -159,8 +159,8 @@ export default function AdminPostsTab({ posts, onRefresh, onLogAction, formatDat
                   </div>
                 </div>
                 <div className="flex items-center gap-0.5 flex-shrink-0">
-                  <button onClick={() => setEditingPost({ id: post.id, content: post.content })} className="transition-forum rounded p-1.5 text-forum-muted hover:text-blue-400 hover:bg-blue-500/10" title="Edit"><Edit3 size={11} /></button>
-                  <button onClick={() => window.open(`/thread/${post.threadId}`, '_blank')} className="transition-forum rounded p-1.5 text-forum-muted hover:text-forum-pink hover:bg-forum-pink/10" title="View in thread"><Eye size={11} /></button>
+                  <button onClick={() => setEditingPost({ id: post.id, content: post.content })} className="transition-forum rounded p-1.5 text-forum-muted hover:text-white hover:bg-blue-600/40" title="Edit"><Edit3 size={11} /></button>
+                  <button onClick={() => window.open(`/thread/${post.threadId}`, '_blank')} className="transition-forum rounded p-1.5 text-forum-muted hover:text-primary hover:bg-primary/10" title="View in thread"><Eye size={11} /></button>
                   {deleteConfirm === post.id ? (
                     <><button onClick={() => handleDelete(post.id)} className="rounded p-1.5 text-red-400 bg-red-500/10"><Check size={11} /></button>
                     <button onClick={() => setDeleteConfirm(null)} className="rounded p-1.5 text-forum-muted"><X size={11} /></button></>

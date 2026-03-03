@@ -41,17 +41,17 @@ export function ColorPicker({ onApply }: ColorPickerProps) {
         title="Text Color"
         aria-label="Choose text color"
         aria-expanded={open}
-        className="transition-all rounded p-1.5 text-zinc-400 hover:text-pink-400 hover:bg-pink-500/10">
+        className="transition-all rounded p-1.5 text-foreground hover:text-white hover:bg-primary/20">
         <span className="relative block">
           <Palette size={12} />
-          <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full border border-black/30"
+          <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2  border border-black/30"
             style={{ background: selected }} />
         </span>
       </button>
 
       {open && (
         <div 
-          className="absolute top-full left-0 mt-1.5 z-[100] bg-zinc-900 border border-zinc-700/70 rounded-xl p-3 shadow-2xl w-[220px]"
+          className="absolute top-full left-0 mt-1.5 z-[100] bg-zinc-900 border border-zinc-700/70  p-3 shadow-brutal-lg w-[220px]"
           onMouseDown={e => e.stopPropagation()}
           role="dialog"
           aria-label="Color picker"
@@ -68,7 +68,7 @@ export function ColorPicker({ onApply }: ColorPickerProps) {
                 {recentColors.map(c => (
                   <button key={c} type="button" onClick={() => commit(c)}
                     aria-label={`Select color ${c}`}
-                    className="w-5 h-5 rounded-md border-2 border-zinc-700 hover:border-zinc-400 transition-colors"
+                    className="w-5 h-5  border-2 border-zinc-700 hover:border-zinc-400 transition-colors"
                     style={{ background: c }} title={c} />
                 ))}
               </div>
@@ -79,7 +79,7 @@ export function ColorPicker({ onApply }: ColorPickerProps) {
             {PRESET_COLORS.map(c => (
               <button key={c} type="button" onClick={() => commit(c)}
                 aria-label={`Select color ${c}`}
-                className={`w-6 h-6 rounded-md border-2 transition-all hover:scale-110 ${
+                className={`w-6 h-6  border-2 transition-all hover:scale-110 ${
                   selected === c ? 'border-white' : 'border-zinc-700 hover:border-zinc-400'
                 }`}
                 style={{ background: c }} title={c} />

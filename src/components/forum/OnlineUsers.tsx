@@ -80,8 +80,8 @@ export default function OnlineUsers() {
   }, []);
 
   const getRoleIcon = (role: string) => {
-    if (role === 'admin') return <Crown size={8} className="text-amber-400" />;
-    if (role === 'moderator') return <Zap size={8} className="text-blue-400" />;
+    if (role === 'admin') return <Crown size={8} className="text-amber-600" />;
+    if (role === 'moderator') return <Zap size={8} className="text-blue-600" />;
     return null;
   };
 
@@ -90,16 +90,16 @@ export default function OnlineUsers() {
       <div className="border-b border-forum-border px-3 py-2.5 flex items-center justify-between bg-gradient-to-r from-emerald-500/5 to-transparent">
         <div className="flex items-center gap-1.5">
           <div className="relative">
-            <Wifi size={11} className="text-emerald-400 drop-shadow-[0_0_4px_rgba(52,211,153,0.4)]" />
+            <Wifi size={11} className="text-emerald-700 drop-shadow-[0_0_4px_rgba(52,211,153,0.4)]" />
             <div className="absolute inset-0 animate-ping opacity-20">
-              <Wifi size={11} className="text-emerald-400" />
+              <Wifi size={11} className="text-emerald-700" />
             </div>
           </div>
           <h4 className="text-[10px] font-bold text-forum-text font-mono uppercase tracking-wider">Online Now</h4>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_4px_rgba(52,211,153,0.6)]" />
-          <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-gradient-to-r from-emerald-400/20 to-emerald-400/10 border border-emerald-400/30 px-1.5 text-[9px] font-bold text-emerald-400 font-mono shadow-[inset_0_0_8px_rgba(52,211,153,0.1)]">
+          <span className="flex h-1.5 w-1.5  bg-emerald-600 animate-pulse shadow-[0_0_4px_rgba(5,150,105,0.6)]" />
+          <span className="flex h-5 min-w-[20px] items-center justify-center  bg-gradient-to-r from-emerald-700/20 to-emerald-700/10 border border-emerald-700/30 px-1.5 text-[9px] font-bold text-black font-mono shadow-[inset_0_0_8px_rgba(5,150,105,0.1)]">
             {onlineUsers.length}
           </span>
         </div>
@@ -108,7 +108,7 @@ export default function OnlineUsers() {
         {onlineUsers.length === 0 ? (
           <div className="text-center py-4">
             <div className="flex justify-center mb-1.5">
-              <div className="h-8 w-8 rounded-full bg-forum-bg/50 border border-forum-border/50 flex items-center justify-center">
+              <div className="h-8 w-8  bg-forum-bg/50 border border-forum-border/50 flex items-center justify-center">
                 <Wifi size={14} className="text-forum-muted/30" />
               </div>
             </div>
@@ -120,7 +120,7 @@ export default function OnlineUsers() {
               <button
                 key={user.id}
                 type="button"
-                className="inline-flex items-center gap-1 rounded-sm border border-emerald-400/20 bg-emerald-400/[0.04] px-2 py-0.5 text-[9px] font-mono font-medium text-emerald-400/90 hover:bg-emerald-400/10 hover:text-emerald-400 hover:border-emerald-400/30 transition-all cursor-pointer group active:scale-95"
+                className="inline-flex items-center gap-1  border border-emerald-700/20 bg-emerald-700/[0.04] px-2 py-0.5 text-[9px] font-mono font-medium text-black hover:bg-emerald-700/10 hover:text-black hover:border-emerald-700/30 transition-all cursor-pointer group active:scale-95"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -130,7 +130,7 @@ export default function OnlineUsers() {
                 style={{ animationDelay: `${index * 30}ms` }}
               >
                 {/* Online indicator */}
-                <div className="flex h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_4px_rgba(52,211,153,0.6)] flex-shrink-0" />
+                <div className="flex h-1.5 w-1.5  bg-emerald-400 shadow-[0_0_4px_rgba(52,211,153,0.6)] flex-shrink-0" />
                 
                 {/* Username */}
                 <span className="truncate max-w-[120px]">

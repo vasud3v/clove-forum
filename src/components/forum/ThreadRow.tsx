@@ -42,7 +42,7 @@ export default function ThreadRow({ thread }: ThreadRowProps) {
     >
       {/* Left accent bar for pinned */}
       {thread.isPinned && (
-        <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-forum-pink" />
+        <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-primary" />
       )}
 
       <div className="flex items-center gap-3 px-3 py-2.5">
@@ -58,7 +58,7 @@ export default function ThreadRow({ thread }: ThreadRowProps) {
               }}
             />
             {thread.hasUnread && (
-              <div className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-forum-pink" />
+              <div className="absolute -top-1 -right-1 h-2.5 w-2.5  bg-primary" />
             )}
           </div>
         )}
@@ -68,7 +68,7 @@ export default function ThreadRow({ thread }: ThreadRowProps) {
           {/* Title Row */}
           <div className="flex items-center gap-2">
             {/* Thread Title */}
-            <h3 className="text-[17px] font-normal text-forum-text group-hover:text-forum-pink transition-colors truncate flex-1">
+            <h3 className="text-[17px] font-normal text-forum-text group-hover:text-primary transition-colors truncate flex-1">
               {thread.title}
             </h3>
 
@@ -80,7 +80,7 @@ export default function ThreadRow({ thread }: ThreadRowProps) {
               <Lock size={14} className="text-amber-500 flex-shrink-0" />
             )}
             {thread.isHot && (
-              <Flame size={14} className="text-orange-400 flex-shrink-0" />
+              <Flame size={14} className="text-orange-700 flex-shrink-0" />
             )}
           </div>
 
@@ -88,7 +88,7 @@ export default function ThreadRow({ thread }: ThreadRowProps) {
           <div className="flex items-center gap-2 text-[13px] text-forum-muted">
             {/* Author */}
             <span
-              className="text-amber-400 hover:text-amber-300 transition-colors cursor-pointer flex items-center gap-1"
+              className="text-amber-600 hover:text-amber-500 transition-colors cursor-pointer flex items-center gap-1"
               onClick={(e) => {
                 e.stopPropagation();
                 navigate(`/user/${thread.author.id}`);
@@ -96,7 +96,7 @@ export default function ThreadRow({ thread }: ThreadRowProps) {
             >
               {thread.author.username}
               {thread.author.role === 'admin' && (
-                <Shield size={11} className="text-amber-400" />
+                <Shield size={11} className="text-amber-600" />
               )}
             </span>
 
@@ -117,7 +117,7 @@ export default function ThreadRow({ thread }: ThreadRowProps) {
                       e.stopPropagation();
                       navigate(`/thread/${thread.id}?page=1`);
                     }}
-                    className="flex items-center justify-center min-w-[20px] h-[20px] px-1.5 rounded text-[11px] font-medium bg-forum-card/50 border border-forum-border/30 text-forum-text hover:bg-forum-pink hover:text-white hover:border-forum-pink transition-all"
+                    className="flex items-center justify-center min-w-[20px] h-[20px] px-1.5 rounded text-[11px] font-medium bg-forum-card/50 border border-forum-border/30 text-forum-text hover:bg-primary hover:text-white hover:border-primary transition-all"
                   >
                     1
                   </button>
@@ -131,7 +131,7 @@ export default function ThreadRow({ thread }: ThreadRowProps) {
                         e.stopPropagation();
                         navigate(`/thread/${thread.id}?page=${pageNum}`);
                       }}
-                      className="flex items-center justify-center min-w-[20px] h-[20px] px-1.5 rounded text-[11px] font-medium bg-forum-card/50 border border-forum-border/30 text-forum-text hover:bg-forum-pink hover:text-white hover:border-forum-pink transition-all"
+                      className="flex items-center justify-center min-w-[20px] h-[20px] px-1.5 rounded text-[11px] font-medium bg-forum-card/50 border border-forum-border/30 text-forum-text hover:bg-primary hover:text-white hover:border-primary transition-all"
                     >
                       {pageNum}
                     </button>
@@ -141,7 +141,7 @@ export default function ThreadRow({ thread }: ThreadRowProps) {
                       e.stopPropagation();
                       navigate(`/thread/${thread.id}?page=${totalPages + 1}`);
                     }}
-                    className="flex items-center gap-0.5 px-2 h-[20px] rounded text-[11px] font-medium bg-forum-card/50 border border-forum-border/30 text-forum-text hover:bg-forum-pink hover:text-white hover:border-forum-pink transition-all"
+                    className="flex items-center gap-0.5 px-2 h-[20px] rounded text-[11px] font-medium bg-forum-card/50 border border-forum-border/30 text-forum-text hover:bg-primary hover:text-white hover:border-primary transition-all"
                   >
                     Next →
                   </button>
@@ -172,7 +172,7 @@ export default function ThreadRow({ thread }: ThreadRowProps) {
               {formatTimeAgo(thread.lastReplyAt)}
             </time>
             <span
-              className="text-[13px] text-forum-text truncate hover:text-forum-pink cursor-pointer transition-colors"
+              className="text-[13px] text-forum-text truncate hover:text-primary cursor-pointer transition-colors"
               onClick={(e) => {
                 e.stopPropagation();
                 navigate(`/user/${thread.lastReplyBy.id}`);
@@ -184,7 +184,7 @@ export default function ThreadRow({ thread }: ThreadRowProps) {
           <img
             src={displayLastReplyByAvatar}
             alt={thread.lastReplyBy.username}
-            className="h-9 w-9 rounded-full object-cover border border-forum-border/40 cursor-pointer flex-shrink-0"
+            className="h-9 w-9  object-cover border border-forum-border/40 cursor-pointer flex-shrink-0"
             onClick={(e) => {
               e.stopPropagation();
               navigate(`/user/${thread.lastReplyBy.id}`);

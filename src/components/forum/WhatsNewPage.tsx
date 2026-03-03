@@ -109,9 +109,9 @@ export default function WhatsNewPage() {
       {/* Breadcrumb */}
       <div className="mx-auto max-w-7xl px-4 lg:px-6 pt-4 pb-2">
         <div className="flex items-center gap-1.5 text-[10px] font-mono text-forum-muted">
-          <HomeIcon size={11} className="text-forum-pink" />
+          <HomeIcon size={11} className="text-primary" />
           <span
-            className="text-forum-text hover:text-forum-pink transition-forum cursor-pointer"
+            className="text-forum-text hover:text-primary transition-forum cursor-pointer"
             onClick={() => navigate('/')}
           >
             Forums
@@ -128,8 +128,8 @@ export default function WhatsNewPage() {
             {/* Page header */}
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2.5">
-                <div className="flex h-8 w-8 items-center justify-center rounded-md bg-forum-pink/10 border border-forum-pink/20">
-                  <MessageSquare size={14} className="text-forum-pink" />
+                <div className="flex h-8 w-8 items-center justify-center  bg-primary/10 border border-primary/20">
+                  <MessageSquare size={14} className="text-primary" />
                 </div>
                 <div>
                   <h1 className="text-[16px] font-bold text-forum-text font-mono">
@@ -141,7 +141,7 @@ export default function WhatsNewPage() {
                 </div>
               </div>
               <div className="flex items-center gap-1">
-                <TrendingUp size={12} className="text-forum-pink" />
+                <TrendingUp size={12} className="text-primary" />
                 <span className="text-[10px] font-mono text-forum-muted">
                   {filteredThreads.length} threads
                 </span>
@@ -159,9 +159,9 @@ export default function WhatsNewPage() {
                       setFilter(opt.key);
                       setCurrentPage(1);
                     }}
-                    className={`transition-forum flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[10px] font-mono font-medium ${
+                    className={`transition-forum flex items-center gap-1.5  px-3 py-1.5 text-[10px] font-mono font-medium ${
                       filter === opt.key
-                        ? 'bg-forum-pink/10 text-forum-pink border border-forum-pink/20'
+                        ? 'bg-primary/10 text-primary border border-primary/20'
                         : 'text-forum-muted hover:text-forum-text hover:bg-forum-hover border border-transparent'
                     }`}
                   >
@@ -189,7 +189,7 @@ export default function WhatsNewPage() {
                           <span className="text-[8px] font-mono text-forum-muted/40">in</span>
                           <button
                             onClick={() => navigate(`/category/${category.id}`)}
-                            className="text-[8px] font-mono text-forum-pink/60 hover:text-forum-pink transition-forum"
+                            className="text-[8px] font-mono text-primary/60 hover:text-primary transition-forum"
                           >
                             {category.name}
                           </button>
@@ -200,7 +200,7 @@ export default function WhatsNewPage() {
                 })
               ) : (
                 <div className="flex flex-col items-center justify-center hud-panel px-6 py-16">
-                  <MessageSquare size={40} className="text-forum-pink mx-auto mb-3" />
+                  <MessageSquare size={40} className="text-primary mx-auto mb-3" />
                   <h3 className="text-[13px] font-bold text-forum-text font-mono mb-1">
                     No threads found
                   </h3>

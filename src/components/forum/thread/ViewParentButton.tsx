@@ -19,7 +19,7 @@ const ViewParentButton = memo(({ parentId, onViewParent }: ViewParentButtonProps
     <button
       type="button"
       onClick={handleClick}
-      className="flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-mono rounded text-forum-muted hover:text-forum-pink hover:bg-forum-pink/10 transition-colors border border-forum-border/20"
+      className="flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-mono rounded text-forum-muted hover:text-primary hover:bg-primary/10 transition-colors border border-forum-border/20"
       title="Jump to parent post"
       aria-label="View parent post"
     >

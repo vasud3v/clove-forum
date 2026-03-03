@@ -51,7 +51,7 @@ export default function UserProfileMiniCard({ user }: UserProfileMiniCardProps) 
           />
         </div>
         <div className="px-3 py-4 text-center -mt-3">
-          <div className="h-12 w-12 rounded-lg border-2 border-forum-border bg-forum-bg mx-auto mb-3 flex items-center justify-center">
+          <div className="h-12 w-12  border-2 border-forum-border bg-forum-bg mx-auto mb-3 flex items-center justify-center">
             <LogIn size={18} className="text-forum-muted" />
           </div>
           <p className="text-[11px] text-forum-muted font-mono mb-3">
@@ -59,14 +59,14 @@ export default function UserProfileMiniCard({ user }: UserProfileMiniCardProps) 
           </p>
           <button
             onClick={() => navigate('/login')}
-            className="transition-forum w-full flex items-center justify-center gap-1.5 rounded-md bg-forum-pink px-3 py-2 text-[11px] font-mono font-bold text-white hover:bg-forum-pink/90 hover:shadow-pink-glow"
+            className="transition-forum w-full flex items-center justify-center gap-1.5  bg-primary px-3 py-2 text-[11px] font-mono font-bold text-white hover:bg-primary/90 hover:shadow-brutal-sm"
           >
             <LogIn size={12} />
             Sign In
           </button>
           <button
             onClick={() => navigate('/signup')}
-            className="transition-forum w-full mt-2 flex items-center justify-center gap-1.5 rounded-md border border-forum-border px-3 py-2 text-[11px] font-mono font-medium text-forum-muted hover:border-forum-pink/40 hover:text-forum-pink hover:bg-forum-hover"
+            className="transition-forum w-full mt-2 flex items-center justify-center gap-1.5  border border-forum-border px-3 py-2 text-[11px] font-mono font-medium text-forum-muted hover:border-primary/40 hover:text-primary hover:bg-forum-hover"
           >
             Create Account
           </button>
@@ -107,7 +107,7 @@ export default function UserProfileMiniCard({ user }: UserProfileMiniCardProps) 
             />
           </>
         )}
-        <button className="absolute top-2 right-2 p-1 rounded text-forum-muted/50 hover:text-forum-pink transition-forum hover:bg-forum-bg/50">
+        <button className="absolute top-2 right-2 p-1 rounded text-forum-muted/50 hover:text-primary transition-forum hover:bg-forum-bg/50">
           <Settings size={11} />
         </button>
       </div>
@@ -119,21 +119,21 @@ export default function UserProfileMiniCard({ user }: UserProfileMiniCardProps) 
             <img
               src={displayAvatar}
               alt={user.username}
-              className="h-12 w-12 rounded-lg border-2 border-forum-pink/30 object-cover shadow-pink-glow"
+              className="h-12 w-12  border-2 border-primary/30 object-cover shadow-brutal-sm"
             />
             {user.isOnline && (
-              <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-forum-card bg-emerald-400" />
+              <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3  border-2 border-forum-card bg-emerald-400" />
             )}
           </div>
           <div className="flex-1 min-w-0 pb-0.5">
             <h3
-              className="text-[12px] font-bold text-forum-text font-mono truncate hover:text-forum-pink transition-forum cursor-pointer"
+              className="text-[12px] font-bold text-forum-text font-mono truncate hover:text-primary transition-forum cursor-pointer"
               onClick={() => navigate(`/user/${user.id}`)}
             >
               {user.username}
             </h3>
             {user.rank && (
-              <span className="badge-shine inline-flex items-center gap-1 rounded-sm border border-forum-pink/30 bg-gradient-to-r from-forum-pink/15 to-forum-pink/5 px-1.5 py-[3px] text-[8px] font-mono font-bold text-forum-pink uppercase tracking-wider badge-glow-pink">
+              <span className="badge-shine inline-flex items-center gap-1  border border-primary/30 bg-primary to-forum-pink/5 px-1.5 py-[3px] text-[8px] font-mono font-bold text-primary uppercase tracking-wider badge-glow-pink">
                 <Zap size={8} className="drop-shadow-[0_0_3px_rgba(255,45,146,0.5)]" />
                 {user.rank}
               </span>
@@ -150,7 +150,7 @@ export default function UserProfileMiniCard({ user }: UserProfileMiniCardProps) 
         </div>
         <div className="bg-forum-bg/80 px-2 py-1.5 text-center border-x border-forum-border">
           <div className="flex items-center justify-center gap-0.5">
-            <div className="text-[11px] font-bold text-forum-pink font-mono">{calculatedRep.toLocaleString()}</div>
+            <div className="text-[11px] font-bold text-primary font-mono">{calculatedRep.toLocaleString()}</div>
             {repChange > 0 && (
               <TrendingUp size={8} className="text-emerald-400" />
             )}
@@ -185,7 +185,7 @@ export default function UserProfileMiniCard({ user }: UserProfileMiniCardProps) 
           <span className="text-forum-text/90 font-medium flex items-center gap-1">
             {user.isOnline ? (
               <span className="text-emerald-400 flex items-center gap-1">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span className="h-1.5 w-1.5  bg-emerald-400 animate-pulse"></span>
                 Viewing now
               </span>
             ) : (

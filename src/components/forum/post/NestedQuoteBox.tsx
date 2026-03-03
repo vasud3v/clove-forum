@@ -63,7 +63,7 @@ const NestedQuoteBox = memo(({ quote, depth = 0, onViewPost }: NestedQuoteBoxPro
 
   return (
     <div
-      className="rounded-md overflow-hidden my-2"
+      className=" overflow-hidden my-2"
       style={{
         borderLeft: `3px solid rgba(236, 72, 153, ${borderOpacity / 100})`,
         backgroundColor: `rgba(236, 72, 153, ${bgOpacity / 100})`,
@@ -76,7 +76,7 @@ const NestedQuoteBox = memo(({ quote, depth = 0, onViewPost }: NestedQuoteBoxPro
           <span className="text-[10px] font-mono text-forum-muted">
             {depth > 0 ? '↳' : '↑'} Quote from
           </span>
-          <span className="text-[10px] font-mono font-semibold text-forum-pink">
+          <span className="text-[10px] font-mono font-semibold text-primary">
             @{quote.author}
           </span>
           {quote.timestamp && (
@@ -89,7 +89,7 @@ const NestedQuoteBox = memo(({ quote, depth = 0, onViewPost }: NestedQuoteBoxPro
         {quote.postId && onViewPost && (
           <button
             onClick={() => onViewPost(quote.postId!)}
-            className="flex items-center gap-1 text-[9px] font-mono text-forum-pink/70 hover:text-forum-pink transition-colors px-1.5 py-0.5 rounded border border-forum-pink/20 hover:border-forum-pink/40"
+            className="flex items-center gap-1 text-[9px] font-mono text-primary/70 hover:text-primary transition-colors px-1.5 py-0.5 rounded border border-primary/20 hover:border-primary/40"
           >
             <ExternalLink size={10} />
             View
@@ -118,7 +118,7 @@ const NestedQuoteBox = memo(({ quote, depth = 0, onViewPost }: NestedQuoteBoxPro
         {shouldTruncate && (
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="mt-2 flex items-center gap-1.5 text-[10px] font-mono text-forum-pink hover:text-forum-pink/80 transition-colors"
+            className="mt-2 flex items-center gap-1.5 text-[10px] font-mono text-primary hover:text-primary/80 transition-colors"
           >
             {isExpanded ? (
               <>

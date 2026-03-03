@@ -56,19 +56,19 @@ export function formatDaysLeft(dateStr: string): string {
 export type RankType = 'Administrator' | 'Moderator' | 'Elite Hacker' | 'Senior Dev' | 'Code Ninja';
 
 const RANK_COLOR_MAP: Record<string, string> = {
-  'Administrator': 'text-red-400 bg-gradient-to-r from-red-500/15 to-red-500/5 border-red-500/40 badge-glow-red',
-  'Moderator': 'text-purple-400 bg-gradient-to-r from-purple-500/15 to-purple-500/5 border-purple-500/40 badge-glow-purple',
-  'Elite Hacker': 'text-forum-pink bg-gradient-to-r from-forum-pink/15 to-forum-pink/5 border-forum-pink/40 badge-glow-pink',
-  'Senior Dev': 'text-cyan-400 bg-gradient-to-r from-cyan-500/15 to-cyan-500/5 border-cyan-500/40 badge-glow-cyan',
-  'Code Ninja': 'text-emerald-400 bg-gradient-to-r from-emerald-500/15 to-emerald-500/5 border-emerald-500/40 badge-glow-emerald',
+  'Administrator': 'text-red-600 bg-gradient-to-r from-red-500/15 to-red-500/5 border-red-500/40 badge-glow-red',
+  'Moderator': 'text-black bg-gradient-to-r from-purple-600/40 to-purple-600/20 border-purple-600 badge-glow-purple',
+  'Elite Hacker': 'text-black bg-gradient-to-r from-primary/40 to-primary/20 border-primary badge-glow-pink',
+  'Senior Dev': 'text-black bg-gradient-to-r from-cyan-600/40 to-cyan-600/20 border-cyan-600 badge-glow-cyan',
+  'Code Ninja': 'text-black bg-gradient-to-r from-emerald-600/40 to-emerald-600/20 border-emerald-600 badge-glow-emerald',
 };
 
 const RANK_COLOR_COMPACT_MAP: Record<string, string> = {
-  'Administrator': 'text-red-400 bg-red-500/10 border-red-500/30',
-  'Moderator': 'text-purple-400 bg-purple-500/10 border-purple-500/30',
-  'Elite Hacker': 'text-forum-pink bg-forum-pink/10 border-forum-pink/30',
-  'Senior Dev': 'text-cyan-400 bg-cyan-500/10 border-cyan-500/30',
-  'Code Ninja': 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30',
+  'Administrator': 'text-red-600 bg-red-500/10 border-red-500/30',
+  'Moderator': 'text-black bg-purple-600/40 border-purple-600',
+  'Elite Hacker': 'text-black bg-primary/40 border-primary',
+  'Senior Dev': 'text-black bg-cyan-600/40 border-cyan-600',
+  'Code Ninja': 'text-black bg-emerald-600/40 border-emerald-600',
 };
 
 export function getRankColor(rank?: string): string {
@@ -113,7 +113,7 @@ export function getRankIconCompact(rank?: string, size: number = 10) {
 
 export function getVoteScoreColor(score: number): string {
   if (score > 0) return 'text-forum-pink';
-  if (score < 0) return 'text-red-400';
+  if (score < 0) return 'text-red-600';
   return 'text-forum-text/80';
 }
 
@@ -126,8 +126,8 @@ export function formatVoteScore(score: number): string {
 // ============================================================================
 
 export function getReputationColor(reputation: number): string {
-  if (reputation > 0) return 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30';
-  if (reputation < 0) return 'text-red-400 bg-red-500/10 border-red-500/30';
+  if (reputation > 0) return 'text-black bg-emerald-600/40 border-emerald-600';
+  if (reputation < 0) return 'text-red-600 bg-red-500/10 border-red-500/30';
   return 'text-forum-muted bg-forum-hover border-forum-border/40';
 }
 

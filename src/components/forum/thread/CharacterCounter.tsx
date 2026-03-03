@@ -16,7 +16,7 @@ const CharacterCounter = memo(({ count, maxCount }: CharacterCounterProps) => {
         isNearLimit 
           ? 'text-red-400 font-bold animate-pulse' 
           : isWarning 
-            ? 'text-amber-400 font-bold' 
+            ? 'text-amber-600 font-bold' 
             : 'text-forum-muted/30'
       }`}
       aria-live="polite"

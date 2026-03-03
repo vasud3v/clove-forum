@@ -51,19 +51,19 @@ const QuotedReplyBox = memo(({ parentPost, onViewParent }: QuotedReplyBoxProps) 
   const mediaPreview = getMediaPreview(parentPost.content);
 
   return (
-    <div className="mt-1.5 mb-0 rounded-md border-l-4 border-forum-pink/40 bg-forum-bg/30 overflow-hidden">
+    <div className="mt-1.5 mb-0  border-l-4 border-primary/40 bg-forum-bg/30 overflow-hidden">
       {/* Header with navigation */}
-      <div className="px-3 py-2 bg-forum-pink/[0.03] border-b border-forum-border/10 flex items-center justify-between">
+      <div className="px-3 py-2 bg-primary/[0.03] border-b border-forum-border/10 flex items-center justify-between">
         <button
           onClick={() => onViewParent(parentPost.id)}
-          className="text-[10px] font-mono text-forum-pink hover:underline font-semibold flex items-center gap-1.5"
+          className="text-[10px] font-mono text-primary hover:underline font-semibold flex items-center gap-1.5"
         >
           <span className="text-forum-muted">↑ In reply to</span>
           <span>{parentPost.author.username}</span>
         </button>
         <button
           onClick={() => onViewParent(parentPost.id)}
-          className="text-[9px] font-mono text-forum-pink/70 hover:text-forum-pink transition-colors px-2 py-0.5 rounded border border-forum-pink/20 hover:border-forum-pink/40"
+          className="text-[9px] font-mono text-primary/70 hover:text-primary transition-colors px-2 py-0.5 rounded border border-primary/20 hover:border-primary/40"
         >
           View Post →
         </button>
@@ -145,7 +145,7 @@ const QuotedReplyBox = memo(({ parentPost, onViewParent }: QuotedReplyBoxProps) 
         {shouldTruncate && (
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="mt-2 flex items-center gap-1.5 text-[10px] font-mono text-forum-pink hover:text-forum-pink/80 transition-colors"
+            className="mt-2 flex items-center gap-1.5 text-[10px] font-mono text-primary hover:text-primary/80 transition-colors"
           >
             {isExpanded ? (
               <>

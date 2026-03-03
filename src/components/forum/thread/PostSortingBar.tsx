@@ -15,13 +15,13 @@ export default function PostSortingBar({
 }: PostSortingBarProps) {
 
   return (
-    <div className="flex items-center justify-between bg-forum-card/60 border border-forum-border/30 rounded-t-md px-4 py-2 mt-4 backdrop-blur-sm -mb-2">
+    <div className="flex items-center justify-between bg-forum-card/60 border border-forum-border/30 rounded-t-md px-4 py-2 mt-4  -mb-2">
       <div className="flex gap-4 text-[13px] font-mono">
         <button
           onClick={() => onSortChange('date')}
           className={`pb-1 border-b-2 transition-colors ${
             sortBy === 'date' 
-              ? 'border-forum-pink text-forum-text' 
+              ? 'border-primary text-forum-text' 
               : 'border-transparent text-forum-muted hover:text-forum-text/80'
           }`}
         >
@@ -31,7 +31,7 @@ export default function PostSortingBar({
           onClick={() => onSortChange('votes')}
           className={`pb-1 border-b-2 transition-colors ${
             sortBy === 'votes' 
-              ? 'border-forum-pink text-forum-text' 
+              ? 'border-primary text-forum-text' 
               : 'border-transparent text-forum-muted hover:text-forum-text/80'
           }`}
         >
@@ -47,7 +47,7 @@ export default function PostSortingBar({
         >
           {isWatching ? (
             <>
-              <BellOff size={11} className="text-forum-pink" />
+              <BellOff size={11} className="text-primary" />
               <span className="hidden sm:inline">Unwatch</span>
             </>
           ) : (

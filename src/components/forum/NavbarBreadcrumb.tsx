@@ -32,7 +32,7 @@ export function NavbarBreadcrumb() {
           {crumb.path ? (
             <button
               onClick={() => navigate(crumb.path!)}
-              className="text-forum-text hover:text-forum-pink transition-colors duration-200 hover:underline"
+              className="text-forum-text hover:text-primary transition-colors duration-200 hover:underline"
             >
               {idx === 0 && <Home size={10} className="inline mr-1" />}
               {crumb.label}

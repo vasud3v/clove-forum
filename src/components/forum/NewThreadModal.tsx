@@ -252,16 +252,16 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/60 "
         onClick={handleClose}
       />
       <div className="relative w-full max-w-2xl hud-panel max-h-[90vh] overflow-y-auto">
         {/* Success overlay */}
         {showSuccess && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center bg-forum-card/95 backdrop-blur-sm rounded">
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-forum-card/95  rounded">
             <div className="text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/15 border border-emerald-500/40 mx-auto mb-3">
-                <Check size={24} className="text-emerald-400" />
+              <div className="flex h-14 w-14 items-center justify-center  bg-emerald-500/15 border border-emerald-500/40 mx-auto mb-3">
+                <Check size={24} className="text-white" />
               </div>
               <h3 className="text-[14px] font-mono font-bold text-forum-text mb-1">Thread Created!</h3>
               <p className="text-[11px] font-mono text-forum-muted">Redirecting to your thread...</p>
@@ -272,12 +272,12 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
         {/* Header */}
         <div className="flex items-center justify-between border-b border-forum-border px-6 py-4">
           <div className="flex items-center gap-2">
-            <PenSquare size={16} className="text-forum-pink" />
+            <PenSquare size={16} className="text-primary" />
             <h2 className="text-[14px] font-bold text-forum-text font-mono">Create New Thread</h2>
           </div>
           <button
             onClick={handleClose}
-            className="transition-forum rounded p-1.5 text-forum-muted hover:bg-forum-hover hover:text-forum-pink"
+            className="transition-forum rounded p-1.5 text-forum-muted hover:bg-forum-hover hover:text-primary"
           >
             <X size={18} />
           </button>
@@ -297,7 +297,7 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
           {/* Title */}
           <div>
             <label className="mb-1.5 block text-[10px] font-mono font-bold text-forum-muted uppercase tracking-wider">
-              Thread Title <span className="text-forum-pink">*</span>
+              Thread Title <span className="text-primary">*</span>
             </label>
             <input
               type="text"
@@ -310,7 +310,7 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
               maxLength={THREAD_VALIDATION.TITLE_MAX_LENGTH}
               className={`transition-forum w-full rounded border bg-forum-bg px-4 py-2.5 text-[12px] font-mono text-forum-text placeholder-forum-muted outline-none focus:ring-1 ${errors.title
                   ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/30'
-                  : 'border-forum-border focus:border-forum-pink focus:ring-forum-pink/30'
+                  : 'border-forum-border focus:border-primary focus:ring-primary'
                 }`}
             />
             <div className="flex items-center justify-between mt-1">
@@ -323,7 +323,7 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
               )}
               <span className={`text-[9px] font-mono ${
                 title.length > THREAD_VALIDATION.TITLE_MAX_LENGTH * 0.9 
-                  ? 'text-orange-400' 
+                  ? 'text-orange-700' 
                   : 'text-forum-muted/40'
               }`}>
                 {title.length}/{THREAD_VALIDATION.TITLE_MAX_LENGTH}
@@ -334,7 +334,7 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
           {/* Category */}
           <div>
             <label className="mb-1.5 block text-[10px] font-mono font-bold text-forum-muted uppercase tracking-wider">
-              Category <span className="text-forum-pink">*</span>
+              Category <span className="text-primary">*</span>
             </label>
             <select
               value={selectedCategory}
@@ -344,7 +344,7 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
               }}
               className={`transition-forum w-full appearance-none rounded border bg-forum-bg px-4 py-2.5 pr-8 text-[12px] font-mono text-forum-text outline-none cursor-pointer focus:ring-1 ${errors.category
                   ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/30'
-                  : 'border-forum-border focus:border-forum-pink focus:ring-forum-pink/30'
+                  : 'border-forum-border focus:border-primary focus:ring-primary'
                 }`}
             >
               <option value="" className="bg-forum-card">Select a category...</option>
@@ -374,7 +374,7 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
               )}
             </select>
             {!categories || categories.length === 0 ? (
-              <p className="mt-1 text-[10px] text-orange-400 font-mono flex items-center gap-1">
+              <p className="mt-1 text-[10px] text-orange-700 font-mono flex items-center gap-1">
                 <AlertCircle size={10} /> No categories available. Categories may still be loading.
               </p>
             ) : null}
@@ -400,7 +400,7 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
                 className={`transition-forum w-full appearance-none rounded border bg-forum-bg px-4 py-2.5 pr-8 text-[12px] font-mono text-forum-text outline-none cursor-pointer focus:ring-1 ${
                   errors.topic
                     ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/30'
-                    : 'border-forum-border focus:border-forum-pink focus:ring-forum-pink/30'
+                    : 'border-forum-border focus:border-primary focus:ring-primary'
                 }`}
               >
                 <option value="" className="bg-forum-card">No specific topic</option>
@@ -434,7 +434,7 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
           {/* Tags */}
           <div>
             <label className="mb-1.5 block text-[10px] font-mono font-bold text-forum-muted uppercase tracking-wider flex items-center gap-1.5">
-              <Tag size={10} className="text-forum-pink/60" />
+              <Tag size={10} className="text-primary/60" />
               Tags <span className="text-forum-muted/40 font-normal">(optional, max {THREAD_VALIDATION.MAX_TAGS})</span>
             </label>
             <input
@@ -448,7 +448,7 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
               className={`transition-forum w-full rounded border bg-forum-bg px-4 py-2.5 text-[12px] font-mono text-forum-text placeholder-forum-muted outline-none focus:ring-1 ${
                 errors.tags
                   ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/30'
-                  : 'border-forum-border focus:border-forum-pink focus:ring-forum-pink/30'
+                  : 'border-forum-border focus:border-primary focus:ring-primary'
               }`}
             />
             {errors.tags && (
@@ -464,7 +464,7 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
                   return (
                     <span
                       key={i}
-                      className="rounded-sm border border-forum-pink/20 bg-forum-pink/[0.05] px-2 py-0.5 text-[9px] font-mono font-medium text-forum-pink/80"
+                      className=" border border-primary/20 bg-primary/[0.05] px-2 py-0.5 text-[9px] font-mono font-medium text-primary/80"
                     >
                       #{trimmed}
                     </span>
@@ -484,7 +484,7 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
                 <img
                   src={thumbnail}
                   alt="Thread thumbnail"
-                  className="h-16 w-16 rounded-md object-cover border border-forum-border"
+                  className="h-16 w-16  object-cover border border-forum-border"
                 />
               )}
               <input
@@ -497,7 +497,7 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
                 <button
                   type="button"
                   onClick={() => setThumbnail('')}
-                  className="px-3 py-2 text-[11px] font-mono text-forum-muted hover:text-forum-pink transition-colors"
+                  className="px-3 py-2 text-[11px] font-mono text-forum-muted hover:text-primary transition-colors"
                 >
                   Remove
                 </button>
@@ -516,7 +516,7 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
           {/* Content */}
           <div>
             <label className="mb-1.5 block text-[10px] font-mono font-bold text-forum-muted uppercase tracking-wider">
-              Content <span className="text-forum-pink">*</span>
+              Content <span className="text-primary">*</span>
             </label>
             <AdvancedEditor
               value={content}
@@ -542,7 +542,7 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
               )}
               <span className={`text-[9px] font-mono ${
                 content.length > THREAD_VALIDATION.CONTENT_MAX_LENGTH * 0.9 
-                  ? 'text-orange-400' 
+                  ? 'text-orange-700' 
                   : 'text-forum-muted/40'
               }`}>
                 {content.length}/{THREAD_VALIDATION.CONTENT_MAX_LENGTH}
@@ -554,20 +554,20 @@ export default function NewThreadModal({ isOpen, onClose, defaultCategoryId }: N
         {/* Footer */}
         <div className="flex items-center justify-between border-t border-forum-border px-6 py-4">
           <span className="text-[9px] font-mono text-forum-muted/40">
-            <span className="text-forum-pink">*</span> Required fields
+            <span className="text-primary">*</span> Required fields
           </span>
           <div className="flex items-center gap-3">
             <button
               onClick={handleClose}
               disabled={isSubmitting}
-              className="transition-forum rounded-sm border border-forum-border/50 bg-forum-card/50 px-4 py-2 text-[11px] font-mono font-bold text-forum-muted hover:bg-forum-hover hover:text-forum-text hover:border-forum-pink/40 disabled:opacity-50"
+              className="transition-forum  border border-forum-border/50 bg-forum-card/50 px-4 py-2 text-[11px] font-mono font-bold text-forum-muted hover:bg-forum-hover hover:text-forum-text hover:border-primary/40 disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               onClick={handleSubmit}
               disabled={isSubmitting}
-              className="transition-forum rounded-sm bg-gradient-to-r from-forum-pink to-forum-pink/90 px-5 py-2 text-[11px] font-mono font-bold text-white hover:shadow-[0_0_20px_rgba(255,45,146,0.4)] active:scale-95 border border-forum-pink/60 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="transition-forum  bg-primary to-forum-pink/90 px-5 py-2 text-[11px] font-mono font-bold text-white hover:shadow-[0_0_20px_rgba(255,45,146,0.4)] active:scale-95 border border-primary/60 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? 'Creating...' : 'Create Thread'}
             </button>

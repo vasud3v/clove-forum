@@ -30,14 +30,14 @@ const notificationIcons: Record<NotificationType, typeof MessageCircle> = {
 };
 
 const notificationColors: Record<NotificationType, string> = {
-    reply: 'text-cyan-400',
-    mention: 'text-forum-pink',
-    upvote: 'text-emerald-400',
-    reaction: 'text-orange-400',
-    best_answer: 'text-amber-400',
-    follow: 'text-purple-400',
-    follow_request: 'text-blue-400',
-    milestone: 'text-amber-400',
+    reply: 'text-cyan-600',
+    mention: 'text-primary',
+    upvote: 'text-emerald-700',
+    reaction: 'text-orange-700',
+    best_answer: 'text-amber-600',
+    follow: 'text-purple-600',
+    follow_request: 'text-blue-600',
+    milestone: 'text-amber-600',
     system: 'text-forum-muted',
 };
 
@@ -74,11 +74,11 @@ export default function NotificationCenter() {
         <div className="relative" ref={dropdownRef}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="transition-forum relative rounded-md p-2 text-forum-muted hover:bg-forum-hover hover:text-forum-pink"
+                className="transition-forum relative  p-2 text-forum-muted hover:bg-forum-hover hover:text-primary"
             >
                 <Bell size={16} />
                 {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-forum-pink to-pink-600 text-[9px] font-bold text-white animate-dot-pulse shadow-lg shadow-forum-pink/60 border border-forum-pink/40 ring-2 ring-forum-pink/20">
+                    <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center  bg-gradient-to-br from-forum-pink to-pink-600 text-[9px] font-bold text-white animate-dot-pulse shadow-brutal shadow-brutal-sm border border-primary/40 ring-2 ring-primary">
                         {unreadCount > 9 ? '9+' : unreadCount}
                     </span>
                 )}
@@ -89,10 +89,10 @@ export default function NotificationCenter() {
                     {/* Header */}
                     <div className="flex items-center justify-between border-b border-forum-border px-4 py-3">
                         <h4 className="text-[12px] font-semibold text-forum-text font-mono flex items-center gap-2">
-                            <Bell size={13} className="text-forum-pink" />
+                            <Bell size={13} className="text-primary" />
                             Notifications
                             {unreadCount > 0 && (
-                                <span className="text-[9px] font-mono text-forum-pink bg-forum-pink/10 border border-forum-pink/20 rounded-full px-2 py-0.5">
+                                <span className="text-[9px] font-mono text-primary bg-primary/10 border border-primary/20  px-2 py-0.5">
                                     {unreadCount} new
                                 </span>
                             )}
@@ -101,7 +101,7 @@ export default function NotificationCenter() {
                             {unreadCount > 0 && (
                                 <button
                                     onClick={markAllAsRead}
-                                    className="transition-forum rounded p-1 text-forum-muted hover:text-emerald-400 hover:bg-emerald-500/10"
+                                    className="transition-forum rounded p-1 text-forum-muted hover:text-emerald-700 hover:bg-emerald-500/10"
                                     title="Mark all as read"
                                 >
                                     <CheckCheck size={13} />
@@ -126,7 +126,7 @@ export default function NotificationCenter() {
                                 return (
                                     <div
                                         key={notif.id}
-                                        className={`transition-forum flex w-full items-start gap-3 px-4 py-3 text-left hover:bg-forum-hover border-b border-forum-border/10 group relative ${!notif.isRead ? 'bg-forum-pink/[0.02]' : ''
+                                        className={`transition-forum flex w-full items-start gap-3 px-4 py-3 text-left hover:bg-forum-hover border-b border-forum-border/10 group relative ${!notif.isRead ? 'bg-primary/[0.02]' : ''
                                             }`}
                                     >
                                         {/* Actor avatar or type icon */}
@@ -144,7 +144,7 @@ export default function NotificationCenter() {
                                                 <img
                                                     src={notif.actorAvatar}
                                                     alt={notif.actorName || ''}
-                                                    className="h-7 w-7 rounded-full object-cover ring-1 ring-forum-border"
+                                                    className="h-7 w-7  object-cover ring-1 ring-forum-border"
                                                 />
                                             ) : (
                                                 <div className={`${color}`}>
@@ -172,7 +172,7 @@ export default function NotificationCenter() {
                                                     {notif.title}
                                                 </span>
                                                 {!notif.isRead && (
-                                                    <div className="h-1.5 w-1.5 rounded-full bg-forum-pink animate-dot-pulse flex-shrink-0" />
+                                                    <div className="h-1.5 w-1.5  bg-primary animate-dot-pulse flex-shrink-0" />
                                                 )}
                                             </div>
                                             <p className="text-[10px] text-forum-muted leading-relaxed font-mono line-clamp-2">

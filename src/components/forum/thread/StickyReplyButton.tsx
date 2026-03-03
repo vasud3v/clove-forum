@@ -42,7 +42,7 @@ const StickyReplyButton = memo(({ onClick }: StickyReplyButtonProps) => {
     <button
       type="button"
       onClick={onClick}
-      className="fixed bottom-20 right-6 z-30 flex items-center gap-2 px-4 py-3 rounded-full bg-forum-pink text-white shadow-lg hover:shadow-pink-glow transition-all hover:scale-105 active:scale-95 border border-forum-pink/50"
+      className="fixed bottom-20 right-6 z-30 flex items-center gap-2 px-4 py-3  bg-primary text-white shadow-brutal hover:shadow-brutal-sm transition-all hover:scale-105 active:scale-95 border border-primary/50"
       title="Quick Reply"
       aria-label="Quick Reply"
     >

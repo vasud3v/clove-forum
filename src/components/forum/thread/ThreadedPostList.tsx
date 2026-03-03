@@ -100,7 +100,7 @@ const ThreadedPostList = memo(({
             {hasChildren && (
               <button
                 onClick={() => toggleCollapse(post.id)}
-                className="absolute -left-6 top-4 z-10 flex items-center gap-1 text-[10px] font-mono text-forum-muted hover:text-forum-pink transition-colors"
+                className="absolute -left-6 top-4 z-10 flex items-center gap-1 text-[10px] font-mono text-forum-muted hover:text-primary transition-colors"
                 title={isCollapsed ? `Show ${childCount} replies` : `Hide ${childCount} replies`}
               >
                 {isCollapsed ? (

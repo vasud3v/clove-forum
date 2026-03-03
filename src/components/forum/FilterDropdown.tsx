@@ -21,10 +21,10 @@ export default function FilterDropdown({ activeFilter, onFilterChange }: FilterD
         <select
           value={activeFilter}
           onChange={(e) => onFilterChange(e.target.value as FilterOption)}
-          className={`transition-forum appearance-none rounded-sm border px-2.5 py-1.5 pr-7 text-[10px] font-mono font-bold outline-none cursor-pointer ${
+          className={`transition-forum appearance-none  border px-2.5 py-1.5 pr-7 text-[10px] font-mono font-bold outline-none cursor-pointer ${
             activeFilter !== 'all'
-              ? 'border-forum-pink/40 bg-gradient-to-r from-forum-pink/[0.12] to-forum-pink/[0.04] text-forum-pink shadow-[0_0_10px_rgba(255,45,146,0.15)] focus:border-forum-pink/60 focus:ring-1 focus:ring-forum-pink/40 focus:shadow-[0_0_14px_rgba(255,45,146,0.25)]'
-              : 'border-forum-border/50 bg-transparent text-forum-text focus:border-forum-pink focus:ring-1 focus:ring-forum-pink/30 hover:bg-forum-hover hover:border-forum-pink/30'
+              ? 'border-primary/40 bg-primary to-forum-pink/[0.04] text-primary shadow-[0_0_10px_rgba(255,45,146,0.15)] focus:border-primary/60 focus:ring-1 focus:ring-primary focus:shadow-[0_0_14px_rgba(255,45,146,0.25)]'
+              : 'border-forum-border/50 bg-transparent text-forum-text focus:border-primary focus:ring-1 focus:ring-primary hover:bg-forum-hover hover:border-primary/30'
           }`}
         >
           {filters.map((filter) => (
@@ -36,7 +36,7 @@ export default function FilterDropdown({ activeFilter, onFilterChange }: FilterD
         <ChevronDown
           size={11}
           className={`pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 ${
-            activeFilter !== 'all' ? 'text-forum-pink/50' : 'text-forum-muted/50'
+            activeFilter !== 'all' ? 'text-primary/50' : 'text-forum-muted/50'
           }`}
         />
       </div>

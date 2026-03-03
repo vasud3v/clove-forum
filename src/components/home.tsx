@@ -20,7 +20,7 @@ function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-forum-bg pb-20 lg:pb-0">
+    <div className="min-h-screen bg-background pb-20 lg:pb-0">
       <ForumHeader
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -30,11 +30,11 @@ function Home() {
 
       {/* Breadcrumb */}
       <div className="mx-auto max-w-7xl px-4 lg:px-6 pt-4 pb-2">
-        <div className="flex items-center gap-1.5 text-[10px] font-mono text-forum-muted">
-          <HomeIcon size={11} className="text-forum-pink" />
-          <span className="text-forum-text hover:text-forum-pink transition-forum cursor-pointer">Forums</span>
+        <div className="flex items-center gap-1.5 text-[10px] font-mono text-muted-foreground">
+          <HomeIcon size={11} className="text-primary" strokeWidth={3} />
+          <span className="text-foreground hover:text-primary transition-forum cursor-pointer font-bold">Forums</span>
           <ChevronRight size={10} />
-          <span className="text-forum-muted">Home</span>
+          <span className="text-muted-foreground">Home</span>
         </div>
       </div>
 
@@ -70,7 +70,7 @@ function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="mt-8 border-t border-forum-border bg-forum-card/50">
+      <footer className="mt-8 border-t-4 border-border bg-card">
         <div className="mx-auto max-w-7xl px-4 py-8 lg:px-6">
           {/* Top footer */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
@@ -79,78 +79,78 @@ function Home() {
               <div className="flex items-center gap-2 mb-3">
                 <ChugliLogo size={28} />
               </div>
-              <p className="text-[10px] font-mono text-forum-muted leading-relaxed mb-3">
+              <p className="text-[10px] font-mono text-muted-foreground leading-relaxed mb-3">
                 A vibrant community where people connect, share, and discover. Powered by Chuglii.
               </p>
               <div className="flex items-center gap-2">
-                <a href="#" className="transition-forum rounded-md border border-forum-border p-1.5 text-forum-muted hover:text-forum-pink hover:border-forum-pink/30 hover:bg-forum-pink/5">
-                  <Github size={13} />
+                <a href="#" className="transition-all duration-150 border-2 border-border p-2 text-muted-foreground hover:text-primary hover:border-primary hover:bg-secondary/10 hover:translate-x-[-1px] hover:translate-y-[-1px]">
+                  <Github size={14} strokeWidth={2.5} />
                 </a>
-                <a href="#" className="transition-forum rounded-md border border-forum-border p-1.5 text-forum-muted hover:text-forum-pink hover:border-forum-pink/30 hover:bg-forum-pink/5">
-                  <Twitter size={13} />
+                <a href="#" className="transition-all duration-150 border-2 border-border p-2 text-muted-foreground hover:text-primary hover:border-primary hover:bg-secondary/10 hover:translate-x-[-1px] hover:translate-y-[-1px]">
+                  <Twitter size={14} strokeWidth={2.5} />
                 </a>
-                <a href="#" className="transition-forum rounded-md border border-forum-border p-1.5 text-forum-muted hover:text-forum-pink hover:border-forum-pink/30 hover:bg-forum-pink/5">
-                  <Rss size={13} />
+                <a href="#" className="transition-all duration-150 border-2 border-border p-2 text-muted-foreground hover:text-primary hover:border-primary hover:bg-secondary/10 hover:translate-x-[-1px] hover:translate-y-[-1px]">
+                  <Rss size={14} strokeWidth={2.5} />
                 </a>
               </div>
             </div>
 
             {/* Quick Links */}
             <div>
-              <h5 className="text-[10px] font-mono font-bold text-forum-text uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                <Code size={10} className="text-forum-pink" />
+              <h5 className="text-[10px] font-mono font-black text-foreground uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <Code size={11} className="text-primary" strokeWidth={3} />
                 Community
               </h5>
               <div className="space-y-2">
-                <a href="/" className="block text-[10px] font-mono text-forum-muted hover:text-forum-pink transition-forum">Forums</a>
-                <a href="/members" className="block text-[10px] font-mono text-forum-muted hover:text-forum-pink transition-forum">Members</a>
-                <a href="/whats-new" className="block text-[10px] font-mono text-forum-muted hover:text-forum-pink transition-forum">What's New</a>
-                <a href="/rules" className="block text-[10px] font-mono text-forum-muted hover:text-forum-pink transition-forum">Rules</a>
+                <a href="/" className="block text-[10px] font-mono text-muted-foreground hover:text-primary transition-all duration-150 hover:font-bold">Forums</a>
+                <a href="/members" className="block text-[10px] font-mono text-muted-foreground hover:text-primary transition-all duration-150 hover:font-bold">Members</a>
+                <a href="/whats-new" className="block text-[10px] font-mono text-muted-foreground hover:text-primary transition-all duration-150 hover:font-bold">What's New</a>
+                <a href="/rules" className="block text-[10px] font-mono text-muted-foreground hover:text-primary transition-all duration-150 hover:font-bold">Rules</a>
               </div>
             </div>
 
             {/* Resources */}
             <div>
-              <h5 className="text-[10px] font-mono font-bold text-forum-text uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                <BookOpen size={10} className="text-forum-pink" />
+              <h5 className="text-[10px] font-mono font-black text-foreground uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <BookOpen size={11} className="text-primary" strokeWidth={3} />
                 Resources
               </h5>
               <div className="space-y-2">
-                <a href="#" className="block text-[10px] font-mono text-forum-muted hover:text-forum-pink transition-forum">About</a>
-                <a href="#" className="block text-[10px] font-mono text-forum-muted hover:text-forum-pink transition-forum">Guidelines</a>
-                <a href="#" className="block text-[10px] font-mono text-forum-muted hover:text-forum-pink transition-forum">Help Center</a>
-                <a href="#" className="block text-[10px] font-mono text-forum-muted hover:text-forum-pink transition-forum">Blog</a>
+                <a href="#" className="block text-[10px] font-mono text-muted-foreground hover:text-primary transition-all duration-150 hover:font-bold">About</a>
+                <a href="#" className="block text-[10px] font-mono text-muted-foreground hover:text-primary transition-all duration-150 hover:font-bold">Guidelines</a>
+                <a href="#" className="block text-[10px] font-mono text-muted-foreground hover:text-primary transition-all duration-150 hover:font-bold">Help Center</a>
+                <a href="#" className="block text-[10px] font-mono text-muted-foreground hover:text-primary transition-all duration-150 hover:font-bold">Blog</a>
               </div>
             </div>
 
             {/* Legal */}
             <div>
-              <h5 className="text-[10px] font-mono font-bold text-forum-text uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                <Shield size={10} className="text-forum-pink" />
+              <h5 className="text-[10px] font-mono font-black text-foreground uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <Shield size={11} className="text-primary" strokeWidth={3} />
                 Legal
               </h5>
               <div className="space-y-2">
-                <a href="#" className="block text-[10px] font-mono text-forum-muted hover:text-forum-pink transition-forum">Terms of Service</a>
-                <a href="#" className="block text-[10px] font-mono text-forum-muted hover:text-forum-pink transition-forum">Privacy Policy</a>
-                <a href="#" className="block text-[10px] font-mono text-forum-muted hover:text-forum-pink transition-forum">Cookie Policy</a>
-                <a href="#" className="block text-[10px] font-mono text-forum-muted hover:text-forum-pink transition-forum">Contact Us</a>
+                <a href="#" className="block text-[10px] font-mono text-muted-foreground hover:text-primary transition-all duration-150 hover:font-bold">Terms of Service</a>
+                <a href="#" className="block text-[10px] font-mono text-muted-foreground hover:text-primary transition-all duration-150 hover:font-bold">Privacy Policy</a>
+                <a href="#" className="block text-[10px] font-mono text-muted-foreground hover:text-primary transition-all duration-150 hover:font-bold">Cookie Policy</a>
+                <a href="#" className="block text-[10px] font-mono text-muted-foreground hover:text-primary transition-all duration-150 hover:font-bold">Contact Us</a>
               </div>
             </div>
           </div>
 
           {/* Divider */}
-          <div className="h-[1px] bg-gradient-to-r from-transparent via-forum-border to-transparent mb-4" />
+          <div className="h-[3px] bg-border mb-6" />
 
           {/* Bottom footer */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div className="text-[9px] font-mono text-forum-muted">
+            <div className="text-[9px] font-mono text-muted-foreground">
               © 2024 Chuglii. All rights reserved.
             </div>
-            <div className="flex items-center gap-1 text-[9px] font-mono text-forum-muted">
-              Made with <Heart size={10} className="text-forum-pink mx-0.5" /> by the community
+            <div className="flex items-center gap-1 text-[9px] font-mono text-muted-foreground">
+              Made with <Heart size={11} className="text-primary mx-0.5" strokeWidth={3} /> by the community
             </div>
-            <div className="text-[9px] font-mono text-forum-muted flex items-center gap-1.5">
-              <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-400 animate-dot-pulse" />
+            <div className="text-[9px] font-mono text-muted-foreground flex items-center gap-1.5">
+              <span className="h-2 w-2 bg-primary animate-dot-pulse border border-border" />
               All systems operational
             </div>
           </div>
@@ -161,10 +161,10 @@ function Home() {
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
           <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/70"
             onClick={() => setIsMobileMenuOpen(false)}
           />
-          <div className="absolute right-0 top-0 bottom-0 w-[300px] overflow-y-auto border-l border-forum-border bg-forum-card p-4 space-y-3">
+          <div className="absolute right-0 top-0 bottom-0 w-[300px] overflow-y-auto border-l-4 border-border bg-card p-4 space-y-3">
             <SidebarStatsPanel stats={forumStats} />
             <OnlineUsers />
             <PopularTags />

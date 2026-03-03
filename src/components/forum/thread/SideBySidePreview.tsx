@@ -21,7 +21,7 @@ const SideBySidePreview = memo(({
       {/* Editor */}
       <div className="flex flex-col">
         <div className="text-[9px] font-mono font-bold text-forum-muted uppercase tracking-wider mb-2 flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-forum-pink"></span>
+          <span className="w-2 h-2  bg-primary"></span>
           Write
         </div>
         <textarea
@@ -30,7 +30,7 @@ const SideBySidePreview = memo(({
           onChange={onContentChange}
           onKeyDown={onKeyDown}
           placeholder={placeholder}
-          className="w-full h-36 bg-forum-bg border border-forum-border/30 rounded-md px-3 py-2.5 text-[12px] font-mono text-forum-text placeholder:text-forum-muted/40 focus:outline-none focus:border-forum-pink/40 focus:ring-1 focus:ring-forum-pink/20 transition-forum resize-none"
+          className="w-full h-36 bg-forum-bg border border-forum-border/30  px-3 py-2.5 text-[12px] font-mono text-forum-text placeholder:text-forum-muted/40 focus:outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary transition-forum resize-none"
           aria-label="Reply editor"
         />
       </div>
@@ -38,10 +38,10 @@ const SideBySidePreview = memo(({
       {/* Preview */}
       <div className="flex flex-col">
         <div className="text-[9px] font-mono font-bold text-forum-muted uppercase tracking-wider mb-2 flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span className="w-2 h-2  bg-emerald-400"></span>
           Preview
         </div>
-        <div className="h-36 bg-forum-bg border border-forum-border/30 rounded-md px-3 py-2.5 overflow-y-auto" aria-label="Reply preview">
+        <div className="h-36 bg-forum-bg border border-forum-border/30  px-3 py-2.5 overflow-y-auto" aria-label="Reply preview">
           {content.trim() ? (
             <PostContentRenderer content={content} />
           ) : (

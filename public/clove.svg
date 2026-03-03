@@ -1,21 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <!-- Background -->
-  <rect width="32" height="32" rx="6" fill="#0d0d12"/>
-  <rect x="0.5" y="0.5" width="31" height="31" rx="5.5" stroke="#FF2D92" stroke-opacity="0.25"/>
-  <!-- Outer glow ring -->
-  <circle cx="16" cy="15" r="9" fill="none" stroke="#FF2D92" stroke-opacity="0.08" stroke-width="4"/>
-  <!-- Center petal (top) -->
-  <path d="M16 6 C18.5 9, 19.5 12, 19 15.5 C18.6 18, 16 19, 16 19 C16 19, 13.4 18, 13 15.5 C12.5 12, 13.5 9, 16 6Z" fill="#FF2D92"/>
-  <!-- Left petal -->
-  <path d="M9.5 18.5 C11 15.5, 13 14, 15.5 14 C16.5 14, 16.5 15, 16 15.8 C15 17.5, 12.5 19.5, 9.5 18.5Z" fill="#FF2D92" fill-opacity="0.75"/>
-  <!-- Right petal -->
-  <path d="M22.5 18.5 C21 15.5, 19 14, 16.5 14 C15.5 14, 15.5 15, 16 15.8 C17 17.5, 19.5 19.5, 22.5 18.5Z" fill="#FF2D92" fill-opacity="0.75"/>
-  <!-- Stem -->
-  <path d="M16 19 C16 19, 15.5 22, 14.5 24.5" stroke="#FF2D92" stroke-width="1.2" stroke-linecap="round" stroke-opacity="0.5"/>
-  <path d="M16 19 C16 19, 16.8 21.5, 18 23.5" stroke="#FF2D92" stroke-width="0.8" stroke-linecap="round" stroke-opacity="0.35"/>
-  <!-- Inner highlight -->
-  <ellipse cx="16" cy="13" rx="1.8" ry="3" fill="white" fill-opacity="0.15"/>
-  <!-- Core dot -->
-  <circle cx="16" cy="14.5" r="1.2" fill="white" fill-opacity="0.85"/>
-  <circle cx="16" cy="14.5" r="0.6" fill="#FF2D92"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Neo-Brutalism Clove Logo: Bold geometric grid design -->
+  
+  <!-- Main border -->
+  <rect x="2" y="2" width="60" height="60" fill="none" stroke="#000000" stroke-width="3"/>
+  
+  <!-- Inner frame -->
+  <rect x="6" y="6" width="52" height="52" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+  
+  <!-- Grid lines -->
+  <g stroke="#000000" stroke-width="1.5" fill="none" stroke-dasharray="2,2">
+    <line x1="20" y1="10" x2="20" y2="54" />
+    <line x1="44" y1="10" x2="44" y2="54" />
+    <line x1="10" y1="24" x2="54" y2="24" />
+    <line x1="10" y1="40" x2="54" y2="40" />
+  </g>
+  
+  <!-- Three petal arrangement - geometric blocks -->
+  <!-- Top petal -->
+  <rect x="26" y="10" width="12" height="14" fill="#ff2d92" stroke="#000000" stroke-width="2"/>
+  
+  <!-- Bottom-left petal -->
+  <rect x="10" y="38" width="12" height="14" fill="#ff2d92" stroke="#000000" stroke-width="2"/>
+  
+  <!-- Bottom-right petal -->
+  <rect x="42" y="38" width="12" height="14" fill="#ff2d92" stroke="#000000" stroke-width="2"/>
+  
+  <!-- Center circle - hot pink -->
+  <circle cx="32" cy="32" r="6" fill="#ff2d92" stroke="#000000" stroke-width="1.5"/>
+  
+  <!-- Corner accents -->
+  <g fill="#000000">
+    <rect x="12" y="12" width="2" height="2" />
+    <rect x="50" y="12" width="2" height="2" />
+    <rect x="12" y="50" width="2" height="2" />
+    <rect x="50" y="50" width="2" height="2" />
+  </g>
 </svg>

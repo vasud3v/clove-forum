@@ -24,10 +24,10 @@ const typeIcons = {
 };
 
 const typeColors = {
-  info: 'text-cyan-400',
-  hiring: 'text-emerald-400',
-  announcement: 'text-forum-pink',
-  warning: 'text-amber-400',
+  info: 'text-black',
+  hiring: 'text-black',
+  announcement: 'text-primary',
+  warning: 'text-amber-600',
 };
 
 export default function AdminBannersTab() {
@@ -180,7 +180,7 @@ export default function AdminBannersTab() {
         </div>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="flex items-center gap-2 px-3 py-2 rounded-md bg-forum-pink/10 border border-forum-pink/30 text-forum-pink hover:bg-forum-pink/20 transition-all text-[11px] font-mono"
+          className="flex items-center gap-2 px-3 py-2  bg-primary/10 border border-primary/30 text-primary hover:bg-primary/20 transition-all text-[11px] font-mono"
         >
           <Plus size={12} />
           New Banner
@@ -201,7 +201,7 @@ export default function AdminBannersTab() {
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-3 py-2 bg-forum-bg border border-forum-border rounded-md text-[11px] font-mono text-forum-text focus:border-forum-pink focus:outline-none"
+                  className="w-full px-3 py-2 bg-forum-bg border border-forum-border  text-[11px] font-mono text-forum-text focus:border-primary focus:outline-none"
                   required
                 />
               </div>
@@ -210,7 +210,7 @@ export default function AdminBannersTab() {
                 <select
                   value={formData.type}
                   onChange={(e) => setFormData({ ...formData, type: e.target.value as Banner['type'] })}
-                  className="w-full px-3 py-2 bg-forum-bg border border-forum-border rounded-md text-[11px] font-mono text-forum-text focus:border-forum-pink focus:outline-none"
+                  className="w-full px-3 py-2 bg-forum-bg border border-forum-border  text-[11px] font-mono text-forum-text focus:border-primary focus:outline-none"
                 >
                   <option value="info">Info</option>
                   <option value="hiring">Hiring</option>
@@ -225,7 +225,7 @@ export default function AdminBannersTab() {
               <textarea
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                className="w-full px-3 py-2 bg-forum-bg border border-forum-border rounded-md text-[11px] font-mono text-forum-text focus:border-forum-pink focus:outline-none"
+                className="w-full px-3 py-2 bg-forum-bg border border-forum-border  text-[11px] font-mono text-forum-text focus:border-primary focus:outline-none"
                 rows={3}
                 required
               />
@@ -238,7 +238,7 @@ export default function AdminBannersTab() {
                   type="text"
                   value={formData.link_text}
                   onChange={(e) => setFormData({ ...formData, link_text: e.target.value })}
-                  className="w-full px-3 py-2 bg-forum-bg border border-forum-border rounded-md text-[11px] font-mono text-forum-text focus:border-forum-pink focus:outline-none"
+                  className="w-full px-3 py-2 bg-forum-bg border border-forum-border  text-[11px] font-mono text-forum-text focus:border-primary focus:outline-none"
                   placeholder="e.g., Apply Now"
                 />
               </div>
@@ -248,7 +248,7 @@ export default function AdminBannersTab() {
                   type="text"
                   value={formData.link_url}
                   onChange={(e) => setFormData({ ...formData, link_url: e.target.value })}
-                  className="w-full px-3 py-2 bg-forum-bg border border-forum-border rounded-md text-[11px] font-mono text-forum-text focus:border-forum-pink focus:outline-none"
+                  className="w-full px-3 py-2 bg-forum-bg border border-forum-border  text-[11px] font-mono text-forum-text focus:border-primary focus:outline-none"
                   placeholder="e.g., /apply"
                 />
               </div>
@@ -260,7 +260,7 @@ export default function AdminBannersTab() {
                 type="date"
                 value={formData.expires_at}
                 onChange={(e) => setFormData({ ...formData, expires_at: e.target.value })}
-                className="w-full px-3 py-2 bg-forum-bg border border-forum-border rounded-md text-[11px] font-mono text-forum-text focus:border-forum-pink focus:outline-none"
+                className="w-full px-3 py-2 bg-forum-bg border border-forum-border  text-[11px] font-mono text-forum-text focus:border-primary focus:outline-none"
               />
             </div>
 
@@ -288,14 +288,14 @@ export default function AdminBannersTab() {
             <div className="flex gap-2">
               <button
                 type="submit"
-                className="px-4 py-2 rounded-md bg-forum-pink/10 border border-forum-pink/30 text-forum-pink hover:bg-forum-pink/20 transition-all text-[11px] font-mono"
+                className="px-4 py-2  bg-primary/10 border border-primary/30 text-primary hover:bg-primary/20 transition-all text-[11px] font-mono"
               >
                 {editingBanner ? 'Update' : 'Create'} Banner
               </button>
               <button
                 type="button"
                 onClick={resetForm}
-                className="px-4 py-2 rounded-md bg-forum-bg border border-forum-border text-forum-muted hover:bg-forum-hover transition-all text-[11px] font-mono"
+                className="px-4 py-2  bg-forum-bg border border-forum-border text-forum-muted hover:bg-forum-hover transition-all text-[11px] font-mono"
               >
                 Cancel
               </button>
@@ -323,11 +323,11 @@ export default function AdminBannersTab() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="text-[12px] font-bold text-forum-text font-mono">{banner.title}</h3>
-                      <span className={`text-[8px] font-mono px-2 py-0.5 rounded-full border ${color} ${banner.type === 'hiring' ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-forum-bg border-forum-border'}`}>
+                      <span className={`text-[8px] font-mono px-2 py-0.5  border ${color} ${banner.type === 'hiring' ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-forum-bg border-forum-border'}`}>
                         {banner.type}
                       </span>
                       {!banner.is_active && (
-                        <span className="text-[8px] font-mono px-2 py-0.5 rounded-full bg-forum-muted/10 border border-forum-muted/30 text-forum-muted">
+                        <span className="text-[8px] font-mono px-2 py-0.5  bg-forum-muted/10 border border-forum-muted/30 text-forum-muted">
                           Inactive
                         </span>
                       )}
@@ -342,21 +342,21 @@ export default function AdminBannersTab() {
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => toggleActive(banner)}
-                      className="p-2 rounded-md hover:bg-forum-hover transition-all text-forum-muted hover:text-forum-text"
+                      className="p-2  hover:bg-forum-hover transition-all text-forum-muted hover:text-forum-text"
                       title={banner.is_active ? 'Deactivate' : 'Activate'}
                     >
                       {banner.is_active ? <Eye size={14} /> : <EyeOff size={14} />}
                     </button>
                     <button
                       onClick={() => handleEdit(banner)}
-                      className="p-2 rounded-md hover:bg-forum-hover transition-all text-forum-muted hover:text-cyan-400"
+                      className="p-2  hover:bg-forum-hover transition-all text-forum-muted hover:text-white"
                       title="Edit"
                     >
                       <Edit2 size={14} />
                     </button>
                     <button
                       onClick={() => handleDelete(banner.id)}
-                      className="p-2 rounded-md hover:bg-forum-hover transition-all text-forum-muted hover:text-red-400"
+                      className="p-2  hover:bg-forum-hover transition-all text-forum-muted hover:text-red-400"
                       title="Delete"
                     >
                       <Trash2 size={14} />

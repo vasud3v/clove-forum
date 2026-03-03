@@ -61,7 +61,7 @@ const TextSelectionQuote = memo(({ onQuote, onAddToMultiQuote }: TextSelectionQu
 
   return (
     <div
-      className="fixed z-50 flex items-center gap-1 bg-forum-bg border-2 border-forum-pink/40 rounded-lg shadow-xl px-2 py-1.5 animate-in fade-in zoom-in duration-150"
+      className="fixed z-50 flex items-center gap-1 bg-forum-bg border-2 border-primary/40  shadow-brutal px-2 py-1.5 animate-in fade-in zoom-in duration-150"
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
@@ -70,7 +70,7 @@ const TextSelectionQuote = memo(({ onQuote, onAddToMultiQuote }: TextSelectionQu
     >
       <button
         onClick={handleQuote}
-        className="flex items-center gap-1 px-2 py-1 text-[10px] font-mono font-semibold text-forum-pink hover:bg-forum-pink/10 rounded transition-colors"
+        className="flex items-center gap-1 px-2 py-1 text-[10px] font-mono font-semibold text-primary hover:bg-primary/10 rounded transition-colors"
         title="Quote selected text"
       >
         <Quote size={12} />
@@ -82,7 +82,7 @@ const TextSelectionQuote = memo(({ onQuote, onAddToMultiQuote }: TextSelectionQu
           <div className="w-px h-4 bg-forum-border/30" />
           <button
             onClick={handleAddToMultiQuote}
-            className="flex items-center gap-1 px-2 py-1 text-[10px] font-mono font-semibold text-forum-pink hover:bg-forum-pink/10 rounded transition-colors"
+            className="flex items-center gap-1 px-2 py-1 text-[10px] font-mono font-semibold text-primary hover:bg-primary/10 rounded transition-colors"
             title="Add to multi-quote"
           >
             <Plus size={12} />

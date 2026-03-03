@@ -151,7 +151,7 @@ function CodeBlock({ children, className }: { children: ReactNode; className?: s
   };
 
   return (
-    <div className="my-3 rounded-md border border-forum-border/40 overflow-hidden">
+    <div className="my-3  border border-forum-border/40 overflow-hidden">
       <div className="flex items-center justify-between px-3 py-1.5 bg-forum-bg border-b border-forum-border/30">
         <span className="text-[8px] font-mono uppercase tracking-wider text-forum-muted">
           {lang || 'code'}
@@ -159,9 +159,9 @@ function CodeBlock({ children, className }: { children: ReactNode; className?: s
         <div className="flex items-center gap-2">
           <button
             onClick={handleCopy}
-            className="flex items-center gap-1 text-forum-muted/50 hover:text-forum-pink transition-forum text-[9px] font-mono"
+            className="flex items-center gap-1 text-forum-muted/50 hover:text-primary transition-forum text-[9px] font-mono"
           >
-            {copied ? <Check size={10} className="text-emerald-400" /> : <Copy size={10} />}
+            {copied ? <Check size={10} className="text-white" /> : <Copy size={10} />}
             {copied ? 'Copied' : 'Copy'}
           </button>
           <Code size={10} className="text-forum-muted/50" />
@@ -196,14 +196,14 @@ function ExpandableBlockquote({ children }: { children: ReactNode }) {
   
   if (!isLong) {
     return (
-      <blockquote className="my-2 pl-3 border-l-2 border-forum-pink/40 text-forum-text/70 italic">
+      <blockquote className="my-2 pl-3 border-l-2 border-primary/40 text-forum-text/70 italic">
         {children}
       </blockquote>
     );
   }
   
   return (
-    <blockquote className="my-2 pl-3 border-l-2 border-forum-pink/40 text-forum-text/70 italic relative">
+    <blockquote className="my-2 pl-3 border-l-2 border-primary/40 text-forum-text/70 italic relative">
       <div className={`${isExpanded ? '' : 'max-h-[100px] overflow-hidden relative'}`}>
         {children}
         {!isExpanded && (
@@ -212,7 +212,7 @@ function ExpandableBlockquote({ children }: { children: ReactNode }) {
       </div>
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="mt-2 flex items-center gap-1.5 text-[10px] font-mono font-semibold text-forum-pink hover:text-forum-pink/80 transition-colors"
+        className="mt-2 flex items-center gap-1.5 text-[10px] font-mono font-semibold text-primary hover:text-primary/80 transition-colors"
       >
         {isExpanded ? (
           <>
@@ -318,13 +318,13 @@ function SpoilerBlock({ content }: { content: string }) {
     <span className="inline-block my-2">
       <button
         onClick={() => setExpanded(!expanded)}
-        className="transition-forum flex items-center gap-1.5 text-[10px] font-mono font-semibold text-forum-pink/80 hover:text-forum-pink bg-forum-pink/[0.04] hover:bg-forum-pink/[0.08] border border-forum-pink/15 hover:border-forum-pink/30 rounded-md px-2.5 py-1.5"
+        className="transition-forum flex items-center gap-1.5 text-[10px] font-mono font-semibold text-primary/80 hover:text-primary bg-primary/[0.04] hover:bg-primary/[0.08] border border-primary/15 hover:border-primary/30  px-2.5 py-1.5"
       >
         <EyeOff size={10} />
         {expanded ? 'Hide Spoiler' : 'Show Spoiler'}
       </button>
       {expanded && (
-        <div className="mt-1.5 px-3 py-2 bg-forum-bg/60 border border-forum-border/30 rounded-md text-forum-text/80 animate-in fade-in duration-200">
+        <div className="mt-1.5 px-3 py-2 bg-forum-bg/60 border border-forum-border/30  text-forum-text/80 animate-in fade-in duration-200">
           {spoilerSegments.map((seg, i) => {
             switch (seg.type) {
               case 'video': {
@@ -390,7 +390,7 @@ const markdownComponents: Components = {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-forum-pink hover:underline decoration-forum-pink/30 hover:decoration-forum-pink/60"
+      className="text-primary hover:underline decoration-forum-pink/30 hover:decoration-forum-pink/60"
     >
       {children}
     </a>
@@ -402,7 +402,7 @@ const markdownComponents: Components = {
       <img
         src={src}
         alt={alt || ''}
-        className="max-w-full max-h-[400px] rounded-md border border-forum-border/30 object-contain"
+        className="max-w-full max-h-[400px]  border border-forum-border/30 object-contain"
         loading="lazy"
         onError={(e) => {
           (e.target as HTMLImageElement).style.display = 'none';
@@ -416,7 +416,7 @@ const markdownComponents: Components = {
   ol: ({ children }) => <ol className="my-1 space-y-0.5 list-decimal list-inside">{children}</ol>,
   li: ({ children }) => (
     <li className="flex items-start gap-2 my-0.5">
-      <span className="text-forum-pink mt-1 shrink-0">&#8226;</span>
+      <span className="text-primary mt-1 shrink-0">&#8226;</span>
       <span className="flex-1">{children}</span>
     </li>
   ),
@@ -429,7 +429,7 @@ const markdownComponents: Components = {
     }
     // Inline code
     return (
-      <code className="px-1.5 py-0.5 rounded bg-forum-bg border border-forum-border/30 text-[11px] text-forum-pink/90 font-mono">
+      <code className="px-1.5 py-0.5 rounded bg-forum-bg border border-forum-border/30 text-[11px] text-primary/90 font-mono">
         {children}
       </code>
     );
@@ -452,18 +452,18 @@ const markdownComponents: Components = {
 
   // Tables
   table: ({ children }) => (
-    <div className="my-3 overflow-x-auto rounded-md border border-forum-border/40">
+    <div className="my-3 overflow-x-auto  border border-forum-border/40">
       <table className="w-full text-[11px] font-mono">{children}</table>
     </div>
   ),
   thead: ({ children }) => <thead className="bg-forum-bg border-b border-forum-border/30">{children}</thead>,
   th: ({ children }) => (
-    <th className="px-3 py-2 text-left font-bold text-forum-pink/80 uppercase tracking-wider text-[9px]">
+    <th className="px-3 py-2 text-left font-bold text-primary/80 uppercase tracking-wider text-[9px]">
       {children}
     </th>
   ),
   tr: ({ children }) => (
-    <tr className="border-b border-forum-border/15 last:border-b-0 hover:bg-forum-pink/[0.02] transition-forum">
+    <tr className="border-b border-forum-border/15 last:border-b-0 hover:bg-primary/[0.02] transition-forum">
       {children}
     </tr>
   ),
@@ -514,7 +514,7 @@ function processMentionString(text: string): ReactNode {
   return parts.map((part, i) => {
     if (part.startsWith('@')) {
       return (
-        <span key={i} className="text-forum-pink font-semibold cursor-pointer hover:underline">
+        <span key={i} className="text-primary font-semibold cursor-pointer hover:underline">
           {part}
         </span>
       );

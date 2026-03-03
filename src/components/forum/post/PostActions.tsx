@@ -190,7 +190,7 @@ const PostActions = memo(({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-2 mt-auto border-t border-forum-border/10 bg-forum-bg/10 gap-2 sm:gap-0">
         {/* Left Actions (Voting & Report) */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-0 border border-forum-border/20 rounded-md bg-forum-bg/50">
+          <div className="flex items-center gap-0 border border-forum-border/20  bg-forum-bg/50">
             <button
               onClick={async () => {
                 if (currentUserId === 'guest') {
@@ -207,8 +207,8 @@ const PostActions = memo(({
               disabled={isVoting || isOwnPost}
               className={`transition-forum flex items-center gap-0.5 px-2.5 py-1 text-[11px] font-mono border-r border-forum-border/20 ${
                 currentVote === 'up' 
-                  ? 'text-forum-pink bg-forum-pink/10' 
-                  : 'text-forum-muted hover:text-forum-pink hover:bg-forum-pink/10'
+                  ? 'text-primary bg-primary/10' 
+                  : 'text-forum-muted hover:text-primary hover:bg-primary/10'
               } ${isOwnPost ? 'opacity-50 cursor-not-allowed' : ''}`}
               title={isOwnPost ? 'You cannot vote on your own post' : 'Upvote'}
             >
@@ -251,7 +251,7 @@ const PostActions = memo(({
                 }
                 setShowReportModal(true);
               }}
-              className="flex items-center gap-1.5 px-2 py-1 text-[10px] font-mono text-forum-muted hover:text-amber-400 transition-colors"
+              className="flex items-center gap-1.5 px-2 py-1 text-[10px] font-mono text-forum-muted hover:text-amber-600 transition-colors"
             >
               <Flag size={11} />
               <span className="hidden sm:inline">Report</span>
@@ -276,7 +276,7 @@ const PostActions = memo(({
           <button
             onClick={handleBookmark}
             className={`flex items-center gap-1.5 px-2.5 py-1.5 text-[10px] font-mono rounded hover:bg-forum-card transition-colors ${
-              isBookmarked ? 'text-forum-pink' : 'text-forum-muted hover:text-forum-text'
+              isBookmarked ? 'text-primary' : 'text-forum-muted hover:text-forum-text'
             }`}
             title="Bookmark Post"
           >
@@ -318,7 +318,7 @@ const PostActions = memo(({
 
           <button
             onClick={handleReply}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-mono font-bold rounded text-forum-pink hover:bg-forum-pink/10 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-mono font-bold rounded text-primary hover:bg-primary/10 transition-colors"
             title="Reply to Post"
           >
             <Reply size={11} />
@@ -334,7 +334,7 @@ const PostActions = memo(({
                 setShowQuoteMenu(!showQuoteMenu);
               }}
               type="button"
-              className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-mono font-bold rounded text-forum-pink hover:bg-forum-pink/10 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-mono font-bold rounded text-primary hover:bg-primary/10 transition-colors"
               title="Quote Options"
             >
               <Quote size={11} />
@@ -344,7 +344,7 @@ const PostActions = memo(({
 
             {/* Dropdown Menu */}
             {showQuoteMenu && (
-              <div className="absolute bottom-full mb-1 right-0 z-50 w-48 hud-panel rounded-lg shadow-xl border border-forum-border/30 overflow-hidden animate-in fade-in zoom-in duration-150">
+              <div className="absolute bottom-full mb-1 right-0 z-50 w-48 hud-panel  shadow-brutal border border-forum-border/30 overflow-hidden animate-in fade-in zoom-in duration-150">
                 <button
                   onClick={(e) => {
                     e.preventDefault();
@@ -352,9 +352,9 @@ const PostActions = memo(({
                     handleQuote();
                   }}
                   type="button"
-                  className="w-full flex items-center gap-2 px-3 py-2 text-[11px] font-mono text-forum-text hover:bg-forum-pink/10 transition-colors text-left"
+                  className="w-full flex items-center gap-2 px-3 py-2 text-[11px] font-mono text-forum-text hover:bg-primary/10 transition-colors text-left"
                 >
-                  <Quote size={12} className="text-forum-pink" />
+                  <Quote size={12} className="text-primary" />
                   <div>
                     <div className="font-semibold">Quote & Reply</div>
                     <div className="text-[9px] text-forum-muted">Reply with quote</div>
@@ -369,9 +369,9 @@ const PostActions = memo(({
                       handleAddToMultiQuote();
                     }}
                     type="button"
-                    className="w-full flex items-center gap-2 px-3 py-2 text-[11px] font-mono text-forum-text hover:bg-forum-pink/10 transition-colors border-t border-forum-border/10 text-left"
+                    className="w-full flex items-center gap-2 px-3 py-2 text-[11px] font-mono text-forum-text hover:bg-primary/10 transition-colors border-t border-forum-border/10 text-left"
                   >
-                    <Plus size={12} className="text-forum-pink" />
+                    <Plus size={12} className="text-primary" />
                     <div>
                       <div className="font-semibold">Add to Multi-Quote</div>
                       <div className="text-[9px] text-forum-muted">Collect multiple quotes</div>

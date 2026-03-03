@@ -75,11 +75,11 @@ const EditModal = memo(({ isOpen, onClose, initialContent, onSave, requireReason
 
   return createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/60 " onClick={onClose} />
       <div className="relative hud-panel w-full max-w-3xl max-h-[90vh] flex flex-col" style={{ overflow: 'visible' }}>
         <div className="flex items-center justify-between px-4 py-3 border-b border-forum-border/20">
           <span className="text-[12px] font-mono font-bold text-forum-text flex items-center gap-2">
-            <Pencil size={13} className="text-forum-pink" /> Edit Post
+            <Pencil size={13} className="text-primary" /> Edit Post
           </span>
           <button
             onClick={onClose}
@@ -118,11 +118,11 @@ const EditModal = memo(({ isOpen, onClose, initialContent, onSave, requireReason
               type="text"
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className="w-full bg-forum-bg border border-forum-border/30 rounded-md px-3 py-2 text-[11px] font-mono text-forum-text placeholder:text-forum-muted/40 focus:outline-none focus:border-forum-pink/50 focus:ring-1 focus:ring-forum-pink/20 transition-forum"
+              className="w-full bg-forum-bg border border-forum-border/30  px-3 py-2 text-[11px] font-mono text-forum-text placeholder:text-forum-muted/40 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary transition-forum"
               placeholder="Brief explanation of what you changed..."
             />
             {requireReason && (
-              <p className="text-[9px] font-mono text-amber-400 mt-1 flex items-center gap-1">
+              <p className="text-[9px] font-mono text-amber-600 mt-1 flex items-center gap-1">
                 <AlertTriangle size={9} />
                 Edit reason required for posts older than 5 minutes
               </p>
@@ -134,18 +134,18 @@ const EditModal = memo(({ isOpen, onClose, initialContent, onSave, requireReason
           <button
             onClick={onClose}
             disabled={isSaving}
-            className="transition-forum rounded-md px-4 py-2 text-[10px] font-mono text-forum-muted border border-forum-border/30 hover:text-forum-text hover:border-forum-border/50 disabled:opacity-50"
+            className="transition-forum  px-4 py-2 text-[10px] font-mono text-forum-muted border border-forum-border/30 hover:text-forum-text hover:border-forum-border/50 disabled:opacity-50"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
             disabled={isSaving || !content.trim() || content.trim().length < 5 || (requireReason && !reason.trim())}
-            className="transition-forum rounded-md bg-forum-pink px-4 py-2 text-[10px] font-mono font-semibold text-white hover:shadow-pink-glow active:scale-95 border border-forum-pink/50 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5"
+            className="transition-forum  bg-primary px-4 py-2 text-[10px] font-mono font-semibold text-black hover:shadow-brutal-sm active:scale-95 border border-primary/50 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5"
           >
             {isSaving ? (
               <>
-                <div className="inline-block animate-spin rounded-full h-3 w-3 border-b border-white"></div>
+                <div className="inline-block animate-spin  h-3 w-3 border-b border-white"></div>
                 Saving...
               </>
             ) : (
@@ -201,11 +201,11 @@ const ReportModal = memo(({ isOpen, onClose, onSubmit }: ReportModalProps) => {
 
   return createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/60 " onClick={onClose} />
       <div className="relative hud-panel w-full max-w-md">
         <div className="flex items-center justify-between px-4 py-3 border-b border-forum-border/20">
           <span className="text-[12px] font-mono font-bold text-forum-text flex items-center gap-2">
-            <Flag size={13} className="text-amber-400" /> Report Post
+            <Flag size={13} className="text-amber-600" /> Report Post
           </span>
           <button
             onClick={onClose}
@@ -223,7 +223,7 @@ const ReportModal = memo(({ isOpen, onClose, onSubmit }: ReportModalProps) => {
             <select
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className="w-full bg-forum-bg border border-forum-border/30 rounded-md px-3 py-2 text-[11px] font-mono text-forum-text focus:outline-none focus:border-forum-pink/50 focus:ring-1 focus:ring-forum-pink/20 transition-forum"
+              className="w-full bg-forum-bg border border-forum-border/30  px-3 py-2 text-[11px] font-mono text-forum-text focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary transition-forum"
             >
               <option value="">Select a reason...</option>
               {reasons.map((r) => (
@@ -241,13 +241,13 @@ const ReportModal = memo(({ isOpen, onClose, onSubmit }: ReportModalProps) => {
             <textarea
               value={details}
               onChange={(e) => setDetails(e.target.value)}
-              className="w-full h-32 bg-forum-bg border border-forum-border/30 rounded-md px-3 py-2.5 text-[11px] font-mono text-forum-text placeholder:text-forum-muted/40 focus:outline-none focus:border-forum-pink/50 focus:ring-1 focus:ring-forum-pink/20 transition-forum resize-none"
+              className="w-full h-32 bg-forum-bg border border-forum-border/30  px-3 py-2.5 text-[11px] font-mono text-forum-text placeholder:text-forum-muted/40 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary transition-forum resize-none"
               placeholder="Please provide specific details about why you're reporting this post..."
             />
           </div>
 
-          <div className="bg-amber-500/5 border border-amber-500/20 rounded-md px-3 py-2">
-            <p className="text-[9px] font-mono text-amber-400 leading-relaxed">
+          <div className="bg-amber-500/5 border border-amber-500/20  px-3 py-2">
+            <p className="text-[9px] font-mono text-amber-600 leading-relaxed">
               Reports are reviewed by moderators. False reports may result in account restrictions.
             </p>
           </div>
@@ -257,18 +257,18 @@ const ReportModal = memo(({ isOpen, onClose, onSubmit }: ReportModalProps) => {
           <button
             onClick={onClose}
             disabled={isSubmitting}
-            className="transition-forum rounded-md px-4 py-2 text-[10px] font-mono text-forum-muted border border-forum-border/30 hover:text-forum-text hover:border-forum-border/50 disabled:opacity-50"
+            className="transition-forum  px-4 py-2 text-[10px] font-mono text-forum-muted border border-forum-border/30 hover:text-forum-text hover:border-forum-border/50 disabled:opacity-50"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={isSubmitting || !reason || !details.trim()}
-            className="transition-forum rounded-md bg-amber-500 px-4 py-2 text-[10px] font-mono font-semibold text-white hover:shadow-[0_0_12px_rgba(245,158,11,0.3)] active:scale-95 border border-amber-500/50 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5"
+            className="transition-forum  bg-amber-500 px-4 py-2 text-[10px] font-mono font-semibold text-black hover:shadow-[0_0_12px_rgba(245,158,11,0.3)] active:scale-95 border border-amber-500/50 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5"
           >
             {isSubmitting ? (
               <>
-                <div className="inline-block animate-spin rounded-full h-3 w-3 border-b border-white"></div>
+                <div className="inline-block animate-spin  h-3 w-3 border-b border-white"></div>
                 Submitting...
               </>
             ) : (
@@ -372,7 +372,7 @@ export const ImprovedPostCard = memo(({
     <>
       <div
         id={post.id}
-        className="hud-panel scroll-mt-20 flex flex-col md:flex-row relative rounded-xl"
+        className="hud-panel scroll-mt-20 flex flex-col md:flex-row relative "
         style={{ zIndex: 100 - (index % 100) }}
       >
         {/* Left Column: Author Sidebar */}
@@ -383,7 +383,7 @@ export const ImprovedPostCard = memo(({
               <img
                 src={displayAvatar}
                 alt={post.author.username}
-                className="h-14 w-14 md:h-24 md:w-24 rounded-md border border-forum-border/50 object-cover cursor-pointer hover:border-forum-pink/50 transition-colors shadow-sm"
+                className="h-14 w-14 md:h-24 md:w-24  border border-forum-border/50 object-cover cursor-pointer hover:border-primary/50 transition-colors shadow-sm"
                 onClick={() => navigate(`/user/${post.author.id}`)}
               />
             </ProfileHoverCard>
@@ -391,7 +391,7 @@ export const ImprovedPostCard = memo(({
             <div className="flex flex-col flex-1 md:w-full items-start md:items-center text-left md:text-center mt-0 md:mt-1">
               <ProfileHoverCard user={post.author}>
                 <span
-                  className="text-[14px] md:text-[16px] font-bold tracking-wide text-forum-text hover:text-forum-pink transition-forum cursor-pointer leading-tight mb-1 md:mb-2 inline-block relative z-20"
+                  className="text-[14px] md:text-[16px] font-bold tracking-wide text-forum-text hover:text-primary transition-forum cursor-pointer leading-tight mb-1 md:mb-2 inline-block relative z-20"
                   onClick={() => navigate(`/user/${post.author.id}`)}
                 >
                   {post.author.username}
@@ -420,7 +420,7 @@ export const ImprovedPostCard = memo(({
                 )}
                 
                 {isOP && (
-                  <span className="w-full text-center text-[9px] font-bold uppercase tracking-wider px-2 py-1 bg-forum-pink/10 border border-forum-pink/30 rounded text-forum-pink">
+                  <span className="w-full text-center text-[9px] font-bold uppercase tracking-wider px-2 py-1 bg-primary/10 border border-primary/30 rounded text-primary">
                     Original Poster
                   </span>
                 )}
@@ -486,7 +486,7 @@ export const ImprovedPostCard = memo(({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-2 mt-auto border-t border-forum-border/10 bg-forum-bg/10 gap-2 sm:gap-0">
             {/* Left Actions (Voting & Report) */}
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-0 border border-forum-border/20 rounded-md bg-forum-bg/50">
+              <div className="flex items-center gap-0 border border-forum-border/20  bg-forum-bg/50">
                 <button
                   onClick={async () => {
                     setIsVoting(true);
@@ -497,7 +497,7 @@ export const ImprovedPostCard = memo(({
                     }
                   }}
                   disabled={isVoting || isOwnPost}
-                  className={`transition-forum flex items-center gap-0.5 px-2.5 py-1 text-[11px] font-mono border-r border-forum-border/20 ${currentVote === 'up' ? 'text-forum-pink bg-forum-pink/10' : 'text-forum-muted hover:text-forum-pink hover:bg-forum-pink/10'} ${isOwnPost ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  className={`transition-forum flex items-center gap-0.5 px-2.5 py-1 text-[11px] font-mono border-r border-forum-border/20 ${currentVote === 'up' ? 'text-primary bg-primary/10' : 'text-forum-muted hover:text-primary hover:bg-primary/10'} ${isOwnPost ? 'opacity-50 cursor-not-allowed' : ''}`}
                   title={isOwnPost ? 'You cannot vote on your own post' : 'Upvote'}
                 >
                   <ChevronUp size={13} strokeWidth={2.5} />
@@ -525,7 +525,7 @@ export const ImprovedPostCard = memo(({
               {!canEditDelete && (
                 <button
                   onClick={() => setShowReportModal(true)}
-                  className="flex items-center gap-1.5 px-2 py-1 text-[10px] font-mono text-forum-muted hover:text-amber-400 transition-colors"
+                  className="flex items-center gap-1.5 px-2 py-1 text-[10px] font-mono text-forum-muted hover:text-amber-600 transition-colors"
                 >
                   <Flag size={11} />
                   <span className="hidden sm:inline">Report</span>
@@ -549,7 +549,7 @@ export const ImprovedPostCard = memo(({
 
               <button
                 onClick={handleBookmark}
-                className={`flex items-center gap-1.5 px-2.5 py-1.5 text-[10px] font-mono rounded hover:bg-forum-card transition-colors ${isBookmarked ? 'text-forum-pink' : 'text-forum-muted hover:text-forum-text'}`}
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 text-[10px] font-mono rounded hover:bg-forum-card transition-colors ${isBookmarked ? 'text-primary' : 'text-forum-muted hover:text-forum-text'}`}
                 title="Bookmark Post"
               >
                 <Bookmark size={11} fill={isBookmarked ? 'currentColor' : 'none'} />
@@ -569,7 +569,7 @@ export const ImprovedPostCard = memo(({
                 <>
                   <button
                     onClick={handleEdit}
-                    className="flex items-center gap-1.5 px-2.5 py-1.5 text-[10px] font-mono rounded text-forum-muted hover:text-blue-400 hover:bg-blue-500/10 transition-colors"
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 text-[10px] font-mono rounded text-forum-muted hover:text-black hover:bg-blue-600/40 transition-colors"
                     title="Edit Post"
                   >
                     <Pencil size={11} />
@@ -590,7 +590,7 @@ export const ImprovedPostCard = memo(({
 
               <button
                 onClick={() => onQuote('', '')} // Empty quote triggers standard reply
-                className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-mono font-bold rounded text-forum-pink hover:bg-forum-pink/10 transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-mono font-bold rounded text-primary hover:bg-primary/10 transition-colors"
                 title="Reply to Post"
               >
                 <Reply size={11} />
@@ -599,7 +599,7 @@ export const ImprovedPostCard = memo(({
 
               <button
                 onClick={handleQuote}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-mono font-bold rounded text-forum-pink hover:bg-forum-pink/10 transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-mono font-bold rounded text-primary hover:bg-primary/10 transition-colors"
                 title="Quote Post"
               >
                 <Quote size={11} />

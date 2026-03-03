@@ -135,14 +135,14 @@ export default function ImageUploadModal({
     : { width: 'w-96', height: 'h-32', aspect: 'aspect-[3/1]' };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="relative w-full max-w-lg mx-4 bg-forum-card border border-forum-border rounded-xl shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 ">
+      <div className="relative w-full max-w-lg mx-4 bg-forum-card border border-forum-border  shadow-brutal-lg">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-forum-border">
           <h2 className="text-[14px] font-bold text-forum-text font-mono">{title}</h2>
           <button
             onClick={handleClose}
-            className="p-1 rounded-md text-forum-muted hover:text-forum-pink hover:bg-forum-hover transition-forum"
+            className="p-1  text-forum-muted hover:text-primary hover:bg-forum-hover transition-forum"
           >
             <X size={18} />
           </button>
@@ -154,7 +154,7 @@ export default function ImageUploadModal({
           {!previewUrl ? (
             <div
               onClick={() => fileInputRef.current?.click()}
-              className={`${dimensions.width} ${dimensions.height} mx-auto border-2 border-dashed border-forum-border rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-forum-pink/50 hover:bg-forum-hover/30 transition-forum`}
+              className={`${dimensions.width} ${dimensions.height} mx-auto border-2 border-dashed border-forum-border  flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-forum-hover/30 transition-forum`}
             >
               <Upload size={32} className="text-forum-muted mb-2" />
               <p className="text-[12px] text-forum-text font-medium mb-1">Click to upload</p>
@@ -168,7 +168,7 @@ export default function ImageUploadModal({
           ) : (
             <div className="space-y-3">
               {/* Preview */}
-              <div className={`${dimensions.width} ${dimensions.height} mx-auto rounded-lg overflow-hidden border border-forum-border`}>
+              <div className={`${dimensions.width} ${dimensions.height} mx-auto  overflow-hidden border border-forum-border`}>
                 <img
                   src={previewUrl}
                   alt="Preview"
@@ -179,7 +179,7 @@ export default function ImageUploadModal({
               {/* Change Image Button */}
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="w-full px-4 py-2 rounded-lg text-[11px] font-medium text-forum-muted border border-forum-border hover:border-forum-pink/30 hover:text-forum-pink transition-forum"
+                className="w-full px-4 py-2  text-[11px] font-medium text-forum-muted border border-forum-border hover:border-primary/30 hover:text-primary transition-forum"
               >
                 <ImageIcon size={14} className="inline mr-2" />
                 Change Image
@@ -197,13 +197,13 @@ export default function ImageUploadModal({
 
           {/* Error Message */}
           {error && (
-            <div className="px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-[11px] text-red-400">
+            <div className="px-4 py-2  bg-red-500/10 border border-red-500/30 text-[11px] text-red-400">
               {error}
             </div>
           )}
 
           {/* Info */}
-          <div className="px-4 py-3 rounded-lg bg-forum-bg border border-forum-border/50">
+          <div className="px-4 py-3  bg-forum-bg border border-forum-border/50">
             <p className="text-[10px] text-forum-muted leading-relaxed">
               <strong className="text-forum-text">Tip:</strong> For best results, use images with{' '}
               {aspectRatio === 'square' ? 'equal width and height (e.g., 512x512px)' : 'a 3:1 ratio (e.g., 768x256px or 1200x400px)'}.
@@ -216,18 +216,18 @@ export default function ImageUploadModal({
         <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-forum-border">
           <button
             onClick={handleClose}
-            className="px-4 py-2 rounded-lg text-[11px] font-medium text-forum-muted hover:text-forum-text hover:bg-forum-hover transition-forum"
+            className="px-4 py-2  text-[11px] font-medium text-forum-muted hover:text-forum-text hover:bg-forum-hover transition-forum"
           >
             Cancel
           </button>
           <button
             onClick={handleUpload}
             disabled={!selectedFile || uploading}
-            className="px-4 py-2 rounded-lg text-[11px] font-medium text-white bg-forum-pink hover:bg-forum-pink/80 disabled:opacity-50 disabled:cursor-not-allowed transition-forum flex items-center gap-2"
+            className="px-4 py-2  text-[11px] font-medium text-white bg-primary hover:bg-primary/80 disabled:opacity-50 disabled:cursor-not-allowed transition-forum flex items-center gap-2"
           >
             {uploading ? (
               <>
-                <div className="h-3 w-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <div className="h-3 w-3 border-2 border-white/30 border-t-white  animate-spin" />
                 Uploading...
               </>
             ) : (

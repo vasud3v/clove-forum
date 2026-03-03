@@ -34,7 +34,7 @@ export function KeyboardShortcutsHint() {
     <>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="hidden lg:flex group transition-all duration-200 items-center gap-1.5 rounded-lg border border-forum-border px-2 py-1.5 text-[10px] font-mono text-forum-muted hover:text-forum-pink hover:border-forum-pink/40 hover:bg-forum-hover"
+        className="hidden lg:flex group transition-all duration-200 items-center gap-1.5  border border-forum-border px-2 py-1.5 text-[10px] font-mono text-forum-muted hover:text-primary hover:border-primary/40 hover:bg-forum-hover"
         title={`Keyboard Shortcuts (${cmdKey} + /)`}
       >
         <Keyboard size={12} className="group-hover:scale-110 transition-transform" />
@@ -42,8 +42,8 @@ export function KeyboardShortcutsHint() {
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="w-full max-w-sm rounded-lg border border-forum-border bg-forum-card shadow-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50  p-4">
+          <div className="w-full max-w-sm  border border-forum-border bg-forum-card shadow-brutal">
             {/* Header */}
             <div className="border-b border-forum-border p-4 flex items-center justify-between">
               <h2 className="text-sm font-bold text-forum-text font-mono">
@@ -51,7 +51,7 @@ export function KeyboardShortcutsHint() {
               </h2>
               <button
                 onClick={() => setIsOpen(false)}
-                className="text-forum-muted hover:text-forum-pink transition-colors"
+                className="text-forum-muted hover:text-primary transition-colors"
               >
                 <X size={16} />
               </button>

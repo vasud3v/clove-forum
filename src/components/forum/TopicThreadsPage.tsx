@@ -287,17 +287,17 @@ export default function TopicThreadsPage() {
       <div className="mx-auto max-w-7xl px-4 lg:px-6 pt-4 pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5 text-[10px] font-mono text-forum-muted">
-            <Link to="/" className="hover:text-forum-pink transition-forum">
-              <HomeIcon size={11} className="text-forum-pink" />
+            <Link to="/" className="hover:text-primary transition-forum">
+              <HomeIcon size={11} className="text-primary" />
             </Link>
             <ChevronRight size={10} />
-            <Link to="/" className="hover:text-forum-pink transition-forum">
+            <Link to="/" className="hover:text-primary transition-forum">
               Forums
             </Link>
             <ChevronRight size={10} />
             {category && (
               <>
-                <Link to={`/category/${categoryId}`} className="hover:text-forum-pink transition-forum">
+                <Link to={`/category/${categoryId}`} className="hover:text-primary transition-forum">
                   {category.name}
                 </Link>
                 <ChevronRight size={10} />
@@ -310,7 +310,7 @@ export default function TopicThreadsPage() {
           {user && (
             <button
               onClick={() => setShowTopicModal(true)}
-              className="transition-forum rounded-sm border border-forum-pink/50 bg-transparent px-3 py-1.5 text-[10px] font-mono font-bold text-forum-pink hover:bg-forum-pink/10 hover:border-forum-pink active:scale-95 flex items-center gap-1.5"
+              className="transition-forum  border border-primary/50 bg-transparent px-3 py-1.5 text-[10px] font-mono font-bold text-primary hover:bg-primary/10 hover:border-primary active:scale-95 flex items-center gap-1.5"
             >
               <PenSquare size={12} />
               <span className="hidden sm:inline">Create Thread</span>
@@ -342,8 +342,8 @@ export default function TopicThreadsPage() {
                 disabled={currentPage === 1}
                 className={`min-w-[32px] h-[32px] rounded border text-[11px] font-mono transition-forum ${
                   currentPage === 1
-                    ? 'border-forum-pink bg-forum-pink text-white'
-                    : 'border-forum-border/40 bg-forum-card text-forum-text hover:bg-forum-hover hover:border-forum-pink/40'
+                    ? 'border-primary bg-primary text-white'
+                    : 'border-forum-border/40 bg-forum-card text-forum-text hover:bg-forum-hover hover:border-primary/40'
                 }`}
               >
                 1
@@ -365,8 +365,8 @@ export default function TopicThreadsPage() {
                     onClick={() => setCurrentPage(pageNum)}
                     className={`min-w-[32px] h-[32px] rounded border text-[11px] font-mono transition-forum ${
                       currentPage === pageNum
-                        ? 'border-forum-pink bg-forum-pink text-white'
-                        : 'border-forum-border/40 bg-forum-card text-forum-text hover:bg-forum-hover hover:border-forum-pink/40'
+                        ? 'border-primary bg-primary text-white'
+                        : 'border-forum-border/40 bg-forum-card text-forum-text hover:bg-forum-hover hover:border-primary/40'
                     }`}
                   >
                     {pageNum}
@@ -383,8 +383,8 @@ export default function TopicThreadsPage() {
                   disabled={currentPage === totalPages}
                   className={`min-w-[32px] h-[32px] rounded border text-[11px] font-mono transition-forum ${
                     currentPage === totalPages
-                      ? 'border-forum-pink bg-forum-pink text-white'
-                      : 'border-forum-border/40 bg-forum-card text-forum-text hover:bg-forum-hover hover:border-forum-pink/40'
+                      ? 'border-primary bg-primary text-white'
+                      : 'border-forum-border/40 bg-forum-card text-forum-text hover:bg-forum-hover hover:border-primary/40'
                   }`}
                 >
                   {totalPages}
@@ -394,7 +394,7 @@ export default function TopicThreadsPage() {
               <button
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
-                className="ml-1 px-3 py-1.5 rounded border border-forum-border/40 bg-forum-card text-[11px] font-mono text-forum-text hover:bg-forum-hover hover:border-forum-pink/40 disabled:opacity-50 disabled:cursor-not-allowed transition-forum"
+                className="ml-1 px-3 py-1.5 rounded border border-forum-border/40 bg-forum-card text-[11px] font-mono text-forum-text hover:bg-forum-hover hover:border-primary/40 disabled:opacity-50 disabled:cursor-not-allowed transition-forum"
               >
                 Next →
               </button>
@@ -402,7 +402,7 @@ export default function TopicThreadsPage() {
             
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="transition-forum rounded-md border px-3 py-1.5 text-[11px] font-mono font-semibold flex items-center gap-2 border-forum-border/40 bg-forum-card text-forum-muted hover:text-forum-pink hover:border-forum-pink/40"
+              className="transition-forum  border px-3 py-1.5 text-[11px] font-mono font-semibold flex items-center gap-2 border-forum-border/40 bg-forum-card text-forum-muted hover:text-primary hover:border-primary/40"
             >
               <Filter size={14} />
               Filters
@@ -421,7 +421,7 @@ export default function TopicThreadsPage() {
                 value={localSearchQuery}
                 onChange={(e) => setLocalSearchQuery(e.target.value)}
                 placeholder="Search threads in this topic..."
-                className="w-full pl-9 pr-3 py-2 bg-forum-bg border border-forum-border/40 rounded-md text-[11px] font-mono text-forum-text placeholder:text-forum-muted/40 focus:border-forum-pink/40 focus:ring-1 focus:ring-forum-pink/20 outline-none transition-forum"
+                className="w-full pl-9 pr-3 py-2 bg-forum-bg border border-forum-border/40  text-[11px] font-mono text-forum-text placeholder:text-forum-muted/40 focus:border-primary/40 focus:ring-1 focus:ring-primary outline-none transition-forum"
               />
             </div>
 
@@ -430,7 +430,7 @@ export default function TopicThreadsPage() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="appearance-none pl-3 pr-8 py-2 bg-forum-bg border border-forum-border/40 rounded-md text-[11px] font-mono text-forum-text focus:border-forum-pink/40 focus:ring-1 focus:ring-forum-pink/20 outline-none transition-forum cursor-pointer"
+                className="appearance-none pl-3 pr-8 py-2 bg-forum-bg border border-forum-border/40  text-[11px] font-mono text-forum-text focus:border-primary/40 focus:ring-1 focus:ring-primary outline-none transition-forum cursor-pointer"
               >
                 <option value="latest">Latest Activity</option>
                 <option value="trending">Trending</option>
@@ -445,16 +445,16 @@ export default function TopicThreadsPage() {
             {/* Filter Button */}
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className={`transition-forum rounded-md border px-3 py-2 text-[11px] font-mono font-semibold flex items-center gap-2 ${
+              className={`transition-forum  border px-3 py-2 text-[11px] font-mono font-semibold flex items-center gap-2 ${
                 filterBy !== 'all'
-                  ? 'border-forum-pink/50 bg-forum-pink/10 text-forum-pink'
-                  : 'border-forum-border/40 bg-forum-bg text-forum-muted hover:text-forum-pink hover:border-forum-pink/40'
+                  ? 'border-primary/50 bg-primary/10 text-primary'
+                  : 'border-forum-border/40 bg-forum-bg text-forum-muted hover:text-primary hover:border-primary/40'
               }`}
             >
               <Filter size={14} />
               Filter
               {filterBy !== 'all' && (
-                <span className="ml-1 px-1.5 py-0.5 bg-forum-pink/20 rounded text-[9px]">1</span>
+                <span className="ml-1 px-1.5 py-0.5 bg-primary/20 rounded text-[9px]">1</span>
               )}
             </button>
           </div>
@@ -464,9 +464,9 @@ export default function TopicThreadsPage() {
             <div className="mt-3 pt-3 border-t border-forum-border/30 flex flex-wrap gap-2">
               <button
                 onClick={() => setFilterBy('all')}
-                className={`transition-forum rounded-md border px-3 py-1.5 text-[10px] font-mono font-semibold ${
+                className={`transition-forum  border px-3 py-1.5 text-[10px] font-mono font-semibold ${
                   filterBy === 'all'
-                    ? 'border-forum-pink/50 bg-forum-pink/10 text-forum-pink'
+                    ? 'border-primary/50 bg-primary/10 text-primary'
                     : 'border-forum-border/30 bg-forum-bg/50 text-forum-muted hover:text-forum-text hover:border-forum-border/50'
                 }`}
               >
@@ -474,9 +474,9 @@ export default function TopicThreadsPage() {
               </button>
               <button
                 onClick={() => setFilterBy('pinned')}
-                className={`transition-forum rounded-md border px-3 py-1.5 text-[10px] font-mono font-semibold flex items-center gap-1.5 ${
+                className={`transition-forum  border px-3 py-1.5 text-[10px] font-mono font-semibold flex items-center gap-1.5 ${
                   filterBy === 'pinned'
-                    ? 'border-forum-pink/50 bg-forum-pink/10 text-forum-pink'
+                    ? 'border-primary/50 bg-primary/10 text-primary'
                     : 'border-forum-border/30 bg-forum-bg/50 text-forum-muted hover:text-forum-text hover:border-forum-border/50'
                 }`}
               >
@@ -485,9 +485,9 @@ export default function TopicThreadsPage() {
               </button>
               <button
                 onClick={() => setFilterBy('hot')}
-                className={`transition-forum rounded-md border px-3 py-1.5 text-[10px] font-mono font-semibold flex items-center gap-1.5 ${
+                className={`transition-forum  border px-3 py-1.5 text-[10px] font-mono font-semibold flex items-center gap-1.5 ${
                   filterBy === 'hot'
-                    ? 'border-forum-pink/50 bg-forum-pink/10 text-forum-pink'
+                    ? 'border-primary/50 bg-primary/10 text-primary'
                     : 'border-forum-border/30 bg-forum-bg/50 text-forum-muted hover:text-forum-text hover:border-forum-border/50'
                 }`}
               >
@@ -496,9 +496,9 @@ export default function TopicThreadsPage() {
               </button>
               <button
                 onClick={() => setFilterBy('unanswered')}
-                className={`transition-forum rounded-md border px-3 py-1.5 text-[10px] font-mono font-semibold flex items-center gap-1.5 ${
+                className={`transition-forum  border px-3 py-1.5 text-[10px] font-mono font-semibold flex items-center gap-1.5 ${
                   filterBy === 'unanswered'
-                    ? 'border-forum-pink/50 bg-forum-pink/10 text-forum-pink'
+                    ? 'border-primary/50 bg-primary/10 text-primary'
                     : 'border-forum-border/30 bg-forum-bg/50 text-forum-muted hover:text-forum-text hover:border-forum-border/50'
                 }`}
               >
@@ -507,9 +507,9 @@ export default function TopicThreadsPage() {
               </button>
               <button
                 onClick={() => setFilterBy('locked')}
-                className={`transition-forum rounded-md border px-3 py-1.5 text-[10px] font-mono font-semibold flex items-center gap-1.5 ${
+                className={`transition-forum  border px-3 py-1.5 text-[10px] font-mono font-semibold flex items-center gap-1.5 ${
                   filterBy === 'locked'
-                    ? 'border-forum-pink/50 bg-forum-pink/10 text-forum-pink'
+                    ? 'border-primary/50 bg-primary/10 text-primary'
                     : 'border-forum-border/30 bg-forum-bg/50 text-forum-muted hover:text-forum-text hover:border-forum-border/50'
                 }`}
               >
@@ -530,7 +530,7 @@ export default function TopicThreadsPage() {
                   setLocalSearchQuery('');
                   setFilterBy('all');
                 }}
-                className="text-[10px] font-mono text-forum-pink hover:text-forum-pink/80 transition-forum"
+                className="text-[10px] font-mono text-primary hover:text-primary/80 transition-forum"
               >
                 Clear Filters
               </button>
@@ -564,7 +564,7 @@ export default function TopicThreadsPage() {
           {stickyThreads.length > 0 && (
             <>
               <div className="bg-forum-bg/30 px-4 py-2 border-b border-forum-border/50">
-                <h3 className="text-[10px] font-mono font-bold text-forum-pink uppercase tracking-wider flex items-center gap-2">
+                <h3 className="text-[10px] font-mono font-bold text-primary uppercase tracking-wider flex items-center gap-2">
                   <Pin size={12} />
                   Sticky Threads
                 </h3>
@@ -608,7 +608,7 @@ export default function TopicThreadsPage() {
                     setLocalSearchQuery('');
                     setFilterBy('all');
                   }}
-                  className="text-[11px] font-mono text-forum-pink hover:text-forum-pink/80 transition-forum"
+                  className="text-[11px] font-mono text-primary hover:text-primary/80 transition-forum"
                 >
                   Clear filters
                 </button>
@@ -627,8 +627,8 @@ export default function TopicThreadsPage() {
                 disabled={currentPage === 1}
                 className={`min-w-[32px] h-[32px] rounded border text-[11px] font-mono transition-forum ${
                   currentPage === 1
-                    ? 'border-forum-pink bg-forum-pink text-white'
-                    : 'border-forum-border/40 bg-forum-card text-forum-text hover:bg-forum-hover hover:border-forum-pink/40'
+                    ? 'border-primary bg-primary text-white'
+                    : 'border-forum-border/40 bg-forum-card text-forum-text hover:bg-forum-hover hover:border-primary/40'
                 }`}
               >
                 1
@@ -650,8 +650,8 @@ export default function TopicThreadsPage() {
                     onClick={() => setCurrentPage(pageNum)}
                     className={`min-w-[32px] h-[32px] rounded border text-[11px] font-mono transition-forum ${
                       currentPage === pageNum
-                        ? 'border-forum-pink bg-forum-pink text-white'
-                        : 'border-forum-border/40 bg-forum-card text-forum-text hover:bg-forum-hover hover:border-forum-pink/40'
+                        ? 'border-primary bg-primary text-white'
+                        : 'border-forum-border/40 bg-forum-card text-forum-text hover:bg-forum-hover hover:border-primary/40'
                     }`}
                   >
                     {pageNum}
@@ -668,8 +668,8 @@ export default function TopicThreadsPage() {
                   disabled={currentPage === totalPages}
                   className={`min-w-[32px] h-[32px] rounded border text-[11px] font-mono transition-forum ${
                     currentPage === totalPages
-                      ? 'border-forum-pink bg-forum-pink text-white'
-                      : 'border-forum-border/40 bg-forum-card text-forum-text hover:bg-forum-hover hover:border-forum-pink/40'
+                      ? 'border-primary bg-primary text-white'
+                      : 'border-forum-border/40 bg-forum-card text-forum-text hover:bg-forum-hover hover:border-primary/40'
                   }`}
                 >
                   {totalPages}
@@ -679,7 +679,7 @@ export default function TopicThreadsPage() {
               <button
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
-                className="ml-1 px-3 py-1.5 rounded border border-forum-border/40 bg-forum-card text-[11px] font-mono text-forum-text hover:bg-forum-hover hover:border-forum-pink/40 disabled:opacity-50 disabled:cursor-not-allowed transition-forum"
+                className="ml-1 px-3 py-1.5 rounded border border-forum-border/40 bg-forum-card text-[11px] font-mono text-forum-text hover:bg-forum-hover hover:border-primary/40 disabled:opacity-50 disabled:cursor-not-allowed transition-forum"
               >
                 Next →
               </button>
@@ -691,7 +691,7 @@ export default function TopicThreadsPage() {
                 onClick={() => navigate('/login')}
                 className="hud-panel px-4 py-2 hover:bg-forum-hover transition-forum cursor-pointer"
               >
-                <p className="text-[11px] text-forum-muted whitespace-nowrap hover:text-forum-pink transition-colors">
+                <p className="text-[11px] text-forum-muted whitespace-nowrap hover:text-primary transition-colors">
                   You must log in or register to post here.
                 </p>
               </button>
@@ -706,7 +706,7 @@ export default function TopicThreadsPage() {
               onClick={() => navigate('/login')}
               className="hud-panel px-4 py-2 hover:bg-forum-hover transition-forum cursor-pointer"
             >
-              <p className="text-[11px] text-forum-muted whitespace-nowrap hover:text-forum-pink transition-colors">
+              <p className="text-[11px] text-forum-muted whitespace-nowrap hover:text-primary transition-colors">
                 You must log in or register to post here.
               </p>
             </button>

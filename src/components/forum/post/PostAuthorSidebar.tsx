@@ -34,7 +34,7 @@ const PostAuthorSidebar = memo(({ author, isOP, currentUserId }: PostAuthorSideb
           <img
             src={displayAvatar}
             alt={author.username}
-            className="h-14 w-14 md:h-24 md:w-24 rounded-md border border-forum-border/50 object-cover cursor-pointer hover:border-forum-pink/50 transition-colors shadow-sm"
+            className="h-14 w-14 md:h-24 md:w-24  border border-forum-border/50 object-cover cursor-pointer hover:border-primary/50 transition-colors shadow-sm"
             onClick={() => navigate(`/user/${author.id}`)}
           />
         </ProfileHoverCard>
@@ -42,7 +42,7 @@ const PostAuthorSidebar = memo(({ author, isOP, currentUserId }: PostAuthorSideb
         <div className="flex flex-col flex-1 md:w-full items-start md:items-center text-left md:text-center mt-0 md:mt-1">
           <ProfileHoverCard user={author}>
             <span
-              className="text-[14px] md:text-[16px] font-bold tracking-wide text-forum-text hover:text-forum-pink transition-forum cursor-pointer leading-tight mb-1 md:mb-2 inline-block relative z-20"
+              className="text-[14px] md:text-[16px] font-bold tracking-wide text-forum-text hover:text-primary transition-forum cursor-pointer leading-tight mb-1 md:mb-2 inline-block relative z-20"
               onClick={() => navigate(`/user/${author.id}`)}
             >
               {author.username}
@@ -71,7 +71,7 @@ const PostAuthorSidebar = memo(({ author, isOP, currentUserId }: PostAuthorSideb
             )}
             
             {isOP && (
-              <span className="w-full text-center text-[9px] font-bold uppercase tracking-wider px-2 py-1 bg-forum-pink/10 border border-forum-pink/30 rounded text-forum-pink">
+              <span className="w-full text-center text-[9px] font-bold uppercase tracking-wider px-2 py-1 bg-primary/10 border border-primary/30 rounded text-primary">
                 Original Poster
               </span>
             )}

@@ -234,7 +234,7 @@ export default function VideoPlayer({ src, type = 'video/mp4' }: VideoPlayerProp
 
   if (error) {
     return (
-      <div className="my-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4 max-w-[400px]">
+      <div className="my-3  border border-red-500/30 bg-red-500/10 p-4 max-w-[400px]">
         <p className="text-[11px] text-red-400 font-mono">{error}</p>
       </div>
     );
@@ -243,7 +243,7 @@ export default function VideoPlayer({ src, type = 'video/mp4' }: VideoPlayerProp
   return (
     <div 
       ref={containerRef}
-      className="video-player-container my-3 rounded-lg overflow-hidden border border-forum-border bg-black max-w-[400px] relative"
+      className="video-player-container my-3  overflow-hidden border border-forum-border bg-black max-w-[400px] relative"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
       tabIndex={0}
@@ -262,7 +262,7 @@ export default function VideoPlayer({ src, type = 'video/mp4' }: VideoPlayerProp
         {/* Loading spinner */}
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-            <Loader2 size={32} className="text-forum-pink animate-spin" />
+            <Loader2 size={32} className="text-primary animate-spin" />
           </div>
         )}
 
@@ -272,7 +272,7 @@ export default function VideoPlayer({ src, type = 'video/mp4' }: VideoPlayerProp
             className="absolute inset-0 flex items-center justify-center bg-black/30 cursor-pointer transition-opacity"
             onClick={togglePlay}
           >
-            <div className="w-12 h-12 rounded-full bg-forum-pink/90 flex items-center justify-center hover:bg-forum-pink hover:scale-110 transition-all">
+            <div className="w-12 h-12  bg-primary/90 flex items-center justify-center hover:bg-primary hover:scale-110 transition-all">
               <Play size={24} className="text-white ml-0.5" fill="white" />
             </div>
           </div>
@@ -280,29 +280,29 @@ export default function VideoPlayer({ src, type = 'video/mp4' }: VideoPlayerProp
 
         {/* Controls */}
         <div 
-          className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/80 to-transparent p-2 transition-opacity duration-300 ${
+          className={`absolute bottom-0 left-0 right-0 bg-background via-black/80 to-transparent p-2 transition-opacity duration-300 ${
             showControls || !isPlaying ? 'opacity-100' : 'opacity-0'
           }`}
         >
           {/* Progress bar */}
           <div 
             ref={progressBarRef}
-            className="w-full h-1.5 mb-2 bg-white/20 rounded-full cursor-pointer relative group/progress"
+            className="w-full h-1.5 mb-2 bg-white/20  cursor-pointer relative group/progress"
             onClick={handleSeek}
           >
             {/* Buffered */}
             <div 
-              className="absolute h-full bg-white/30 rounded-full"
+              className="absolute h-full bg-white/30 "
               style={{ width: `${buffered}%` }}
             />
             {/* Progress */}
             <div 
-              className="absolute h-full bg-forum-pink rounded-full"
+              className="absolute h-full bg-primary "
               style={{ width: `${(currentTime / duration) * 100}%` }}
             />
             {/* Hover thumb */}
             <div 
-              className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-forum-pink rounded-full opacity-0 group-hover/progress:opacity-100 transition-opacity"
+              className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-primary  opacity-0 group-hover/progress:opacity-100 transition-opacity"
               style={{ left: `${(currentTime / duration) * 100}%`, marginLeft: '-6px' }}
             />
           </div>
@@ -311,7 +311,7 @@ export default function VideoPlayer({ src, type = 'video/mp4' }: VideoPlayerProp
             {/* Play/Pause */}
             <button
               onClick={togglePlay}
-              className="text-white hover:text-forum-pink transition-forum p-1"
+              className="text-white hover:text-primary transition-forum p-1"
               title="Play/Pause (Space)"
             >
               {isPlaying ? <Pause size={16} /> : <Play size={16} />}
@@ -320,7 +320,7 @@ export default function VideoPlayer({ src, type = 'video/mp4' }: VideoPlayerProp
             {/* Skip back */}
             <button
               onClick={() => skip(-10)}
-              className="text-white hover:text-forum-pink transition-forum p-1"
+              className="text-white hover:text-primary transition-forum p-1"
               title="Skip back 10s (←)"
             >
               <SkipBack size={14} />
@@ -329,7 +329,7 @@ export default function VideoPlayer({ src, type = 'video/mp4' }: VideoPlayerProp
             {/* Skip forward */}
             <button
               onClick={() => skip(10)}
-              className="text-white hover:text-forum-pink transition-forum p-1"
+              className="text-white hover:text-primary transition-forum p-1"
               title="Skip forward 10s (→)"
             >
               <SkipForward size={14} />
@@ -338,7 +338,7 @@ export default function VideoPlayer({ src, type = 'video/mp4' }: VideoPlayerProp
             {/* Volume */}
             <button
               onClick={toggleMute}
-              className="text-white hover:text-forum-pink transition-forum p-1"
+              className="text-white hover:text-primary transition-forum p-1"
               title="Mute (M)"
             >
               {isMuted || volume === 0 ? <VolumeX size={16} /> : <Volume2 size={16} />}
@@ -351,7 +351,7 @@ export default function VideoPlayer({ src, type = 'video/mp4' }: VideoPlayerProp
               step="0.05"
               value={volume}
               onChange={handleVolumeChange}
-              className="w-12 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-2 [&::-webkit-slider-thumb]:h-2 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer hover:[&::-webkit-slider-thumb]:bg-forum-pink"
+              className="w-12 h-1 bg-white/20  appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-2 [&::-webkit-slider-thumb]:h-2 [&::-webkit-slider-thumb]: [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer hover:[&::-webkit-slider-thumb]:bg-primary"
               title="Volume (↑↓)"
             />
 
@@ -366,7 +366,7 @@ export default function VideoPlayer({ src, type = 'video/mp4' }: VideoPlayerProp
             <div className="relative">
               <button
                 onClick={() => setShowSettings(!showSettings)}
-                className="text-white hover:text-forum-pink transition-forum p-1"
+                className="text-white hover:text-primary transition-forum p-1"
                 title="Settings"
               >
                 <Settings size={16} />
@@ -378,7 +378,7 @@ export default function VideoPlayer({ src, type = 'video/mp4' }: VideoPlayerProp
                     className="fixed inset-0 z-10" 
                     onClick={() => setShowSettings(false)}
                   />
-                  <div className="absolute bottom-full right-0 mb-2 bg-forum-card border border-forum-border rounded-lg p-2 min-w-[120px] z-20">
+                  <div className="absolute bottom-full right-0 mb-2 bg-forum-card border border-forum-border  p-2 min-w-[120px] z-20">
                     <div className="text-[9px] font-mono text-forum-muted uppercase mb-1">Speed</div>
                     {[0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2].map(rate => (
                       <button
@@ -386,7 +386,7 @@ export default function VideoPlayer({ src, type = 'video/mp4' }: VideoPlayerProp
                         onClick={() => changePlaybackRate(rate)}
                         className={`w-full text-left px-2 py-1 text-[10px] font-mono rounded transition-forum ${
                           playbackRate === rate 
-                            ? 'bg-forum-pink/20 text-forum-pink' 
+                            ? 'bg-primary/20 text-primary' 
                             : 'text-forum-text hover:bg-forum-hover'
                         }`}
                       >
@@ -401,7 +401,7 @@ export default function VideoPlayer({ src, type = 'video/mp4' }: VideoPlayerProp
             {/* Download */}
             <button
               onClick={downloadVideo}
-              className="text-white hover:text-forum-pink transition-forum p-1"
+              className="text-white hover:text-primary transition-forum p-1"
               title="Download"
             >
               <Download size={16} />
@@ -410,7 +410,7 @@ export default function VideoPlayer({ src, type = 'video/mp4' }: VideoPlayerProp
             {/* Fullscreen */}
             <button
               onClick={toggleFullscreen}
-              className="text-white hover:text-forum-pink transition-forum p-1"
+              className="text-white hover:text-primary transition-forum p-1"
               title="Fullscreen (F)"
             >
               {isFullscreen ? <Minimize size={16} /> : <Maximize size={16} />}

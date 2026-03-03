@@ -76,7 +76,7 @@ const QuickReplyTemplates = memo(({ onSelectTemplate }: QuickReplyTemplatesProps
               key={template.label}
               type="button"
               onClick={() => handleSelect(template.content)}
-              className="w-full text-left px-3 py-2 text-[10px] font-mono text-forum-text hover:bg-forum-pink/10 hover:text-forum-pink rounded transition-colors"
+              className="w-full text-left px-3 py-2 text-[10px] font-mono text-forum-text hover:bg-primary/10 hover:text-primary rounded transition-colors"
               role="menuitem"
             >
               {template.label}

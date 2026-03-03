@@ -176,10 +176,10 @@ export default function AnalyticsDashboard() {
     const maxPosts = Math.max(...dailyStats.map((d) => d.posts), 1);
 
     const summaryCards = [
-        { label: 'Posts (7d)', value: totalStats.posts7d, icon: MessageSquare, color: 'text-cyan-400', bg: 'bg-cyan-500/10' },
-        { label: 'Threads (7d)', value: totalStats.threads7d, icon: FileText, color: 'text-forum-pink', bg: 'bg-forum-pink/10' },
-        { label: 'New Users (7d)', value: totalStats.newUsers7d, icon: Users, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
-        { label: 'Activity', value: totalStats.posts7d + totalStats.threads7d, icon: Activity, color: 'text-amber-400', bg: 'bg-amber-500/10' },
+        { label: 'Posts (7d)', value: totalStats.posts7d, icon: MessageSquare, color: 'text-white', bg: 'bg-cyan-500/10' },
+        { label: 'Threads (7d)', value: totalStats.threads7d, icon: FileText, color: 'text-primary', bg: 'bg-primary/10' },
+        { label: 'New Users (7d)', value: totalStats.newUsers7d, icon: Users, color: 'text-white', bg: 'bg-emerald-600/40' },
+        { label: 'Activity', value: totalStats.posts7d + totalStats.threads7d, icon: Activity, color: 'text-amber-600', bg: 'bg-amber-500/10' },
     ];
 
     // Access control - only staff can view analytics
@@ -196,8 +196,8 @@ export default function AnalyticsDashboard() {
                 {/* Breadcrumb */}
                 <div className="mx-auto max-w-7xl px-4 lg:px-6 pt-4 pb-2">
                     <div className="flex items-center gap-1.5 text-[10px] font-mono text-forum-muted">
-                        <HomeIcon size={11} className="text-forum-pink" />
-                        <span className="text-forum-text hover:text-forum-pink transition-forum cursor-pointer" onClick={() => navigate('/')}>
+                        <HomeIcon size={11} className="text-primary" />
+                        <span className="text-forum-text hover:text-primary transition-forum cursor-pointer" onClick={() => navigate('/')}>
                             Forums
                         </span>
                         <ChevronRight size={10} />
@@ -209,8 +209,8 @@ export default function AnalyticsDashboard() {
                 <div className="mx-auto max-w-7xl px-4 lg:px-6 py-12">
                     <div className="hud-panel p-12 text-center">
                         <div className="flex justify-center mb-4">
-                            <div className="h-16 w-16 rounded-full bg-forum-pink/10 flex items-center justify-center">
-                                <Shield size={32} className="text-forum-pink" />
+                            <div className="h-16 w-16  bg-primary/10 flex items-center justify-center">
+                                <Shield size={32} className="text-primary" />
                             </div>
                         </div>
                         <h2 className="text-[18px] font-bold text-forum-text font-mono mb-2">Access Restricted</h2>
@@ -219,7 +219,7 @@ export default function AnalyticsDashboard() {
                         </p>
                         <button
                             onClick={() => navigate('/')}
-                            className="transition-forum rounded bg-forum-pink px-6 py-2.5 text-[11px] font-mono font-semibold text-white hover:shadow-pink-glow active:scale-95 border border-forum-pink/50"
+                            className="transition-forum rounded bg-primary px-6 py-2.5 text-[11px] font-mono font-semibold text-white hover:shadow-brutal-sm active:scale-95 border border-primary/50"
                         >
                             Back to Forums
                         </button>
@@ -243,8 +243,8 @@ export default function AnalyticsDashboard() {
             {/* Breadcrumb */}
             <div className="mx-auto max-w-7xl px-4 lg:px-6 pt-4 pb-2">
                 <div className="flex items-center gap-1.5 text-[10px] font-mono text-forum-muted">
-                    <HomeIcon size={11} className="text-forum-pink" />
-                    <span className="text-forum-text hover:text-forum-pink transition-forum cursor-pointer" onClick={() => navigate('/')}>
+                    <HomeIcon size={11} className="text-primary" />
+                    <span className="text-forum-text hover:text-primary transition-forum cursor-pointer" onClick={() => navigate('/')}>
                         Forums
                     </span>
                     <ChevronRight size={10} />
@@ -256,7 +256,7 @@ export default function AnalyticsDashboard() {
                 {/* Header */}
                 <div className="hud-panel p-6">
                     <h1 className="text-[18px] font-mono font-bold text-forum-text flex items-center gap-2">
-                        <BarChart3 size={18} className="text-forum-pink" />
+                        <BarChart3 size={18} className="text-primary" />
                         Forum Analytics
                     </h1>
                     <p className="text-[11px] font-mono text-forum-muted mt-1">Last 7 days overview</p>
@@ -267,7 +267,7 @@ export default function AnalyticsDashboard() {
                     {summaryCards.map((card) => (
                         <div key={card.label} className="hud-panel p-4">
                             <div className="flex items-center gap-2 mb-2">
-                                <div className={`p-1.5 rounded-md ${card.bg}`}>
+                                <div className={`p-1.5  ${card.bg}`}>
                                     <card.icon size={14} className={card.color} />
                                 </div>
                                 <span className="text-[9px] font-mono text-forum-muted uppercase tracking-wider">
@@ -284,7 +284,7 @@ export default function AnalyticsDashboard() {
                 {/* Daily Activity Bar Chart */}
                 <div className="hud-panel p-4">
                     <h3 className="text-[12px] font-mono font-bold text-forum-text mb-4 flex items-center gap-2">
-                        <Calendar size={13} className="text-forum-pink" />
+                        <Calendar size={13} className="text-primary" />
                         Daily Activity (Posts)
                     </h3>
                     <div className="flex items-end gap-2 h-40">
@@ -310,7 +310,7 @@ export default function AnalyticsDashboard() {
                     <div className="hud-panel overflow-hidden">
                         <div className="border-b border-forum-border px-4 py-3">
                             <h3 className="text-[12px] font-mono font-bold text-forum-text flex items-center gap-2">
-                                <TrendingUp size={13} className="text-forum-pink" />
+                                <TrendingUp size={13} className="text-primary" />
                                 Top Threads by Views
                             </h3>
                         </div>
@@ -325,7 +325,7 @@ export default function AnalyticsDashboard() {
                                         {i + 1}
                                     </span>
                                     <div className="flex-1 min-w-0">
-                                        <span className="text-[10px] font-mono text-forum-text line-clamp-1 hover:text-forum-pink">
+                                        <span className="text-[10px] font-mono text-forum-text line-clamp-1 hover:text-primary">
                                             {thread.title}
                                         </span>
                                         <div className="flex items-center gap-2 text-[8px] font-mono text-forum-muted mt-0.5">
@@ -343,7 +343,7 @@ export default function AnalyticsDashboard() {
                     <div className="hud-panel overflow-hidden">
                         <div className="border-b border-forum-border px-4 py-3">
                             <h3 className="text-[12px] font-mono font-bold text-forum-text flex items-center gap-2">
-                                <Users size={13} className="text-forum-pink" />
+                                <Users size={13} className="text-primary" />
                                 Top Users by Posts
                             </h3>
                         </div>
@@ -360,15 +360,15 @@ export default function AnalyticsDashboard() {
                                     <img
                                         src={user.avatar}
                                         alt={user.username}
-                                        className="h-7 w-7 rounded-md border border-forum-border object-cover"
+                                        className="h-7 w-7  border border-forum-border object-cover"
                                     />
                                     <div className="flex-1">
-                                        <span className="text-[10px] font-mono font-semibold text-forum-text hover:text-forum-pink">
+                                        <span className="text-[10px] font-mono font-semibold text-forum-text hover:text-primary">
                                             {user.username}
                                         </span>
                                         <div className="flex items-center gap-2 text-[8px] font-mono text-forum-muted mt-0.5">
                                             <span>{user.postCount} posts</span>
-                                            <span className="text-forum-pink">{user.reputation} rep</span>
+                                            <span className="text-primary">{user.reputation} rep</span>
                                         </div>
                                     </div>
                                 </div>

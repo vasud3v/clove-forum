@@ -6,7 +6,6 @@ import NotificationCenter from '@/components/forum/NotificationCenter';
 import RoleBadge from '@/components/forum/RoleBadge';
 import SearchDropdown from '@/components/forum/SearchDropdown';
 import { NavbarBreadcrumb } from '@/components/forum/NavbarBreadcrumb';
-import { KeyboardShortcutsHint } from '@/components/forum/KeyboardShortcutsHint';
 import { useAuth } from '@/context/AuthContext';
 import { useForumContext } from '@/context/ForumContext';
 import { usePermissions } from '@/hooks/usePermissions';
@@ -121,13 +120,13 @@ export default function ForumHeader({
   return (
     <header className="w-full">
       {/* Top Navigation Bar */}
-      <div className="sticky top-0 z-header border-b border-forum-border bg-gradient-to-r from-forum-card via-forum-card to-forum-card/80 backdrop-blur-xl shadow-lg overflow-visible">
+      <div className="sticky top-0 z-header border-b-4 border-border bg-primary overflow-visible">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 lg:px-6 gap-4 overflow-visible">
           {/* Logo Section - Enhanced */}
           <div className="flex items-center gap-3 lg:gap-4 flex-shrink-0">
             <button
               onClick={onMobileMenuToggle}
-              className="group transition-all duration-300 rounded-lg p-2 text-forum-muted hover:bg-forum-pink/10 hover:text-forum-pink lg:hidden"
+              className="group transition-all duration-150 p-2 border-2 border-primary-foreground/30 text-primary-foreground hover:bg-secondary hover:text-secondary-foreground lg:hidden"
               aria-label="Toggle menu"
             >
               <div className="relative w-5 h-5 flex items-center justify-center">
@@ -138,14 +137,14 @@ export default function ForumHeader({
                 )}
               </div>
             </button>
-            
-            <button 
+
+            <button
               onClick={() => navigate('/')}
-              className="flex items-center gap-0 cursor-pointer group h-9"
+              className="flex items-center gap-0 cursor-pointer group h-10 transition-transform duration-150 hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px]"
               aria-label="Go to home"
             >
               <div className="transition-all duration-300 group-hover:scale-110 group-active:scale-95">
-                <ChugliLogo size={32} />
+                <ChugliLogo size={40} />
               </div>
             </button>
           </div>
@@ -155,7 +154,8 @@ export default function ForumHeader({
             <div className="relative group w-full overflow-visible">
               <Search
                 size={16}
-                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-forum-muted group-focus-within:text-forum-pink transition-colors duration-200 pointer-events-none"
+                strokeWidth={3}
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-foreground/70 group-focus-within:text-foreground transition-colors duration-150 pointer-events-none font-bold"
               />
               <input
                 type="text"
@@ -164,7 +164,7 @@ export default function ForumHeader({
                 onChange={(e) => handleSearchChange(e.target.value)}
                 onKeyDown={handleSearchKeyDown}
                 onFocus={handleFocus}
-                className="transition-all duration-200 w-full rounded-lg border border-forum-border bg-forum-bg/40 hover:bg-forum-bg/60 hover:border-forum-border/80 py-2 pl-10 pr-10 text-[12px] font-mono text-forum-text placeholder-forum-muted/70 outline-none focus:border-forum-pink focus:bg-forum-bg focus:placeholder-forum-muted focus:shadow-lg focus:shadow-forum-pink/20 focus:ring-2 focus:ring-forum-pink/30"
+                className="transition-all duration-150 w-full border-3 border-border bg-background py-2 pl-10 pr-10 text-sm font-bold text-foreground placeholder-muted-foreground outline-none focus:ring-4 focus:ring-accent shadow-brutal-sm"
               />
               {liveQuery && (
                 <button
@@ -173,7 +173,7 @@ export default function ForumHeader({
                     onSearchChange('');
                     setIsDropdownOpen(false);
                   }}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-forum-muted hover:text-forum-pink transition-all duration-200 hover:rotate-90 hover:scale-110"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-all duration-150"
                   aria-label="Clear search"
                 >
                   <X size={14} />
@@ -201,14 +201,11 @@ export default function ForumHeader({
             {/* Mobile Search */}
             <button
               onClick={() => navigate('/search')}
-              className="group transition-all duration-200 rounded-lg p-2 text-forum-muted hover:bg-forum-hover hover:text-forum-pink md:hidden"
+              className="group transition-all duration-150 p-2 border-2 border-primary-foreground/30 text-primary-foreground hover:bg-secondary hover:text-secondary-foreground md:hidden"
               aria-label="Open search"
             >
               <Search size={18} className="group-hover:scale-110 transition-transform" />
             </button>
-
-            {/* Keyboard Shortcuts */}
-            <KeyboardShortcutsHint />
 
             {/* Notifications */}
             {isAuthenticated && <NotificationCenter />}
@@ -220,30 +217,30 @@ export default function ForumHeader({
                 <div ref={userDropdownRef} className="relative">
                   <button
                     onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
-                    className="group transition-all duration-200 flex items-center gap-2 rounded-lg border border-forum-border p-1.5 hover:border-forum-pink/50 hover:bg-forum-hover hover:shadow-md active:scale-95"
+                    className="group transition-all duration-150 flex items-center gap-2 border-2 border-primary-foreground/30 p-1.5 hover:bg-secondary hover:text-secondary-foreground hover:border-border active:translate-y-[1px]"
                     aria-expanded={isUserDropdownOpen}
                   >
                     <img
                       src={currentUser.avatar}
                       alt={currentUser.username}
-                      className="h-7 w-7 rounded-md object-cover ring-1 ring-forum-pink/30 group-hover:ring-forum-pink/50 transition-all"
+                      className="h-7 w-7 object-cover border-2 border-border transition-all"
                     />
-                    <span className="hidden text-[11px] font-medium text-forum-text font-mono sm:inline-block max-w-[100px] truncate">
+                    <span className="hidden text-xs font-bold text-primary-foreground sm:inline-block max-w-[100px] truncate uppercase">
                       {currentUser.username}
                     </span>
-                    <ChevronDown 
-                      size={14} 
+                    <ChevronDown
+                      size={14}
                       className={`hidden sm:block transition-transform duration-300 ${isUserDropdownOpen ? 'rotate-180' : ''}`}
                     />
                   </button>
 
                   {/* User Dropdown Menu */}
                   {isUserDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-48 rounded-lg border border-forum-border bg-forum-card shadow-xl backdrop-blur-sm z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="absolute right-0 mt-2 w-48 border-3 border-border bg-background shadow-brutal z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
                       {/* User Info Header */}
-                      <div className="border-b border-forum-border p-3 bg-forum-bg/50">
-                        <div className="text-[11px] font-mono text-forum-muted">Signed in as</div>
-                        <div className="text-sm font-bold text-forum-text truncate">{currentUser.username}</div>
+                      <div className="border-b-3 border-border p-3 bg-muted">
+                        <div className="text-xs font-bold text-muted-foreground uppercase">Signed in as</div>
+                        <div className="text-sm font-black text-foreground truncate">{currentUser.username}</div>
                       </div>
 
                       {/* Menu Items */}
@@ -253,7 +250,7 @@ export default function ForumHeader({
                             navigate(`/user/${currentUser.id}`);
                             setIsUserDropdownOpen(false);
                           }}
-                          className="w-full px-4 py-2.5 text-left text-[11px] font-mono text-forum-muted hover:text-forum-pink hover:bg-forum-hover transition-all duration-150 flex items-center gap-2 group"
+                          className="w-full px-4 py-2.5 text-left text-xs font-bold text-foreground hover:bg-secondary hover:text-secondary-foreground transition-all duration-150 flex items-center gap-2 group border-b border-border/30"
                         >
                           <Users size={14} className="group-hover:scale-110 transition-transform" />
                           View Profile
@@ -263,7 +260,7 @@ export default function ForumHeader({
                             navigate(`/user/${currentUser.id}?tab=settings`);
                             setIsUserDropdownOpen(false);
                           }}
-                          className="w-full px-4 py-2.5 text-left text-[11px] font-mono text-forum-muted hover:text-forum-pink hover:bg-forum-hover transition-all duration-150 flex items-center gap-2 group"
+                          className="w-full px-4 py-2.5 text-left text-xs font-bold text-foreground hover:bg-secondary hover:text-secondary-foreground transition-all duration-150 flex items-center gap-2 group border-b border-border/30"
                         >
                           <Settings size={14} className="group-hover:rotate-180 transition-transform duration-500" />
                           Settings
@@ -276,7 +273,7 @@ export default function ForumHeader({
                                 navigate('/admin');
                                 setIsUserDropdownOpen(false);
                               }}
-                              className="w-full px-4 py-2.5 text-left text-[11px] font-mono text-forum-muted hover:text-forum-pink hover:bg-forum-hover transition-all duration-150 flex items-center gap-2 group"
+                              className="w-full px-4 py-2.5 text-left text-xs font-bold text-foreground hover:bg-secondary hover:text-secondary-foreground transition-all duration-150 flex items-center gap-2 group border-b border-border/30"
                             >
                               <Shield size={14} className="group-hover:scale-110 transition-transform" />
                               Admin Panel
@@ -286,14 +283,14 @@ export default function ForumHeader({
                       </div>
 
                       {/* Logout Button */}
-                      <div className="border-t border-forum-border p-1">
+                      <div className="border-t-3 border-border p-1">
                         <button
                           onClick={async () => {
                             await signOut();
                             setIsUserDropdownOpen(false);
                             navigate('/');
                           }}
-                          className="w-full px-4 py-2.5 text-left text-[11px] font-mono text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all duration-150 flex items-center gap-2 group rounded-md"
+                          className="w-full px-4 py-2.5 text-left text-xs font-black text-destructive uppercase hover:bg-destructive hover:text-destructive-foreground transition-all duration-150 flex items-center gap-2 group"
                         >
                           <LogOut size={14} className="group-hover:translate-x-1 transition-transform" />
                           Logout
@@ -307,14 +304,14 @@ export default function ForumHeader({
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => navigate('/login')}
-                  className="group transition-all duration-200 flex items-center gap-1.5 rounded-lg border border-forum-border px-3 py-2 text-[11px] font-mono font-medium text-forum-muted hover:border-forum-pink/50 hover:bg-forum-hover hover:text-forum-pink active:scale-95"
+                  className="group transition-all duration-150 flex items-center gap-1.5 border-2 border-primary-foreground/30 px-3 py-2 text-xs font-bold text-primary-foreground uppercase hover:bg-secondary hover:text-secondary-foreground hover:border-border active:translate-y-[1px]"
                 >
                   <LoginIcon size={13} className="group-hover:scale-110 transition-transform" />
                   <span className="hidden sm:inline">Sign In</span>
                 </button>
                 <button
                   onClick={() => navigate('/signup')}
-                  className="group transition-all duration-200 flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-forum-pink to-forum-pink/80 px-4 py-2 text-[11px] font-mono font-bold text-white hover:from-forum-pink/90 hover:to-forum-pink/70 hover:shadow-lg hover:shadow-forum-pink/30 active:scale-95"
+                  className="group transition-all duration-150 flex items-center gap-1.5 bg-secondary text-secondary-foreground border-2 border-border px-4 py-2 text-xs font-black uppercase shadow-brutal-sm hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-brutal active:translate-x-[1px] active:translate-y-[1px] active:shadow-none"
                 >
                   <UserPlus size={13} className="group-hover:scale-110 transition-transform" />
                   <span className="hidden sm:inline">Sign Up</span>
@@ -326,34 +323,24 @@ export default function ForumHeader({
       </div>
 
       {/* Navigation Bar - Enhanced */}
-      <nav className="hidden md:block border-b border-forum-border/50 bg-forum-card-alt/40 backdrop-blur-sm relative">
+      <nav className="hidden md:block border-b-3 border-border bg-background relative">
         <div className="mx-auto max-w-7xl px-4 lg:px-6">
-          <div className="flex items-center gap-0.5 h-11 overflow-x-auto scrollbar-hide">
+          <div className="flex items-center gap-0 h-11 overflow-x-auto scrollbar-hide">
             {navLinks.map((link, idx) => (
-              <div key={link.label} className="relative group">
-                <button
-                  onClick={() => navigate(link.href)}
-                  className={`transition-all duration-200 flex items-center gap-1.5 rounded-md px-3.5 py-2 text-[11px] font-mono font-medium whitespace-nowrap relative overflow-hidden ${
-                    link.active
-                      ? 'text-forum-pink'
-                      : 'text-forum-muted hover:text-forum-text'
+              <button
+                key={link.label}
+                onClick={() => navigate(link.href)}
+                className={`flex items-center gap-1.5 px-3.5 py-1 text-xs font-bold uppercase tracking-wider whitespace-nowrap border-b-4 transition-all duration-150 relative ${link.active
+                    ? 'text-primary border-b-4 border-primary'
+                    : 'text-muted-foreground hover:text-foreground border-b-4 border-transparent hover:border-border'
                   }`}
-                >
-                  {/* Active indicator underline */}
-                  {link.active && (
-                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-forum-pink/0 via-forum-pink to-forum-pink/0 animate-pulse" />
-                  )}
-                  
-                  <link.icon 
-                    size={13} 
-                    className={`transition-all duration-200 ${link.active ? 'scale-110' : 'group-hover:scale-110'}`}
-                  />
-                  {link.label}
-                </button>
-                
-                {/* Hover background effect */}
-                <div className={`absolute inset-0 rounded-md bg-forum-pink/5 -z-10 transition-all duration-200 ${link.active ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />
-              </div>
+              >
+                <link.icon
+                  size={13}
+                  className={`transition-transform duration-150 ${link.active ? 'scale-110' : 'group-hover:scale-110'}`}
+                />
+                {link.label}
+              </button>
             ))}
           </div>
         </div>

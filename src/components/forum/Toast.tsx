@@ -31,13 +31,13 @@ const Toast = ({ toast, onClose }: ToastProps) => {
   const getIcon = () => {
     switch (toast.type) {
       case 'success':
-        return <Check size={14} className="text-emerald-400" />;
+        return <Check size={14} className="text-emerald-700" />;
       case 'error':
-        return <AlertCircle size={14} className="text-red-400" />;
+        return <AlertCircle size={14} className="text-red-600" />;
       case 'warning':
-        return <AlertTriangle size={14} className="text-amber-400" />;
+        return <AlertTriangle size={14} className="text-amber-600" />;
       case 'info':
-        return <Info size={14} className="text-cyan-400" />;
+        return <Info size={14} className="text-cyan-600" />;
     }
   };
 
@@ -56,7 +56,7 @@ const Toast = ({ toast, onClose }: ToastProps) => {
 
   return (
     <div
-      className={`flex items-center gap-2 px-4 py-3 rounded-md border backdrop-blur-sm transition-all duration-300 ${getStyles()} ${
+      className={`flex items-center gap-2 px-4 py-3  border  transition-all duration-300 ${getStyles()} ${
         isExiting ? 'opacity-0 translate-x-full' : 'opacity-100 translate-x-0'
       }`}
     >

@@ -97,28 +97,28 @@ export default function MembersPage() {
       case 'admin':
         return <ShieldCheck size={10} className="text-red-400" />;
       case 'moderator':
-        return <ShieldCheck size={10} className="text-cyan-400" />;
+        return <ShieldCheck size={10} className="text-black" />;
       case 'elite':
-        return <Crown size={10} className="text-amber-400" />;
+        return <Crown size={10} className="text-amber-600" />;
       case 'veteran':
-        return <Star size={10} className="text-purple-400" />;
+        return <Star size={10} className="text-black" />;
       default:
-        return <Zap size={10} className="text-forum-pink" />;
+        return <Zap size={10} className="text-primary" />;
     }
   };
 
   const getRankBadgeClasses = (rank?: string) => {
     switch (rank?.toLowerCase()) {
       case 'admin':
-        return 'border-red-500/30 bg-red-500/10 text-red-400';
+        return 'border-red-500/30 bg-red-500/10 text-red-600';
       case 'moderator':
-        return 'border-cyan-500/30 bg-cyan-500/10 text-cyan-400';
+        return 'border-cyan-600 bg-cyan-600/40 text-black';
       case 'elite':
-        return 'border-amber-500/30 bg-amber-500/10 text-amber-400';
+        return 'border-amber-500/30 bg-amber-500/10 text-amber-600';
       case 'veteran':
-        return 'border-purple-500/30 bg-purple-500/10 text-purple-400';
+        return 'border-purple-600 bg-purple-600/40 text-black';
       default:
-        return 'border-forum-pink/30 bg-forum-pink/10 text-forum-pink';
+        return 'border-primary/30 bg-primary/10 text-primary';
     }
   };
 
@@ -141,9 +141,9 @@ export default function MembersPage() {
       {/* Breadcrumb */}
       <div className="mx-auto max-w-7xl px-4 lg:px-6 pt-4 pb-2">
         <div className="flex items-center gap-1.5 text-[10px] font-mono text-forum-muted">
-          <HomeIcon size={11} className="text-forum-pink" />
+          <HomeIcon size={11} className="text-primary" />
           <span
-            className="text-forum-text hover:text-forum-pink transition-forum cursor-pointer"
+            className="text-forum-text hover:text-primary transition-forum cursor-pointer"
             onClick={() => navigate('/')}
           >
             Forums
@@ -160,8 +160,8 @@ export default function MembersPage() {
             {/* Page header */}
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2.5">
-                <div className="flex h-8 w-8 items-center justify-center rounded-md bg-forum-pink/10 border border-forum-pink/20">
-                  <UsersIcon size={14} className="text-forum-pink" />
+                <div className="flex h-8 w-8 items-center justify-center  bg-primary/10 border border-primary/20">
+                  <UsersIcon size={14} className="text-primary" />
                 </div>
                 <div>
                   <h1 className="text-[16px] font-bold text-forum-text font-mono">
@@ -184,7 +184,7 @@ export default function MembersPage() {
                     placeholder="Search members..."
                     value={memberSearch}
                     onChange={(e) => setMemberSearch(e.target.value)}
-                    className="transition-forum w-full rounded border border-forum-border bg-forum-bg py-2 pl-8 pr-4 text-[11px] font-mono text-forum-text placeholder-forum-muted outline-none focus:border-forum-pink focus:ring-1 focus:ring-forum-pink/30"
+                    className="transition-forum w-full rounded border border-forum-border bg-forum-bg py-2 pl-8 pr-4 text-[11px] font-mono text-forum-text placeholder-forum-muted outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                   />
                 </div>
                 <div className="flex items-center gap-1">
@@ -193,7 +193,7 @@ export default function MembersPage() {
                       key={opt.key}
                       onClick={() => setSortBy(opt.key)}
                       className={`transition-forum rounded px-2.5 py-1.5 text-[9px] font-mono font-medium ${sortBy === opt.key
-                          ? 'bg-forum-pink/10 text-forum-pink border border-forum-pink/20'
+                          ? 'bg-primary/10 text-primary border border-primary/20'
                           : 'text-forum-muted hover:text-forum-text hover:bg-forum-hover border border-transparent'
                         }`}
                     >
@@ -212,7 +212,7 @@ export default function MembersPage() {
                   <button
                     key={member.id}
                     onClick={() => navigate(`/user/${member.id}`)}
-                    className="transition-forum hud-panel p-3 flex items-center gap-3 hover:border-forum-pink/30 hover:shadow-[0_0_20px_rgba(255,45,146,0.1)] hover:-translate-y-[1px] group text-left"
+                    className="transition-forum hud-panel p-3 flex items-center gap-3 hover:border-primary/30 hover:shadow-[0_0_20px_rgba(255,45,146,0.1)] hover:-translate-y-[1px] group text-left"
                   >
                     {/* Rank number */}
                     <span className="text-[10px] font-mono text-forum-muted/30 w-4 flex-shrink-0 text-right">
@@ -224,21 +224,21 @@ export default function MembersPage() {
                       <img
                         src={member.avatar}
                         alt={member.username}
-                        className="h-10 w-10 rounded-lg object-cover border border-forum-border group-hover:border-forum-pink/30 transition-forum"
+                        className="h-10 w-10  object-cover border border-forum-border group-hover:border-primary/30 transition-forum"
                       />
                       {member.isOnline && (
-                        <div className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-forum-card bg-emerald-400" />
+                        <div className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5  border-2 border-forum-card bg-emerald-400" />
                       )}
                     </div>
 
                     {/* Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-[11px] font-bold text-forum-text font-mono group-hover:text-forum-pink transition-forum truncate">
+                        <span className="text-[11px] font-bold text-forum-text font-mono group-hover:text-primary transition-forum truncate">
                           {member.username}
                         </span>
                         {member.rank && (
-                          <span className={`inline-flex items-center gap-0.5 rounded-sm border px-1.5 py-[1px] text-[7px] font-mono font-bold uppercase tracking-wider ${getRankBadgeClasses(member.rank)}`}>
+                          <span className={`inline-flex items-center gap-0.5  border px-1.5 py-[1px] text-[7px] font-mono font-bold uppercase tracking-wider ${getRankBadgeClasses(member.rank)}`}>
                             {getRankIcon(member.rank)}
                             {member.rank}
                           </span>
@@ -249,7 +249,7 @@ export default function MembersPage() {
                           <MessageSquare size={8} />
                           {member.postCount.toLocaleString()} posts
                         </span>
-                        <span className="flex items-center gap-1 text-[9px] font-mono text-forum-pink">
+                        <span className="flex items-center gap-1 text-[9px] font-mono text-primary">
                           <TrendingUp size={8} />
                           {rep.toLocaleString()} rep
                         </span>
@@ -266,7 +266,7 @@ export default function MembersPage() {
 
             {sortedMembers.length === 0 && (
               <div className="flex flex-col items-center justify-center hud-panel px-6 py-16">
-                <UsersIcon size={40} className="text-forum-pink mx-auto mb-3" />
+                <UsersIcon size={40} className="text-primary mx-auto mb-3" />
                 <h3 className="text-[13px] font-bold text-forum-text font-mono mb-1">
                   No members found
                 </h3>

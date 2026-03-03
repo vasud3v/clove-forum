@@ -95,23 +95,23 @@ export default function AdminOverviewTab({ stats, recentLogs, onNavigateTab, for
   };
 
   const statCards = [
-    { label: 'Total Users', value: stats.totalUsers, icon: Users, color: 'text-cyan-400', growth: growthMetrics.usersGrowth },
-    { label: 'Total Threads', value: stats.totalThreads, icon: FileText, color: 'text-forum-pink', growth: growthMetrics.threadsGrowth },
-    { label: 'Total Posts', value: stats.totalPosts, icon: MessageSquare, color: 'text-emerald-400', growth: growthMetrics.postsGrowth },
-    { label: 'Online Now', value: stats.onlineUsers, icon: Eye, color: 'text-amber-400', growth: null },
-    { label: 'Pending Reports', value: stats.pendingReports, icon: AlertTriangle, color: 'text-red-400', growth: null, alert: stats.pendingReports > 0 },
+    { label: 'Total Users', value: stats.totalUsers, icon: Users, color: 'text-white', growth: growthMetrics.usersGrowth },
+    { label: 'Total Threads', value: stats.totalThreads, icon: FileText, color: 'text-primary', growth: growthMetrics.threadsGrowth },
+    { label: 'Total Posts', value: stats.totalPosts, icon: MessageSquare, color: 'text-white', growth: growthMetrics.postsGrowth },
+    { label: 'Online Now', value: stats.onlineUsers, icon: Eye, color: 'text-amber-600', growth: null },
+    { label: 'Pending Reports', value: stats.pendingReports, icon: AlertTriangle, color: 'text-red-600', growth: null, alert: stats.pendingReports > 0 },
     { label: 'Banned Users', value: stats.bannedUsers, icon: Shield, color: 'text-red-500', growth: null },
-    { label: 'Staff Members', value: stats.staffCount, icon: Shield, color: 'text-blue-400', growth: null },
-    { label: 'New Users (24h)', value: stats.newUsersToday, icon: TrendingUp, color: 'text-green-400', growth: null },
+    { label: 'Staff Members', value: stats.staffCount, icon: Shield, color: 'text-black', growth: null },
+    { label: 'New Users (24h)', value: stats.newUsersToday, icon: TrendingUp, color: 'text-black', growth: null },
   ];
 
   const quickActions = [
-    { label: 'Quick Setup', tab: 'quicksetup', icon: Zap, color: 'text-forum-pink' },
-    { label: 'Manage Categories', tab: 'categories', icon: FileText, color: 'text-cyan-400' },
-    { label: 'Manage Threads', tab: 'threads', icon: FileText, color: 'text-purple-400' },
-    { label: 'Manage Users', tab: 'users', icon: Users, color: 'text-blue-400' },
-    { label: 'View Reports', tab: 'reports', icon: AlertTriangle, color: 'text-red-400', badge: stats.pendingReports },
-    { label: 'Analytics', tab: 'analytics', icon: TrendingUp, color: 'text-emerald-400' },
+    { label: 'Quick Setup', tab: 'quicksetup', icon: Zap, color: 'text-primary' },
+    { label: 'Manage Categories', tab: 'categories', icon: FileText, color: 'text-black' },
+    { label: 'Manage Threads', tab: 'threads', icon: FileText, color: 'text-black' },
+    { label: 'Manage Users', tab: 'users', icon: Users, color: 'text-black' },
+    { label: 'View Reports', tab: 'reports', icon: AlertTriangle, color: 'text-red-600', badge: stats.pendingReports },
+    { label: 'Analytics', tab: 'analytics', icon: TrendingUp, color: 'text-black' },
   ];
 
   const healthScore = Math.round(
@@ -122,9 +122,9 @@ export default function AdminOverviewTab({ stats, recentLogs, onNavigateTab, for
   );
 
   const getHealthColor = (score: number) => {
-    if (score >= 80) return 'text-emerald-400';
-    if (score >= 60) return 'text-amber-400';
-    return 'text-red-400';
+    if (score >= 80) return 'text-black';
+    if (score >= 60) return 'text-amber-600';
+    return 'text-red-600';
   };
 
   return (
@@ -134,7 +134,7 @@ export default function AdminOverviewTab({ stats, recentLogs, onNavigateTab, for
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-[12px] font-mono font-bold text-forum-text flex items-center gap-2">
-              <Activity size={13} className="text-forum-pink" /> Forum Health Score
+              <Activity size={13} className="text-primary" /> Forum Health Score
             </h3>
             <p className="text-[9px] font-mono text-forum-muted mt-1">Overall forum performance and engagement</p>
           </div>
@@ -143,7 +143,7 @@ export default function AdminOverviewTab({ stats, recentLogs, onNavigateTab, for
             <div className="text-[9px] font-mono text-forum-muted">/ 100</div>
           </div>
         </div>
-        <div className="mt-3 h-2 bg-forum-hover rounded-full overflow-hidden">
+        <div className="mt-3 h-2 bg-forum-hover  overflow-hidden">
           <div
             className={`h-full transition-all duration-500 ${healthScore >= 80 ? 'bg-emerald-400' : healthScore >= 60 ? 'bg-amber-400' : 'bg-red-400'}`}
             style={{ width: `${healthScore}%` }}
@@ -167,7 +167,7 @@ export default function AdminOverviewTab({ stats, recentLogs, onNavigateTab, for
             <div className="flex items-end justify-between">
               <div className="text-[24px] font-mono font-bold text-forum-text">{stat.value.toLocaleString()}</div>
               {stat.growth !== null && stat.growth !== 0 && (
-                <div className={`text-[10px] font-mono font-bold ${stat.growth > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                <div className={`text-[10px] font-mono font-bold ${stat.growth > 0 ? 'text-black' : 'text-red-600'}`}>
                   {stat.growth > 0 ? '+' : ''}{stat.growth}%
                 </div>
               )}
@@ -181,18 +181,18 @@ export default function AdminOverviewTab({ stats, recentLogs, onNavigateTab, for
         {/* Quick Actions */}
         <div className="hud-panel p-4">
           <h3 className="text-[12px] font-mono font-bold text-forum-text mb-3 flex items-center gap-2">
-            <Zap size={13} className="text-forum-pink" /> Quick Actions
+            <Zap size={13} className="text-primary" /> Quick Actions
           </h3>
           <div className="grid grid-cols-2 gap-2">
             {quickActions.map((action) => (
               <button
                 key={action.tab}
                 onClick={() => onNavigateTab(action.tab)}
-                className="transition-forum flex items-center gap-2 rounded-md border border-forum-border/30 bg-forum-bg/50 px-3 py-2.5 text-[10px] font-mono text-forum-muted hover:text-forum-pink hover:border-forum-pink/30 relative"
+                className="transition-forum flex items-center gap-2  border border-forum-border/30 bg-forum-bg/50 px-3 py-2.5 text-[10px] font-mono text-forum-muted hover:text-primary hover:border-primary/30 relative"
               >
                 <action.icon size={12} className={action.color} /> {action.label}
                 {action.badge && action.badge > 0 && (
-                  <span className="absolute -top-1 -right-1 rounded-full bg-red-500 px-1.5 py-[1px] text-[8px] text-white">
+                  <span className="absolute -top-1 -right-1  bg-red-500 px-1.5 py-[1px] text-[8px] text-black">
                     {action.badge}
                   </span>
                 )}
@@ -204,13 +204,13 @@ export default function AdminOverviewTab({ stats, recentLogs, onNavigateTab, for
         {/* Top Contributors */}
         <div className="hud-panel p-4">
           <h3 className="text-[12px] font-mono font-bold text-forum-text mb-3 flex items-center gap-2">
-            <Award size={13} className="text-forum-pink" /> Top Contributors
+            <Award size={13} className="text-primary" /> Top Contributors
           </h3>
           <div className="space-y-2">
             {topContributors.map((user, idx) => (
               <div key={idx} className="flex items-center justify-between text-[10px] font-mono">
                 <div className="flex items-center gap-2">
-                  <span className={`text-[8px] font-bold ${idx === 0 ? 'text-amber-400' : idx === 1 ? 'text-gray-400' : idx === 2 ? 'text-orange-600' : 'text-forum-muted'}`}>
+                  <span className={`text-[8px] font-bold ${idx === 0 ? 'text-amber-600' : idx === 1 ? 'text-gray-600' : idx === 2 ? 'text-orange-700' : 'text-forum-muted'}`}>
                     #{idx + 1}
                   </span>
                   <span className="text-forum-text">{user.username}</span>
@@ -226,7 +226,7 @@ export default function AdminOverviewTab({ stats, recentLogs, onNavigateTab, for
       <div className="hud-panel overflow-hidden">
         <div className="border-b border-forum-border px-4 py-3">
           <h3 className="text-[12px] font-mono font-bold text-forum-text flex items-center gap-2">
-            <Clock size={13} className="text-forum-pink" /> Recent Moderation Actions
+            <Clock size={13} className="text-primary" /> Recent Moderation Actions
           </h3>
         </div>
         <div className="divide-y divide-forum-border/20 max-h-[300px] overflow-y-auto">
@@ -238,7 +238,7 @@ export default function AdminOverviewTab({ stats, recentLogs, onNavigateTab, for
           ) : (
             recentLogs.slice(0, 10).map((log) => (
               <div key={log.id} className="px-4 py-2.5 flex items-center gap-3 text-[10px] font-mono hover:bg-forum-hover/30 transition-forum">
-                <Shield size={10} className="text-forum-pink flex-shrink-0" />
+                <Shield size={10} className="text-primary flex-shrink-0" />
                 <span className="text-forum-text font-semibold">{log.moderatorName || 'Staff'}</span>
                 <span className="text-forum-muted">{log.action.replace(/_/g, ' ')}</span>
                 {log.targetUserName && (

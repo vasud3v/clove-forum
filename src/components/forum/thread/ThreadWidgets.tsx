@@ -18,7 +18,7 @@ export function ReadingProgressBar() {
   return (
     <div className="fixed top-0 left-0 right-0 z-50 h-[2px] bg-forum-bg/50">
       <div
-        className="h-full bg-gradient-to-r from-forum-pink to-forum-pink/60 transition-all duration-100"
+        className="h-full bg-primary to-forum-pink/60 transition-all duration-100"
         style={{ width: `${progress}%` }}
       />
     </div>
@@ -39,7 +39,7 @@ export function ScrollToTopButton() {
   return (
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      className="fixed bottom-24 right-6 z-30 transition-forum hud-panel h-9 w-9 flex items-center justify-center text-forum-muted hover:text-forum-pink hover:border-forum-pink/30 hover:shadow-pink-glow"
+      className="fixed bottom-24 right-6 z-30 transition-forum hud-panel h-9 w-9 flex items-center justify-center text-forum-muted hover:text-primary hover:border-primary/30 hover:shadow-brutal-sm"
       title="Scroll to top"
     >
       <ArrowUp size={14} />

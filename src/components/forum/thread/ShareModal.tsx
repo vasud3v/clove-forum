@@ -23,13 +23,13 @@ export default function ShareModal({ isOpen, onClose, threadTitle, threadId }: S
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/60 "
         onClick={onClose}
       />
       <div className="relative hud-panel w-[400px] max-w-[90vw] overflow-hidden">
         <div className="flex items-center justify-between px-4 py-3 border-b border-forum-border/20">
           <span className="text-[12px] font-mono font-bold text-forum-text flex items-center gap-2">
-            <Share2 size={13} className="text-forum-pink" /> Share Thread
+            <Share2 size={13} className="text-primary" /> Share Thread
           </span>
           <button
             onClick={onClose}
@@ -44,14 +44,14 @@ export default function ShareModal({ isOpen, onClose, threadTitle, threadId }: S
           </p>
 
           <div className="flex items-center gap-2">
-            <div className="flex-1 bg-forum-bg border border-forum-border/30 rounded-md px-3 py-2 text-[10px] font-mono text-forum-text truncate">
+            <div className="flex-1 bg-forum-bg border border-forum-border/30  px-3 py-2 text-[10px] font-mono text-forum-text truncate">
               {url}
             </div>
             <button
               onClick={handleCopy}
-              className={`transition-forum rounded-md px-3 py-2 text-[10px] font-mono font-semibold border ${copied
+              className={`transition-forum  px-3 py-2 text-[10px] font-mono font-semibold border ${copied
                 ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                : 'bg-forum-pink/10 border-forum-pink/30 text-forum-pink hover:bg-forum-pink/20'
+                : 'bg-primary/10 border-primary/30 text-primary hover:bg-primary/20'
                 }`}
             >
               {copied ? <Check size={12} /> : <Copy size={12} />}
@@ -63,7 +63,7 @@ export default function ShareModal({ isOpen, onClose, threadTitle, threadId }: S
               href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(threadTitle)}&url=${encodeURIComponent(url)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-forum flex items-center justify-center gap-1.5 rounded-md border border-forum-border/30 bg-forum-bg/50 py-2 text-[9px] font-mono text-forum-muted hover:text-forum-pink hover:border-forum-pink/30"
+              className="transition-forum flex items-center justify-center gap-1.5  border border-forum-border/30 bg-forum-bg/50 py-2 text-[9px] font-mono text-forum-muted hover:text-primary hover:border-primary/30"
             >
               <ExternalLink size={10} /> Twitter/X
             </a>
@@ -71,13 +71,13 @@ export default function ShareModal({ isOpen, onClose, threadTitle, threadId }: S
               href={`https://reddit.com/submit?title=${encodeURIComponent(threadTitle)}&url=${encodeURIComponent(url)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-forum flex items-center justify-center gap-1.5 rounded-md border border-forum-border/30 bg-forum-bg/50 py-2 text-[9px] font-mono text-forum-muted hover:text-orange-400 hover:border-orange-500/30"
+              className="transition-forum flex items-center justify-center gap-1.5  border border-forum-border/30 bg-forum-bg/50 py-2 text-[9px] font-mono text-forum-muted hover:text-orange-700 hover:border-orange-500/30"
             >
               <ExternalLink size={10} /> Reddit
             </a>
             <button
               onClick={handleCopy}
-              className="transition-forum flex items-center justify-center gap-1.5 rounded-md border border-forum-border/30 bg-forum-bg/50 py-2 text-[9px] font-mono text-forum-muted hover:text-forum-text hover:border-forum-border/50"
+              className="transition-forum flex items-center justify-center gap-1.5  border border-forum-border/30 bg-forum-bg/50 py-2 text-[9px] font-mono text-forum-muted hover:text-forum-text hover:border-forum-border/50"
             >
               <Link2 size={10} /> Copy Link
             </button>
@@ -87,7 +87,7 @@ export default function ShareModal({ isOpen, onClose, threadTitle, threadId }: S
             <span className="text-[9px] font-mono text-forum-muted uppercase tracking-wider">
               Embed Code
             </span>
-            <div className="bg-forum-bg border border-forum-border/30 rounded-md px-3 py-2 text-[9px] font-mono text-forum-pink/80 break-all">
+            <div className="bg-forum-bg border border-forum-border/30  px-3 py-2 text-[9px] font-mono text-primary/80 break-all">
               {`<iframe src="${url}?embed=true" width="600" height="400" frameborder="0"></iframe>`}
             </div>
           </div>

@@ -49,9 +49,10 @@ const PaginationLink = ({
     aria-current={isActive ? "page" : undefined}
     className={cn(
       buttonVariants({
-        variant: isActive ? "outline" : "ghost",
+        variant: isActive ? "default" : "outline",
         size,
       }),
+      isActive && "bg-primary text-primary-foreground",
       className
     )}
     {...props}
@@ -69,7 +70,7 @@ const PaginationPrevious = ({
     className={cn("gap-1 pl-2.5", className)}
     {...props}
   >
-    <ChevronLeft className="h-4 w-4" />
+    <ChevronLeft className="h-4 w-4" strokeWidth={3} />
     <span>Previous</span>
   </PaginationLink>
 )
@@ -86,7 +87,7 @@ const PaginationNext = ({
     {...props}
   >
     <span>Next</span>
-    <ChevronRight className="h-4 w-4" />
+    <ChevronRight className="h-4 w-4" strokeWidth={3} />
   </PaginationLink>
 )
 PaginationNext.displayName = "PaginationNext"
@@ -97,10 +98,10 @@ const PaginationEllipsis = ({
 }: React.ComponentProps<"span">) => (
   <span
     aria-hidden
-    className={cn("flex h-9 w-9 items-center justify-center", className)}
+    className={cn("flex h-10 w-10 items-center justify-center font-black", className)}
     {...props}
   >
-    <MoreHorizontal className="h-4 w-4" />
+    <MoreHorizontal className="h-4 w-4" strokeWidth={3} />
     <span className="sr-only">More pages</span>
   </span>
 )

@@ -16,16 +16,16 @@ interface ActivityItem {
 }
 
 const iconMap = {
-  reply: { icon: MessageSquare, color: 'text-cyan-400' },
-  new_member: { icon: UserPlus, color: 'text-emerald-400' },
-  thread: { icon: Zap, color: 'text-forum-pink' },
-  hot_thread: { icon: TrendingUp, color: 'text-orange-400' },
-  pinned_thread: { icon: Pin, color: 'text-amber-400' },
-  locked_thread: { icon: Lock, color: 'text-red-400' },
-  popular_thread: { icon: Eye, color: 'text-purple-400' },
-  achievement: { icon: Award, color: 'text-yellow-400' },
-  follow: { icon: UserCheck, color: 'text-blue-400' },
-  upvote: { icon: ThumbsUp, color: 'text-emerald-400' },
+  reply: { icon: MessageSquare, color: 'text-cyan-600' },
+  new_member: { icon: UserPlus, color: 'text-emerald-700' },
+  thread: { icon: Zap, color: 'text-primary' },
+  hot_thread: { icon: TrendingUp, color: 'text-orange-700' },
+  pinned_thread: { icon: Pin, color: 'text-amber-600' },
+  locked_thread: { icon: Lock, color: 'text-red-600' },
+  popular_thread: { icon: Eye, color: 'text-purple-600' },
+  achievement: { icon: Award, color: 'text-yellow-700' },
+  follow: { icon: UserCheck, color: 'text-blue-600' },
+  upvote: { icon: ThumbsUp, color: 'text-emerald-700' },
 };
 
 function getActivityText(item: ActivityItem): string {
@@ -453,9 +453,9 @@ export default function RecentActivityFeed() {
     return (
       <div className="hud-panel overflow-hidden">
         <div className="flex items-stretch">
-          <div className="flex items-center gap-1.5 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border-r border-forum-border px-4 py-2.5 flex-shrink-0 w-[140px]">
-            <Clock size={12} className="text-emerald-400" />
-            <span className="text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-wider whitespace-nowrap">
+          <div className="flex items-center gap-1.5 bg-emerald-600 border-r border-forum-border px-4 py-2.5 flex-shrink-0 w-[140px]">
+            <Clock size={12} className="text-white font-bold" />
+            <span className="text-[10px] font-mono font-bold text-white uppercase tracking-wider whitespace-nowrap">
               Live Feed
             </span>
           </div>
@@ -473,9 +473,9 @@ export default function RecentActivityFeed() {
     return (
       <div className="hud-panel overflow-hidden">
         <div className="flex items-stretch">
-          <div className="flex items-center gap-1.5 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border-r border-forum-border px-4 py-2.5 flex-shrink-0 w-[140px]">
-            <Clock size={12} className="text-emerald-400" />
-            <span className="text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-wider whitespace-nowrap">
+          <div className="flex items-center gap-1.5 bg-emerald-600 border-r border-forum-border px-4 py-2.5 flex-shrink-0 w-[140px]">
+            <Clock size={12} className="text-white font-bold" />
+            <span className="text-[10px] font-mono font-bold text-white uppercase tracking-wider whitespace-nowrap">
               Live Feed
             </span>
           </div>
@@ -492,9 +492,9 @@ export default function RecentActivityFeed() {
   return (
     <div className="hud-panel overflow-hidden">
       <div className="flex items-stretch">
-        <div className="flex items-center gap-1.5 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border-r border-forum-border px-4 py-2.5 flex-shrink-0 w-[140px]">
-          <Clock size={12} className="text-emerald-400" />
-          <span className="text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-wider whitespace-nowrap">
+        <div className="flex items-center gap-1.5 bg-emerald-600 border-r border-forum-border px-4 py-2.5 flex-shrink-0 w-[140px]">
+          <Clock size={12} className="text-white font-bold" />
+          <span className="text-[10px] font-mono font-bold text-white uppercase tracking-wider whitespace-nowrap">
             Live Feed
           </span>
         </div>
@@ -518,8 +518,8 @@ export default function RecentActivityFeed() {
                   className="flex items-center gap-2 whitespace-nowrap group transition-all duration-200 hover:scale-105 cursor-pointer"
                 >
                   <Icon size={10} className={`${color} flex-shrink-0`} />
-                  <span className="text-[11px] font-mono text-forum-muted group-hover:text-forum-pink transition-colors">
-                    <span className="font-semibold text-forum-text group-hover:text-forum-pink">
+                  <span className="text-[11px] font-mono text-forum-muted group-hover:text-primary transition-colors">
+                    <span className="font-semibold text-forum-text group-hover:text-primary">
                       {item.user.username}
                     </span>
                     {' '}
@@ -532,7 +532,7 @@ export default function RecentActivityFeed() {
               );
             })}
           </div>
-          <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-forum-card to-transparent pointer-events-none z-10" />
+          <div className="absolute left-0 top-0 bottom-0 w-12 bg-forum-card to-transparent pointer-events-none z-10" />
           <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-forum-card to-transparent pointer-events-none z-10" />
         </div>
       </div>

@@ -38,7 +38,7 @@ export function MessageSettingsModal({ isOpen, onClose, currentUserId }: Message
           </p>
           
           <RadioGroup value={selectedSetting} onValueChange={(value: any) => setSelectedSetting(value)}>
-            <div className="flex items-start space-x-3 p-3 rounded-lg border hover:bg-accent cursor-pointer">
+            <div className="flex items-start space-x-3 p-3  border hover:bg-accent cursor-pointer">
               <RadioGroupItem value="everyone" id="everyone" />
               <Label htmlFor="everyone" className="flex-1 cursor-pointer">
                 <div className="flex items-center gap-2 mb-1">
@@ -51,7 +51,7 @@ export function MessageSettingsModal({ isOpen, onClose, currentUserId }: Message
               </Label>
             </div>
             
-            <div className="flex items-start space-x-3 p-3 rounded-lg border hover:bg-accent cursor-pointer">
+            <div className="flex items-start space-x-3 p-3  border hover:bg-accent cursor-pointer">
               <RadioGroupItem value="following" id="following" />
               <Label htmlFor="following" className="flex-1 cursor-pointer">
                 <div className="flex items-center gap-2 mb-1">
@@ -64,7 +64,7 @@ export function MessageSettingsModal({ isOpen, onClose, currentUserId }: Message
               </Label>
             </div>
             
-            <div className="flex items-start space-x-3 p-3 rounded-lg border hover:bg-accent cursor-pointer">
+            <div className="flex items-start space-x-3 p-3  border hover:bg-accent cursor-pointer">
               <RadioGroupItem value="none" id="none" />
               <Label htmlFor="none" className="flex-1 cursor-pointer">
                 <div className="flex items-center gap-2 mb-1">

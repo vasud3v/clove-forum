@@ -186,7 +186,7 @@ export default function AdminSettingsTab() {
   if (isLoading) {
     return (
       <div className="hud-panel flex items-center justify-center py-20">
-        <RefreshCw size={20} className="text-forum-pink animate-spin" />
+        <RefreshCw size={20} className="text-primary animate-spin" />
         <span className="ml-3 text-[12px] font-mono text-forum-muted">Loading settings...</span>
       </div>
     );
@@ -198,7 +198,7 @@ export default function AdminSettingsTab() {
       <div className="hud-panel p-6 flex items-center justify-between">
         <div>
           <h2 className="text-[14px] font-mono font-bold text-forum-text flex items-center gap-2">
-            <Globe size={14} className="text-forum-pink" /> Forum Settings
+            <Globe size={14} className="text-primary" /> Forum Settings
           </h2>
           <p className="text-[10px] font-mono text-forum-muted mt-1">
             Configure global forum behavior and features
@@ -207,7 +207,7 @@ export default function AdminSettingsTab() {
         <button
           onClick={saveSettings}
           disabled={isSaving}
-          className="transition-forum flex items-center gap-1.5 rounded-md bg-forum-pink px-4 py-2 text-[11px] font-mono font-medium text-white hover:bg-forum-pink/90 disabled:opacity-50"
+          className="transition-forum flex items-center gap-1.5  bg-primary px-4 py-2 text-[11px] font-mono font-medium text-black hover:bg-primary/90 disabled:opacity-50"
         >
           {isSaving ? <RefreshCw size={12} className="animate-spin" /> : <Save size={12} />}
           {isSaving ? 'Saving...' : 'Save Changes'}
@@ -217,7 +217,7 @@ export default function AdminSettingsTab() {
       {/* General Settings */}
       <div className="hud-panel p-6 space-y-4">
         <h3 className="text-[12px] font-mono font-bold text-forum-text flex items-center gap-2">
-          <Globe size={12} className="text-forum-pink" /> General
+          <Globe size={12} className="text-primary" /> General
         </h3>
         
         <div className="space-y-3">
@@ -227,7 +227,7 @@ export default function AdminSettingsTab() {
               type="text"
               value={settings.forum_name}
               onChange={(e) => updateSetting('forum_name', e.target.value)}
-              className="w-full rounded-md border border-forum-border bg-forum-hover px-3 py-2 text-[11px] font-mono text-forum-text focus:border-forum-pink focus:outline-none"
+              className="w-full  border border-forum-border bg-forum-hover px-3 py-2 text-[11px] font-mono text-forum-text focus:border-primary focus:outline-none"
             />
           </div>
 
@@ -237,7 +237,7 @@ export default function AdminSettingsTab() {
               value={settings.forum_description}
               onChange={(e) => updateSetting('forum_description', e.target.value)}
               rows={3}
-              className="w-full rounded-md border border-forum-border bg-forum-hover px-3 py-2 text-[11px] font-mono text-forum-text focus:border-forum-pink focus:outline-none resize-none"
+              className="w-full  border border-forum-border bg-forum-hover px-3 py-2 text-[11px] font-mono text-forum-text focus:border-primary focus:outline-none resize-none"
             />
           </div>
         </div>
@@ -246,7 +246,7 @@ export default function AdminSettingsTab() {
       {/* User Settings */}
       <div className="hud-panel p-6 space-y-4">
         <h3 className="text-[12px] font-mono font-bold text-forum-text flex items-center gap-2">
-          <Users size={12} className="text-forum-pink" /> User & Registration
+          <Users size={12} className="text-primary" /> User & Registration
         </h3>
         
         <div className="space-y-3">
@@ -255,7 +255,7 @@ export default function AdminSettingsTab() {
               type="checkbox"
               checked={settings.allow_registration}
               onChange={(e) => updateSetting('allow_registration', e.target.checked)}
-              className="rounded border-forum-border bg-forum-hover text-forum-pink focus:ring-forum-pink focus:ring-offset-0"
+              className="rounded border-forum-border bg-forum-hover text-primary focus:ring-primary focus:ring-offset-0"
             />
             <span className="text-[11px] font-mono text-forum-text">Allow new user registration</span>
           </label>
@@ -265,7 +265,7 @@ export default function AdminSettingsTab() {
               type="checkbox"
               checked={settings.require_email_verification}
               onChange={(e) => updateSetting('require_email_verification', e.target.checked)}
-              className="rounded border-forum-border bg-forum-hover text-forum-pink focus:ring-forum-pink focus:ring-offset-0"
+              className="rounded border-forum-border bg-forum-hover text-primary focus:ring-primary focus:ring-offset-0"
             />
             <span className="text-[11px] font-mono text-forum-text">Require email verification</span>
           </label>
@@ -275,7 +275,7 @@ export default function AdminSettingsTab() {
               type="checkbox"
               checked={settings.allow_guest_viewing}
               onChange={(e) => updateSetting('allow_guest_viewing', e.target.checked)}
-              className="rounded border-forum-border bg-forum-hover text-forum-pink focus:ring-forum-pink focus:ring-offset-0"
+              className="rounded border-forum-border bg-forum-hover text-primary focus:ring-primary focus:ring-offset-0"
             />
             <span className="text-[11px] font-mono text-forum-text">Allow guests to view forum</span>
           </label>
@@ -285,7 +285,7 @@ export default function AdminSettingsTab() {
       {/* Content Settings */}
       <div className="hud-panel p-6 space-y-4">
         <h3 className="text-[12px] font-mono font-bold text-forum-text flex items-center gap-2">
-          <MessageSquare size={12} className="text-forum-pink" /> Content & Posts
+          <MessageSquare size={12} className="text-primary" /> Content & Posts
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -296,7 +296,7 @@ export default function AdminSettingsTab() {
               min="1"
               value={settings.min_post_length}
               onChange={(e) => updateSetting('min_post_length', parseInt(e.target.value) || 1)}
-              className="w-full rounded-md border border-forum-border bg-forum-hover px-3 py-2 text-[11px] font-mono text-forum-text focus:border-forum-pink focus:outline-none"
+              className="w-full  border border-forum-border bg-forum-hover px-3 py-2 text-[11px] font-mono text-forum-text focus:border-primary focus:outline-none"
             />
           </div>
 
@@ -307,7 +307,7 @@ export default function AdminSettingsTab() {
               min="100"
               value={settings.max_post_length}
               onChange={(e) => updateSetting('max_post_length', parseInt(e.target.value) || 100)}
-              className="w-full rounded-md border border-forum-border bg-forum-hover px-3 py-2 text-[11px] font-mono text-forum-text focus:border-forum-pink focus:outline-none"
+              className="w-full  border border-forum-border bg-forum-hover px-3 py-2 text-[11px] font-mono text-forum-text focus:border-primary focus:outline-none"
             />
           </div>
 
@@ -319,7 +319,7 @@ export default function AdminSettingsTab() {
               max="100"
               value={settings.posts_per_page}
               onChange={(e) => updateSetting('posts_per_page', parseInt(e.target.value) || 20)}
-              className="w-full rounded-md border border-forum-border bg-forum-hover px-3 py-2 text-[11px] font-mono text-forum-text focus:border-forum-pink focus:outline-none"
+              className="w-full  border border-forum-border bg-forum-hover px-3 py-2 text-[11px] font-mono text-forum-text focus:border-primary focus:outline-none"
             />
           </div>
 
@@ -331,7 +331,7 @@ export default function AdminSettingsTab() {
               max="100"
               value={settings.threads_per_page}
               onChange={(e) => updateSetting('threads_per_page', parseInt(e.target.value) || 25)}
-              className="w-full rounded-md border border-forum-border bg-forum-hover px-3 py-2 text-[11px] font-mono text-forum-text focus:border-forum-pink focus:outline-none"
+              className="w-full  border border-forum-border bg-forum-hover px-3 py-2 text-[11px] font-mono text-forum-text focus:border-primary focus:outline-none"
             />
           </div>
 
@@ -343,7 +343,7 @@ export default function AdminSettingsTab() {
               max="20"
               value={settings.max_attachments_per_post}
               onChange={(e) => updateSetting('max_attachments_per_post', parseInt(e.target.value) || 5)}
-              className="w-full rounded-md border border-forum-border bg-forum-hover px-3 py-2 text-[11px] font-mono text-forum-text focus:border-forum-pink focus:outline-none"
+              className="w-full  border border-forum-border bg-forum-hover px-3 py-2 text-[11px] font-mono text-forum-text focus:border-primary focus:outline-none"
             />
           </div>
 
@@ -354,7 +354,7 @@ export default function AdminSettingsTab() {
               min="0"
               value={settings.auto_lock_threads_days}
               onChange={(e) => updateSetting('auto_lock_threads_days', parseInt(e.target.value) || 0)}
-              className="w-full rounded-md border border-forum-border bg-forum-hover px-3 py-2 text-[11px] font-mono text-forum-text focus:border-forum-pink focus:outline-none"
+              className="w-full  border border-forum-border bg-forum-hover px-3 py-2 text-[11px] font-mono text-forum-text focus:border-primary focus:outline-none"
             />
           </div>
         </div>
@@ -363,7 +363,7 @@ export default function AdminSettingsTab() {
       {/* Feature Settings */}
       <div className="hud-panel p-6 space-y-4">
         <h3 className="text-[12px] font-mono font-bold text-forum-text flex items-center gap-2">
-          <Shield size={12} className="text-forum-pink" /> Features
+          <Shield size={12} className="text-primary" /> Features
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -372,7 +372,7 @@ export default function AdminSettingsTab() {
               type="checkbox"
               checked={settings.enable_reputation}
               onChange={(e) => updateSetting('enable_reputation', e.target.checked)}
-              className="rounded border-forum-border bg-forum-hover text-forum-pink focus:ring-forum-pink focus:ring-offset-0"
+              className="rounded border-forum-border bg-forum-hover text-primary focus:ring-primary focus:ring-offset-0"
             />
             <span className="text-[11px] font-mono text-forum-text">Enable reputation system</span>
           </label>
@@ -382,7 +382,7 @@ export default function AdminSettingsTab() {
               type="checkbox"
               checked={settings.enable_reactions}
               onChange={(e) => updateSetting('enable_reactions', e.target.checked)}
-              className="rounded border-forum-border bg-forum-hover text-forum-pink focus:ring-forum-pink focus:ring-offset-0"
+              className="rounded border-forum-border bg-forum-hover text-primary focus:ring-primary focus:ring-offset-0"
             />
             <span className="text-[11px] font-mono text-forum-text">Enable post reactions</span>
           </label>
@@ -392,7 +392,7 @@ export default function AdminSettingsTab() {
               type="checkbox"
               checked={settings.enable_mentions}
               onChange={(e) => updateSetting('enable_mentions', e.target.checked)}
-              className="rounded border-forum-border bg-forum-hover text-forum-pink focus:ring-forum-pink focus:ring-offset-0"
+              className="rounded border-forum-border bg-forum-hover text-primary focus:ring-primary focus:ring-offset-0"
             />
             <span className="text-[11px] font-mono text-forum-text">Enable @mentions</span>
           </label>
@@ -402,7 +402,7 @@ export default function AdminSettingsTab() {
               type="checkbox"
               checked={settings.enable_markdown}
               onChange={(e) => updateSetting('enable_markdown', e.target.checked)}
-              className="rounded border-forum-border bg-forum-hover text-forum-pink focus:ring-forum-pink focus:ring-offset-0"
+              className="rounded border-forum-border bg-forum-hover text-primary focus:ring-primary focus:ring-offset-0"
             />
             <span className="text-[11px] font-mono text-forum-text">Enable markdown formatting</span>
           </label>
@@ -412,7 +412,7 @@ export default function AdminSettingsTab() {
               type="checkbox"
               checked={settings.enable_emojis}
               onChange={(e) => updateSetting('enable_emojis', e.target.checked)}
-              className="rounded border-forum-border bg-forum-hover text-forum-pink focus:ring-forum-pink focus:ring-offset-0"
+              className="rounded border-forum-border bg-forum-hover text-primary focus:ring-primary focus:ring-offset-0"
             />
             <span className="text-[11px] font-mono text-forum-text">Enable emoji picker</span>
           </label>
@@ -422,7 +422,7 @@ export default function AdminSettingsTab() {
               type="checkbox"
               checked={settings.enable_polls}
               onChange={(e) => updateSetting('enable_polls', e.target.checked)}
-              className="rounded border-forum-border bg-forum-hover text-forum-pink focus:ring-forum-pink focus:ring-offset-0"
+              className="rounded border-forum-border bg-forum-hover text-primary focus:ring-primary focus:ring-offset-0"
             />
             <span className="text-[11px] font-mono text-forum-text">Enable polls</span>
           </label>
@@ -432,7 +432,7 @@ export default function AdminSettingsTab() {
               type="checkbox"
               checked={settings.enable_private_messages}
               onChange={(e) => updateSetting('enable_private_messages', e.target.checked)}
-              className="rounded border-forum-border bg-forum-hover text-forum-pink focus:ring-forum-pink focus:ring-offset-0"
+              className="rounded border-forum-border bg-forum-hover text-primary focus:ring-primary focus:ring-offset-0"
             />
             <span className="text-[11px] font-mono text-forum-text">Enable private messages</span>
           </label>
@@ -442,7 +442,7 @@ export default function AdminSettingsTab() {
               type="checkbox"
               checked={settings.enable_user_signatures}
               onChange={(e) => updateSetting('enable_user_signatures', e.target.checked)}
-              className="rounded border-forum-border bg-forum-hover text-forum-pink focus:ring-forum-pink focus:ring-offset-0"
+              className="rounded border-forum-border bg-forum-hover text-primary focus:ring-primary focus:ring-offset-0"
             />
             <span className="text-[11px] font-mono text-forum-text">Enable user signatures</span>
           </label>
@@ -452,7 +452,7 @@ export default function AdminSettingsTab() {
               type="checkbox"
               checked={settings.enable_user_profiles}
               onChange={(e) => updateSetting('enable_user_profiles', e.target.checked)}
-              className="rounded border-forum-border bg-forum-hover text-forum-pink focus:ring-forum-pink focus:ring-offset-0"
+              className="rounded border-forum-border bg-forum-hover text-primary focus:ring-primary focus:ring-offset-0"
             />
             <span className="text-[11px] font-mono text-forum-text">Enable user profiles</span>
           </label>
@@ -462,7 +462,7 @@ export default function AdminSettingsTab() {
       {/* Security & Moderation */}
       <div className="hud-panel p-6 space-y-4">
         <h3 className="text-[12px] font-mono font-bold text-forum-text flex items-center gap-2">
-          <Shield size={12} className="text-forum-pink" /> Security & Moderation
+          <Shield size={12} className="text-primary" /> Security & Moderation
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -473,7 +473,7 @@ export default function AdminSettingsTab() {
               min="0"
               value={settings.min_reputation_to_post}
               onChange={(e) => updateSetting('min_reputation_to_post', parseInt(e.target.value) || 0)}
-              className="w-full rounded-md border border-forum-border bg-forum-hover px-3 py-2 text-[11px] font-mono text-forum-text focus:border-forum-pink focus:outline-none"
+              className="w-full  border border-forum-border bg-forum-hover px-3 py-2 text-[11px] font-mono text-forum-text focus:border-primary focus:outline-none"
             />
           </div>
 
@@ -484,7 +484,7 @@ export default function AdminSettingsTab() {
               min="0"
               value={settings.min_reputation_to_create_thread}
               onChange={(e) => updateSetting('min_reputation_to_create_thread', parseInt(e.target.value) || 0)}
-              className="w-full rounded-md border border-forum-border bg-forum-hover px-3 py-2 text-[11px] font-mono text-forum-text focus:border-forum-pink focus:outline-none"
+              className="w-full  border border-forum-border bg-forum-hover px-3 py-2 text-[11px] font-mono text-forum-text focus:border-primary focus:outline-none"
             />
           </div>
 
@@ -496,7 +496,7 @@ export default function AdminSettingsTab() {
               max="500"
               value={settings.max_thread_title_length}
               onChange={(e) => updateSetting('max_thread_title_length', parseInt(e.target.value) || 200)}
-              className="w-full rounded-md border border-forum-border bg-forum-hover px-3 py-2 text-[11px] font-mono text-forum-text focus:border-forum-pink focus:outline-none"
+              className="w-full  border border-forum-border bg-forum-hover px-3 py-2 text-[11px] font-mono text-forum-text focus:border-primary focus:outline-none"
             />
           </div>
         </div>
@@ -507,7 +507,7 @@ export default function AdminSettingsTab() {
               type="checkbox"
               checked={settings.spam_detection_enabled}
               onChange={(e) => updateSetting('spam_detection_enabled', e.target.checked)}
-              className="rounded border-forum-border bg-forum-hover text-forum-pink focus:ring-forum-pink focus:ring-offset-0"
+              className="rounded border-forum-border bg-forum-hover text-primary focus:ring-primary focus:ring-offset-0"
             />
             <span className="text-[11px] font-mono text-forum-text">Enable spam detection</span>
           </label>
@@ -517,7 +517,7 @@ export default function AdminSettingsTab() {
               type="checkbox"
               checked={settings.profanity_filter_enabled}
               onChange={(e) => updateSetting('profanity_filter_enabled', e.target.checked)}
-              className="rounded border-forum-border bg-forum-hover text-forum-pink focus:ring-forum-pink focus:ring-offset-0"
+              className="rounded border-forum-border bg-forum-hover text-primary focus:ring-primary focus:ring-offset-0"
             />
             <span className="text-[11px] font-mono text-forum-text">Enable profanity filter</span>
           </label>

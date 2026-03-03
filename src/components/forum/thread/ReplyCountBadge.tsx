@@ -12,12 +12,12 @@ const ReplyCountBadge = memo(({ count }: ReplyCountBadgeProps) => {
 
   return (
     <div 
-      className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-forum-pink/10 border border-forum-pink/30"
+      className="flex items-center gap-1 px-2 py-0.5  bg-primary/10 border border-primary/30"
       title={`${count} ${count === 1 ? 'reply' : 'replies'}`}
       aria-label={`${count} ${count === 1 ? 'reply' : 'replies'}`}
     >
-      <MessageCircle size={9} className="text-forum-pink" />
-      <span className="text-[9px] font-mono font-bold text-forum-pink">
+      <MessageCircle size={9} className="text-primary" />
+      <span className="text-[9px] font-mono font-bold text-primary">
         {displayCount}
       </span>
     </div>

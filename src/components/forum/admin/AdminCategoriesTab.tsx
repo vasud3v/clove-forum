@@ -161,12 +161,12 @@ export default function AdminCategoriesTab({ categories, onRefresh, onLogAction 
         <div>
           <label className="text-[9px] font-mono text-forum-muted uppercase tracking-wider">Name</label>
           <input value={formData.name} onChange={e => setFormData(p => ({ ...p, name: e.target.value }))}
-            className="mt-1 w-full rounded-md border border-forum-border bg-forum-bg px-3 py-1.5 text-[11px] font-mono text-forum-text outline-none focus:border-forum-pink" placeholder="Category name" />
+            className="mt-1 w-full  border border-forum-border bg-forum-bg px-3 py-1.5 text-[11px] font-mono text-forum-text outline-none focus:border-primary" placeholder="Category name" />
         </div>
         <div>
           <label className="text-[9px] font-mono text-forum-muted uppercase tracking-wider">Icon</label>
           <select value={formData.icon} onChange={e => setFormData(p => ({ ...p, icon: e.target.value }))}
-            className="mt-1 w-full rounded-md border border-forum-border bg-forum-bg px-3 py-1.5 text-[11px] font-mono text-forum-text outline-none focus:border-forum-pink">
+            className="mt-1 w-full  border border-forum-border bg-forum-bg px-3 py-1.5 text-[11px] font-mono text-forum-text outline-none focus:border-primary">
             {ICON_OPTIONS.map(i => <option key={i} value={i}>{i}</option>)}
           </select>
         </div>
@@ -174,7 +174,7 @@ export default function AdminCategoriesTab({ categories, onRefresh, onLogAction 
       <div>
         <label className="text-[9px] font-mono text-forum-muted uppercase tracking-wider">Description</label>
         <textarea value={formData.description} onChange={e => setFormData(p => ({ ...p, description: e.target.value }))}
-          className="mt-1 w-full rounded-md border border-forum-border bg-forum-bg px-3 py-1.5 text-[11px] font-mono text-forum-text outline-none focus:border-forum-pink resize-none h-16" placeholder="Category description" />
+          className="mt-1 w-full  border border-forum-border bg-forum-bg px-3 py-1.5 text-[11px] font-mono text-forum-text outline-none focus:border-primary resize-none h-16" placeholder="Category description" />
       </div>
       <div className="flex items-center gap-4">
         <label className="flex items-center gap-1.5 text-[10px] font-mono text-forum-muted cursor-pointer">
@@ -186,10 +186,10 @@ export default function AdminCategoriesTab({ categories, onRefresh, onLogAction 
       </div>
       <div className="flex items-center gap-2">
         <button onClick={isEditing ? handleUpdate : handleCreate} disabled={isSubmitting || !formData.name.trim()}
-          className="transition-forum rounded-md bg-forum-pink px-4 py-1.5 text-[10px] font-mono font-bold text-white hover:bg-forum-pink/90 disabled:opacity-40">
+          className="transition-forum  bg-primary px-4 py-1.5 text-[10px] font-mono font-bold text-black hover:bg-primary/90 disabled:opacity-40">
           {isSubmitting ? 'Saving...' : isEditing ? 'Update' : 'Create'}
         </button>
-        <button onClick={resetForm} className="transition-forum rounded-md border border-forum-border px-4 py-1.5 text-[10px] font-mono text-forum-muted hover:text-forum-text">
+        <button onClick={resetForm} className="transition-forum  border border-forum-border px-4 py-1.5 text-[10px] font-mono text-forum-muted hover:text-forum-text">
           Cancel
         </button>
       </div>
@@ -200,7 +200,7 @@ export default function AdminCategoriesTab({ categories, onRefresh, onLogAction 
     <div className="space-y-3">
       {!showCreateForm && !editingId && (
         <button onClick={() => setShowCreateForm(true)}
-          className="transition-forum flex items-center gap-1.5 rounded-md bg-forum-pink px-4 py-2 text-[10px] font-mono font-bold text-white hover:bg-forum-pink/90">
+          className="transition-forum flex items-center gap-1.5  bg-primary px-4 py-2 text-[10px] font-mono font-bold text-black hover:bg-primary/90">
           <Plus size={12} /> Create Category
         </button>
       )}
@@ -214,14 +214,14 @@ export default function AdminCategoriesTab({ categories, onRefresh, onLogAction 
           {categories.map((cat, idx) => (
             <div key={cat.id} className="flex items-center gap-3 px-4 py-3 hover:bg-forum-hover/30 transition-forum">
               <div className="flex flex-col gap-0.5">
-                <button onClick={() => handleReorder(cat.id, 'up')} disabled={idx === 0} className="text-forum-muted hover:text-forum-pink disabled:opacity-20 transition-forum"><ArrowUp size={10} /></button>
-                <button onClick={() => handleReorder(cat.id, 'down')} disabled={idx === categories.length - 1} className="text-forum-muted hover:text-forum-pink disabled:opacity-20 transition-forum"><ArrowDown size={10} /></button>
+                <button onClick={() => handleReorder(cat.id, 'up')} disabled={idx === 0} className="text-forum-muted hover:text-primary disabled:opacity-20 transition-forum"><ArrowUp size={10} /></button>
+                <button onClick={() => handleReorder(cat.id, 'down')} disabled={idx === categories.length - 1} className="text-forum-muted hover:text-primary disabled:opacity-20 transition-forum"><ArrowDown size={10} /></button>
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="text-[11px] font-mono font-semibold text-forum-text">{cat.name}</span>
-                  {cat.isSticky && <span className="text-[7px] font-mono text-amber-400 border border-amber-500/20 rounded-sm px-1">STICKY</span>}
-                  {cat.isImportant && <span className="text-[7px] font-mono text-red-400 border border-red-500/20 rounded-sm px-1">IMPORTANT</span>}
+                  {cat.isSticky && <span className="text-[7px] font-mono text-amber-600 border border-amber-500/20  px-1">STICKY</span>}
+                  {cat.isImportant && <span className="text-[7px] font-mono text-red-400 border border-red-500/20  px-1">IMPORTANT</span>}
                 </div>
                 <div className="text-[9px] font-mono text-forum-muted mt-0.5">{cat.description}</div>
                 <div className="flex items-center gap-3 text-[8px] font-mono text-forum-muted mt-0.5">
@@ -231,7 +231,7 @@ export default function AdminCategoriesTab({ categories, onRefresh, onLogAction 
                 </div>
               </div>
               <div className="flex items-center gap-1 flex-shrink-0">
-                <button onClick={() => startEdit(cat)} className="transition-forum rounded p-1.5 text-forum-muted hover:text-blue-400 hover:bg-blue-500/10"><Edit3 size={12} /></button>
+                <button onClick={() => startEdit(cat)} className="transition-forum rounded p-1.5 text-forum-muted hover:text-black hover:bg-blue-600/40"><Edit3 size={12} /></button>
                 {deleteConfirm === cat.id ? (
                   <div className="flex items-center gap-1">
                     <button onClick={() => handleDelete(cat.id)} className="transition-forum rounded p-1.5 text-red-400 bg-red-500/10"><Check size={12} /></button>

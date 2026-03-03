@@ -43,7 +43,7 @@ export default function ProfileHoverCard({ user, children }: ProfileHoverCardPro
           {/* Invisible padding area to prevent losing hover when moving mouse down/right */}
           <div className="absolute -top-4 -left-4 -right-4 -bottom-4 bg-transparent -z-10" />
           
-          <div className="shadow-2xl rounded-lg border-2 border-forum-border/40 overflow-hidden bg-forum-bg relative z-10">
+          <div className="shadow-brutal-lg  border-2 border-forum-border/40 overflow-hidden bg-forum-bg relative z-10">
             <UserProfileMiniCard user={user} />
           </div>
         </div>

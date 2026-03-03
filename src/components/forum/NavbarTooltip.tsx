@@ -19,7 +19,7 @@ export function NavbarTooltip({
       <div className={`
         absolute hidden group-hover:block z-50
         px-2 py-1 text-[10px] font-mono text-white
-        bg-black border border-forum-pink/40 rounded
+        bg-black border border-primary/40 rounded
         whitespace-nowrap after:content-['']
         transition-all duration-200 delay-${delay}
         ${position === 'top' ? 'bottom-full mb-2 left-1/2 -translate-x-1/2' : ''}
@@ -29,7 +29,7 @@ export function NavbarTooltip({
       `}>
         {content}
         <div className={`
-          absolute w-1 h-1 bg-forum-pink/40 rotate-45
+          absolute w-1 h-1 bg-primary/40 rotate-45
           ${position === 'top' ? '-bottom-0.5 left-1/2 -translate-x-1/2' : ''}
           ${position === 'bottom' ? '-top-0.5 left-1/2 -translate-x-1/2' : ''}
           ${position === 'left' ? '-right-0.5 top-1/2 -translate-y-1/2' : ''}

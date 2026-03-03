@@ -23,58 +23,58 @@ const colorSchemes: ColorScheme[] = [
   {
     bg: 'bg-cyan-500/10',
     border: 'border-cyan-500/30',
-    text: 'text-cyan-400',
+    text: 'text-black',
     hover: 'hover:bg-cyan-500/20 hover:border-cyan-500/50',
-    icon: 'text-cyan-400',
+    icon: 'text-cyan-600',
   },
   {
     bg: 'bg-purple-500/10',
     border: 'border-purple-500/30',
-    text: 'text-purple-400',
+    text: 'text-black',
     hover: 'hover:bg-purple-500/20 hover:border-purple-500/50',
-    icon: 'text-purple-400',
+    icon: 'text-purple-600',
   },
   {
     bg: 'bg-emerald-500/10',
     border: 'border-emerald-500/30',
-    text: 'text-emerald-400',
+    text: 'text-black',
     hover: 'hover:bg-emerald-500/20 hover:border-emerald-500/50',
-    icon: 'text-emerald-400',
+    icon: 'text-emerald-600',
   },
   {
     bg: 'bg-amber-500/10',
     border: 'border-amber-500/30',
-    text: 'text-amber-400',
+    text: 'text-black',
     hover: 'hover:bg-amber-500/20 hover:border-amber-500/50',
-    icon: 'text-amber-400',
+    icon: 'text-amber-600',
   },
   {
     bg: 'bg-rose-500/10',
     border: 'border-rose-500/30',
-    text: 'text-rose-400',
+    text: 'text-black',
     hover: 'hover:bg-rose-500/20 hover:border-rose-500/50',
-    icon: 'text-rose-400',
+    icon: 'text-rose-600',
   },
   {
     bg: 'bg-blue-500/10',
     border: 'border-blue-500/30',
-    text: 'text-blue-400',
+    text: 'text-black',
     hover: 'hover:bg-blue-500/20 hover:border-blue-500/50',
-    icon: 'text-blue-400',
+    icon: 'text-blue-600',
   },
   {
     bg: 'bg-indigo-500/10',
     border: 'border-indigo-500/30',
-    text: 'text-indigo-400',
+    text: 'text-black',
     hover: 'hover:bg-indigo-500/20 hover:border-indigo-500/50',
-    icon: 'text-indigo-400',
+    icon: 'text-indigo-600',
   },
   {
     bg: 'bg-pink-500/10',
     border: 'border-pink-500/30',
-    text: 'text-pink-400',
+    text: 'text-black',
     hover: 'hover:bg-pink-500/20 hover:border-pink-500/50',
-    icon: 'text-pink-400',
+    icon: 'text-pink-600',
   },
 ];
 
@@ -83,11 +83,11 @@ const getColorScheme = (tagName: string, isHot: boolean): ColorScheme => {
   if (isHot) {
     // Hot tags get the pink/forum color
     return {
-      bg: 'bg-forum-pink/10',
-      border: 'border-forum-pink/40',
-      text: 'text-forum-pink',
-      hover: 'hover:bg-forum-pink/20 hover:border-forum-pink/60',
-      icon: 'text-forum-pink',
+      bg: 'bg-primary/10',
+      border: 'border-primary/40',
+      text: 'text-black',
+      hover: 'hover:bg-primary/20 hover:border-primary/60',
+      icon: 'text-primary',
     };
   }
   
@@ -155,7 +155,7 @@ export default function PopularTags() {
   return (
     <div className="hud-panel overflow-hidden">
       <div className="border-b border-forum-border px-3 py-2 flex items-center gap-1.5">
-        <Hash size={11} className="text-forum-pink" />
+        <Hash size={11} className="text-primary" />
         <h4 className="text-[10px] font-bold text-forum-text font-mono uppercase tracking-wider">
           Popular Tags
         </h4>
@@ -184,7 +184,7 @@ export default function PopularTags() {
                     console.log('Tag clicked:', tag.name);
                     navigate(`/search?q=${encodeURIComponent(tag.name)}`);
                   }}
-                  className={`group transition-all duration-200 flex items-center gap-1 rounded-md border px-2 py-1 text-[9px] font-mono cursor-pointer active:scale-95 ${bg} ${border} ${text} ${hover}`}
+                  className={`group transition-all duration-200 flex items-center gap-1  border px-2 py-1 text-[9px] font-mono cursor-pointer active:scale-95 ${bg} ${border} ${text} ${hover}`}
                 >
                   {tag.hot ? (
                     <Flame size={9} className={`${icon} animate-pulse`} />

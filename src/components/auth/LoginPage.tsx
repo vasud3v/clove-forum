@@ -82,7 +82,7 @@ export default function LoginPage() {
 
           {/* Error */}
           {error && (
-            <div className="mb-4 flex items-start gap-2 rounded-md border border-red-500/30 bg-red-500/10 px-3 py-2.5">
+            <div className="mb-4 flex items-start gap-2  border border-red-500/30 bg-red-500/10 px-3 py-2.5">
               <AlertCircle size={14} className="text-red-400 mt-0.5 flex-shrink-0" />
               <p className="text-[11px] text-red-400 font-mono">{error}</p>
             </div>
@@ -104,7 +104,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="user@example.com"
-                  className="transition-forum w-full rounded-md border border-forum-border bg-forum-bg py-2.5 pl-9 pr-4 text-[12px] font-mono text-forum-text placeholder-forum-muted outline-none focus:border-forum-pink focus:shadow-pink-glow focus:ring-1 focus:ring-forum-pink/30"
+                  className="transition-forum w-full  border border-forum-border bg-forum-bg py-2.5 pl-9 pr-4 text-[12px] font-mono text-forum-text placeholder-forum-muted outline-none focus:border-primary focus:shadow-brutal-sm focus:ring-1 focus:ring-primary"
                   autoComplete="email"
                   disabled={loading}
                 />
@@ -126,14 +126,14 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="transition-forum w-full rounded-md border border-forum-border bg-forum-bg py-2.5 pl-9 pr-10 text-[12px] font-mono text-forum-text placeholder-forum-muted outline-none focus:border-forum-pink focus:shadow-pink-glow focus:ring-1 focus:ring-forum-pink/30"
+                  className="transition-forum w-full  border border-forum-border bg-forum-bg py-2.5 pl-9 pr-10 text-[12px] font-mono text-forum-text placeholder-forum-muted outline-none focus:border-primary focus:shadow-brutal-sm focus:ring-1 focus:ring-primary"
                   autoComplete="current-password"
                   disabled={loading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-forum-muted hover:text-forum-pink transition-forum"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-forum-muted hover:text-primary transition-forum"
                 >
                   {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
                 </button>
@@ -144,10 +144,10 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="transition-forum w-full flex items-center justify-center gap-2 rounded-md bg-forum-pink px-4 py-2.5 text-[12px] font-bold text-white font-mono hover:bg-forum-pink/90 hover:shadow-pink-glow disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
+              className="transition-forum w-full flex items-center justify-center gap-2  bg-primary px-4 py-2.5 text-[12px] font-bold text-white font-mono hover:bg-primary/90 hover:shadow-brutal-sm disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
             >
               {loading ? (
-                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                <div className="h-4 w-4 animate-spin  border-2 border-white/30 border-t-white" />
               ) : (
                 <>
                   <LogIn size={14} />
@@ -169,7 +169,7 @@ export default function LoginPage() {
             Don't have an account?{' '}
             <Link
               to="/signup"
-              className="text-forum-pink hover:text-glow-pink transition-forum underline underline-offset-2"
+              className="text-primary hover:text-glow-pink transition-forum underline underline-offset-2"
             >
               Create Account
             </Link>
@@ -180,7 +180,7 @@ export default function LoginPage() {
         <div className="text-center mt-4">
           <Link
             to="/"
-            className="text-[10px] text-forum-muted font-mono hover:text-forum-pink transition-forum"
+            className="text-[10px] text-forum-muted font-mono hover:text-primary transition-forum"
           >
             ← Back to Forum
           </Link>

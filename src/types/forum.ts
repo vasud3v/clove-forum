@@ -21,9 +21,9 @@ export const ROLE_LABELS: Record<UserRole, string> = {
 };
 
 export const ROLE_COLORS: Record<UserRole, string> = {
-  admin: 'text-red-400',
-  super_moderator: 'text-orange-400',
-  moderator: 'text-blue-400',
+  admin: 'text-red-600',
+  super_moderator: 'text-orange-700',
+  moderator: 'text-blue-600',
   member: 'text-forum-muted',
   restricted: 'text-gray-500',
 };

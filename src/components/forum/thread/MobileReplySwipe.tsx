@@ -75,7 +75,7 @@ const MobileReplySwipe = memo(({ postId, onReply, children }: MobileReplySwipePr
     <div className="relative overflow-hidden touch-pan-y">
       {/* Reply action revealed on swipe */}
       <div 
-        className="absolute right-0 top-0 bottom-0 w-20 bg-forum-pink flex items-center justify-center pointer-events-none"
+        className="absolute right-0 top-0 bottom-0 w-20 bg-primary flex items-center justify-center pointer-events-none"
         style={{
           transform: `translateX(${Math.abs(swipeX) < maxSwipe ? maxSwipe - Math.abs(swipeX) : 0}px)`,
           transition: isSwiping ? 'none' : 'transform 0.3s ease-out',

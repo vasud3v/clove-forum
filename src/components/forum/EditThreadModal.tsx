@@ -153,17 +153,17 @@ export default function EditThreadModal({ isOpen, onClose, threadId }: EditThrea
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/60 "
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-forum-card border border-forum-border rounded-lg shadow-2xl">
+      <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-forum-card border border-forum-border  shadow-brutal-lg">
         {/* Header */}
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-forum-border bg-forum-card px-6 py-4">
           <h2 className="text-[16px] font-bold text-forum-text font-mono">Edit Thread</h2>
           <button
             onClick={onClose}
-            className="transition-forum rounded-lg p-2 text-forum-muted hover:bg-forum-bg hover:text-forum-text"
+            className="transition-forum  p-2 text-forum-muted hover:bg-forum-bg hover:text-forum-text"
           >
             <X size={18} />
           </button>
@@ -180,7 +180,7 @@ export default function EditThreadModal({ isOpen, onClose, threadId }: EditThrea
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded-lg border border-forum-border bg-forum-bg px-4 py-2.5 text-[13px] font-mono text-forum-text placeholder-forum-muted/50 focus:border-forum-pink/40 focus:outline-none focus:ring-1 focus:ring-forum-pink/20 transition-forum"
+              className="w-full  border border-forum-border bg-forum-bg px-4 py-2.5 text-[13px] font-mono text-forum-text placeholder-forum-muted/50 focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary transition-forum"
               placeholder="Enter thread title..."
             />
           </div>
@@ -207,7 +207,7 @@ export default function EditThreadModal({ isOpen, onClose, threadId }: EditThrea
               type="text"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
-              className="w-full rounded-lg border border-forum-border bg-forum-bg px-4 py-2.5 text-[13px] font-mono text-forum-text placeholder-forum-muted/50 focus:border-forum-pink/40 focus:outline-none focus:ring-1 focus:ring-forum-pink/20 transition-forum"
+              className="w-full  border border-forum-border bg-forum-bg px-4 py-2.5 text-[13px] font-mono text-forum-text placeholder-forum-muted/50 focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary transition-forum"
               placeholder="e.g. discussion, help, announcement"
             />
           </div>
@@ -222,7 +222,7 @@ export default function EditThreadModal({ isOpen, onClose, threadId }: EditThrea
                 <img
                   src={thumbnail}
                   alt="Thread thumbnail"
-                  className="h-16 w-16 rounded-md object-cover border border-forum-border"
+                  className="h-16 w-16  object-cover border border-forum-border"
                   onError={() => {
                     toast.error('Failed to load thumbnail');
                     setThumbnail('');
@@ -234,13 +234,13 @@ export default function EditThreadModal({ isOpen, onClose, threadId }: EditThrea
                 accept="image/*"
                 onChange={handleThumbnailUpload}
                 disabled={isUploading}
-                className="flex-1 text-[11px] font-mono text-forum-text file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-[11px] file:font-medium file:bg-forum-bg file:text-forum-text hover:file:bg-forum-hover file:cursor-pointer disabled:opacity-50"
+                className="flex-1 text-[11px] font-mono text-forum-text file:mr-4 file:py-2 file:px-4 file: file:border-0 file:text-[11px] file:font-medium file:bg-forum-bg file:text-forum-text hover:file:bg-forum-hover file:cursor-pointer disabled:opacity-50"
               />
               {thumbnail && (
                 <button
                   type="button"
                   onClick={() => setThumbnail('')}
-                  className="px-3 py-2 text-[11px] font-mono text-forum-muted hover:text-forum-pink transition-colors"
+                  className="px-3 py-2 text-[11px] font-mono text-forum-muted hover:text-primary transition-colors"
                 >
                   Remove
                 </button>
@@ -262,7 +262,7 @@ export default function EditThreadModal({ isOpen, onClose, threadId }: EditThrea
                 <img
                   src={banner}
                   alt="Thread banner"
-                  className="w-full h-48 object-cover rounded-lg border border-forum-border bg-forum-bg"
+                  className="w-full h-48 object-cover  border border-forum-border bg-forum-bg"
                   onError={() => {
                     toast.error('Failed to load banner image');
                     setBanner('');
@@ -270,24 +270,24 @@ export default function EditThreadModal({ isOpen, onClose, threadId }: EditThrea
                 />
                 <button
                   onClick={handleRemoveBanner}
-                  className="absolute top-2 right-2 bg-red-500/90 hover:bg-red-500 text-white rounded-lg p-2 transition-forum opacity-0 group-hover:opacity-100"
+                  className="absolute top-2 right-2 bg-red-500/90 hover:bg-red-500 text-white  p-2 transition-forum opacity-0 group-hover:opacity-100"
                 >
                   <X size={16} />
                 </button>
               </div>
             ) : (
               <label className="block cursor-pointer">
-                <div className="border-2 border-dashed border-forum-border rounded-lg p-8 text-center hover:border-forum-pink/40 hover:bg-forum-pink/5 transition-forum">
+                <div className="border-2 border-dashed border-forum-border  p-8 text-center hover:border-primary/40 hover:bg-primary/5 transition-forum">
                   <div className="flex flex-col items-center gap-3">
                     {isUploading ? (
                       <>
-                        <div className="animate-spin rounded-full h-10 w-10 border-2 border-forum-pink border-t-transparent" />
+                        <div className="animate-spin  h-10 w-10 border-2 border-primary border-t-transparent" />
                         <span className="text-[11px] font-mono text-forum-muted">Uploading...</span>
                       </>
                     ) : (
                       <>
-                        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-forum-pink/10 border border-forum-pink/20">
-                          <ImageIcon size={24} className="text-forum-pink" />
+                        <div className="flex h-12 w-12 items-center justify-center  bg-primary/10 border border-primary/20">
+                          <ImageIcon size={24} className="text-primary" />
                         </div>
                         <div>
                           <span className="text-[12px] font-mono font-semibold text-forum-text">
@@ -318,14 +318,14 @@ export default function EditThreadModal({ isOpen, onClose, threadId }: EditThrea
           <button
             onClick={onClose}
             disabled={isSaving}
-            className="transition-forum rounded-lg border border-forum-border bg-transparent px-4 py-2 text-[11px] font-mono font-semibold text-forum-text hover:bg-forum-bg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="transition-forum  border border-forum-border bg-transparent px-4 py-2 text-[11px] font-mono font-semibold text-forum-text hover:bg-forum-bg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
             disabled={isSaving || !title.trim() || !content.trim()}
-            className="transition-forum rounded-lg border border-forum-pink/40 bg-transparent px-4 py-2 text-[11px] font-mono font-semibold text-forum-pink hover:bg-forum-pink/10 hover:border-forum-pink/60 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="transition-forum  border border-primary/40 bg-transparent px-4 py-2 text-[11px] font-mono font-semibold text-primary hover:bg-primary/10 hover:border-primary/60 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSaving ? 'Saving...' : 'Save Changes'}
           </button>

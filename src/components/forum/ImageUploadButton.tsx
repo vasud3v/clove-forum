@@ -13,7 +13,7 @@ interface ImageUploadButtonProps {
 
 export default function ImageUploadButton({
   onImageInsert,
-  className = 'transition-forum rounded p-1.5 text-forum-muted hover:bg-forum-hover hover:text-forum-pink',
+  className = 'transition-forum rounded p-1.5 text-forum-muted hover:bg-forum-hover hover:text-primary',
   iconSize = 14,
   mode = 'both', // Default to both images and videos
 }: ImageUploadButtonProps) {
@@ -120,7 +120,7 @@ export default function ImageUploadButton({
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={isUploading}
-          className="flex items-center gap-2 px-4 py-2 rounded-md bg-zinc-800 border border-zinc-700 text-zinc-300 hover:bg-zinc-700 hover:border-zinc-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-[13px] font-medium"
+          className="flex items-center gap-2 px-4 py-2  bg-zinc-800 border border-zinc-700 text-zinc-300 hover:bg-zinc-700 hover:border-zinc-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-[13px] font-medium"
         >
           {isUploading ? (
             <Loader2 size={16} className="animate-spin" />
@@ -178,9 +178,9 @@ export default function ImageUploadButton({
             <button
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploading}
-              className="transition-forum w-full flex items-center gap-2 rounded-md border border-dashed border-forum-border/50 bg-forum-bg/50 px-3 py-3 text-[10px] font-mono text-forum-muted hover:border-forum-pink/40 hover:text-forum-pink hover:bg-forum-pink/[0.03] group disabled:opacity-50 disabled:cursor-not-allowed"
+              className="transition-forum w-full flex items-center gap-2  border border-dashed border-forum-border/50 bg-forum-bg/50 px-3 py-3 text-[10px] font-mono text-forum-muted hover:border-primary/40 hover:text-primary hover:bg-primary/[0.03] group disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Upload size={14} className="text-forum-muted group-hover:text-forum-pink transition-forum" />
+              <Upload size={14} className="text-forum-muted group-hover:text-primary transition-forum" />
               <div className="text-left">
                 <div className="font-semibold">
                   {isUploading ? 'Uploading...' : 'Upload from device'}
@@ -204,12 +204,12 @@ export default function ImageUploadButton({
                   onChange={(e) => setUrlInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleUrlInsert()}
                   placeholder="https://example.com/image.png"
-                  className="flex-1 rounded border border-forum-border/40 bg-forum-bg px-2.5 py-1.5 text-[10px] font-mono text-forum-text placeholder:text-forum-muted/40 outline-none focus:border-forum-pink/40 focus:ring-1 focus:ring-forum-pink/20 transition-forum"
+                  className="flex-1 rounded border border-forum-border/40 bg-forum-bg px-2.5 py-1.5 text-[10px] font-mono text-forum-text placeholder:text-forum-muted/40 outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary transition-forum"
                 />
                 <button
                   onClick={handleUrlInsert}
                   disabled={!urlInput.trim()}
-                  className="transition-forum rounded bg-forum-pink/15 border border-forum-pink/30 px-2.5 py-1.5 text-[9px] font-mono font-semibold text-forum-pink hover:bg-forum-pink/25 disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="transition-forum rounded bg-primary/15 border border-primary/30 px-2.5 py-1.5 text-[9px] font-mono font-semibold text-primary hover:bg-primary/25 disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   Insert
                 </button>

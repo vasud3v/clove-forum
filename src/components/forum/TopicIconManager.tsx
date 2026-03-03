@@ -85,7 +85,7 @@ export default function TopicIconManager({ topics, onUpdate }: TopicIconManagerP
             {/* Icon Preview */}
             <div className="flex-shrink-0">
               {topic.icon ? (
-                <div className="w-32 h-10 rounded-lg overflow-hidden border border-forum-border">
+                <div className="w-32 h-10  overflow-hidden border border-forum-border">
                   <img
                     src={topic.icon}
                     alt={topic.name}
@@ -93,7 +93,7 @@ export default function TopicIconManager({ topics, onUpdate }: TopicIconManagerP
                   />
                 </div>
               ) : (
-                <div className="w-32 h-10 rounded-lg border-2 border-dashed border-forum-border flex items-center justify-center">
+                <div className="w-32 h-10  border-2 border-dashed border-forum-border flex items-center justify-center">
                   <ImageIcon size={20} className="text-forum-muted" />
                 </div>
               )}
@@ -116,7 +116,7 @@ export default function TopicIconManager({ topics, onUpdate }: TopicIconManagerP
               <button
                 onClick={() => openUploadModal(topic)}
                 disabled={updating === topic.id}
-                className="p-1.5 rounded-md text-forum-muted hover:text-forum-pink hover:bg-forum-hover transition-forum disabled:opacity-50"
+                className="p-1.5  text-forum-muted hover:text-primary hover:bg-forum-hover transition-forum disabled:opacity-50"
                 title={topic.icon ? 'Change banner' : 'Add banner'}
               >
                 {topic.icon ? <Edit2 size={14} /> : <Plus size={14} />}
@@ -125,7 +125,7 @@ export default function TopicIconManager({ topics, onUpdate }: TopicIconManagerP
                 <button
                   onClick={() => handleRemoveIcon(topic.id)}
                   disabled={updating === topic.id}
-                  className="p-1.5 rounded-md text-forum-muted hover:text-red-400 hover:bg-red-500/10 transition-forum disabled:opacity-50"
+                  className="p-1.5  text-forum-muted hover:text-red-400 hover:bg-red-500/10 transition-forum disabled:opacity-50"
                   title="Remove banner"
                 >
                   <Trash2 size={14} />

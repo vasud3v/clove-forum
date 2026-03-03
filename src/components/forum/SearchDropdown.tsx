@@ -155,7 +155,7 @@ export default function SearchDropdown({
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -8, scale: 0.95 }}
                         transition={{ duration: 0.15, ease: 'easeOut' }}
-                        className="absolute left-0 right-0 top-full mt-2 z-dropdown rounded-lg border border-forum-border/70 bg-forum-card/95 backdrop-blur-lg shadow-2xl shadow-black/40 overflow-hidden min-w-full"
+                        className="absolute left-0 right-0 top-full mt-2 z-dropdown  border border-forum-border/70 bg-forum-card/95 -lg shadow-brutal-lg shadow-black/40 overflow-hidden min-w-full"
                         style={{ zIndex: 9999 }}
                     >
                         {/* Recent Searches */}
@@ -163,7 +163,7 @@ export default function SearchDropdown({
                             <div className="p-3 border-b border-forum-border/30">
                                 <div className="flex items-center justify-between mb-2.5">
                                     <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-forum-muted/80 flex items-center gap-1.5">
-                                        <Clock size={10} className="text-forum-pink/60" />
+                                        <Clock size={10} className="text-primary/60" />
                                         Recent
                                     </span>
                                     <button
@@ -171,7 +171,7 @@ export default function SearchDropdown({
                                             e.stopPropagation();
                                             onClearRecent();
                                         }}
-                                        className="text-[8px] font-mono text-forum-muted hover:text-forum-pink transition-forum flex items-center gap-1 hover:bg-forum-hover/50 px-1.5 py-1 rounded"
+                                        className="text-[8px] font-mono text-forum-muted hover:text-primary transition-forum flex items-center gap-1 hover:bg-forum-hover/50 px-1.5 py-1 rounded"
                                     >
                                         <Trash2 size={8} />
                                         Clear
@@ -188,12 +188,12 @@ export default function SearchDropdown({
                                                 tabIndex={0}
                                                 onClick={() => onRecentClick(term)}
                                                 onKeyDown={(e) => { if (e.key === 'Enter') onRecentClick(term); }}
-                                                className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-left transition-all duration-150 group cursor-pointer ${activeIndex === idx
-                                                    ? 'bg-forum-pink/10 text-forum-pink'
+                                                className={`w-full flex items-center gap-2.5 px-2.5 py-2  text-left transition-all duration-150 group cursor-pointer ${activeIndex === idx
+                                                    ? 'bg-primary/10 text-primary'
                                                     : 'text-forum-text hover:bg-forum-hover/50'
                                                     }`}
                                             >
-                                                <Clock size={12} className="text-forum-muted/60 flex-shrink-0 group-hover:text-forum-pink/60 transition-colors" />
+                                                <Clock size={12} className="text-forum-muted/60 flex-shrink-0 group-hover:text-primary/60 transition-colors" />
                                                 <span className="text-[12px] font-mono truncate flex-1 text-sm">{term}</span>
                                                 <span
                                                     role="button"
@@ -217,7 +217,7 @@ export default function SearchDropdown({
                         {/* Loading */}
                         {showLoading && (
                             <div className="flex items-center justify-center py-10 gap-2">
-                                <Loader2 size={16} className="text-forum-pink animate-spin" />
+                                <Loader2 size={16} className="text-primary animate-spin" />
                                 <span className="text-[11px] font-mono text-forum-muted/70">Searching...</span>
                             </div>
                         )}
@@ -230,7 +230,7 @@ export default function SearchDropdown({
                                     <div className="mb-2">
                                         <div className="px-2 py-1.5 border-b border-forum-border/20">
                                             <span className="text-[8px] font-mono font-bold uppercase tracking-wider text-forum-muted/70 flex items-center gap-1.5">
-                                                <FileText size={9} className="text-forum-pink/50" />
+                                                <FileText size={9} className="text-primary/50" />
                                                 Threads
                                             </span>
                                         </div>
@@ -242,8 +242,8 @@ export default function SearchDropdown({
                                                     <button
                                                         key={result.id}
                                                         onClick={() => onSelectResult(result.link)}
-                                                        className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-left transition-all duration-150 ${activeIndex === idx
-                                                            ? 'bg-forum-pink/10'
+                                                        className={`w-full flex items-center gap-2.5 px-2.5 py-2  text-left transition-all duration-150 ${activeIndex === idx
+                                                            ? 'bg-primary/10'
                                                             : 'hover:bg-forum-hover/50'
                                                             }`}
                                                     >
@@ -255,19 +255,19 @@ export default function SearchDropdown({
                                                             />
                                                         ) : (
                                                             <div className="h-7 w-7 rounded border border-forum-border/30 bg-forum-bg/50 flex items-center justify-center flex-shrink-0">
-                                                                <FileText size={11} className="text-forum-pink/30" />
+                                                                <FileText size={11} className="text-primary/30" />
                                                             </div>
                                                         )}
                                                     <div className="flex-1 min-w-0">
                                                         <div className="flex items-center gap-1.5">
-                                                            <span className={`text-[12px] font-mono font-medium truncate ${activeIndex === idx ? 'text-forum-pink' : 'text-forum-text'
+                                                            <span className={`text-[12px] font-mono font-medium truncate ${activeIndex === idx ? 'text-primary' : 'text-forum-text'
                                                                 }`}>
                                                                 {result.title}
                                                             </span>
                                                         </div>
                                                         <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                                                             {result.categoryName && (
-                                                                <span className="text-[8px] font-mono text-forum-pink/50 bg-forum-pink/5 px-1.5 py-[1px] rounded">
+                                                                <span className="text-[8px] font-mono text-primary/50 bg-primary/5 px-1.5 py-[1px] rounded">
                                                                     {result.categoryName}
                                                                 </span>
                                                             )}
@@ -290,7 +290,7 @@ export default function SearchDropdown({
                                     <div className="mb-2">
                                         <div className="px-2 py-1.5 border-b border-forum-border/20">
                                             <span className="text-[8px] font-mono font-bold uppercase tracking-wider text-forum-muted/70 flex items-center gap-1.5">
-                                                <User size={9} className="text-forum-pink/50" />
+                                                <User size={9} className="text-primary/50" />
                                                 Users
                                             </span>
                                         </div>
@@ -302,8 +302,8 @@ export default function SearchDropdown({
                                                     <button
                                                         key={result.id}
                                                         onClick={() => onSelectResult(result.link)}
-                                                        className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-left transition-all duration-150 ${activeIndex === idx
-                                                            ? 'bg-forum-pink/10'
+                                                        className={`w-full flex items-center gap-2.5 px-2.5 py-2  text-left transition-all duration-150 ${activeIndex === idx
+                                                            ? 'bg-primary/10'
                                                             : 'hover:bg-forum-hover/50'
                                                             }`}
                                                     >
@@ -311,15 +311,15 @@ export default function SearchDropdown({
                                                             <img
                                                                 src={result.avatar}
                                                                 alt=""
-                                                                className="h-7 w-7 rounded-md object-cover border border-forum-border/40 flex-shrink-0"
+                                                                className="h-7 w-7  object-cover border border-forum-border/40 flex-shrink-0"
                                                             />
                                                         ) : (
-                                                            <div className="h-7 w-7 rounded-md border border-forum-border/30 bg-forum-bg/50 flex items-center justify-center flex-shrink-0">
-                                                                <User size={11} className="text-forum-pink/30" />
+                                                            <div className="h-7 w-7  border border-forum-border/30 bg-forum-bg/50 flex items-center justify-center flex-shrink-0">
+                                                                <User size={11} className="text-primary/30" />
                                                             </div>
                                                         )}
                                                         <div className="flex-1 min-w-0">
-                                                            <span className={`text-[12px] font-mono font-medium truncate inline-block ${activeIndex === idx ? 'text-forum-pink' : 'text-forum-text'
+                                                            <span className={`text-[12px] font-mono font-medium truncate inline-block ${activeIndex === idx ? 'text-primary' : 'text-forum-text'
                                                                 }`}>
                                                                 {result.title}
                                                             </span>
@@ -341,9 +341,9 @@ export default function SearchDropdown({
                                     return (
                                         <button
                                             onClick={onViewAll}
-                                            className={`w-full flex items-center justify-center gap-1.5 px-3 py-2.5 mt-1 rounded-md text-[11px] font-mono font-medium transition-all duration-150 border border-forum-border/30 ${activeIndex === idx
-                                                ? 'bg-forum-pink/10 text-forum-pink border-forum-pink/30'
-                                                : 'text-forum-muted/70 hover:text-forum-pink hover:bg-forum-pink/5 hover:border-forum-pink/30'
+                                            className={`w-full flex items-center justify-center gap-1.5 px-3 py-2.5 mt-1  text-[11px] font-mono font-medium transition-all duration-150 border border-forum-border/30 ${activeIndex === idx
+                                                ? 'bg-primary/10 text-primary border-primary/30'
+                                                : 'text-forum-muted/70 hover:text-primary hover:bg-primary/5 hover:border-primary/30'
                                                 }`}
                                         >
                                             View all results
@@ -357,7 +357,7 @@ export default function SearchDropdown({
                         {/* Empty state */}
                         {showEmpty && (
                             <div className="flex flex-col items-center justify-center py-10 px-4">
-                                <Search size={24} className="text-forum-pink/30 mb-3" />
+                                <Search size={24} className="text-primary/30 mb-3" />
                                 <span className="text-[12px] font-mono text-forum-muted/70 text-center">No results found for your search</span>
                             </div>
                         )}
@@ -365,7 +365,7 @@ export default function SearchDropdown({
                         {/* Nothing-yet state (empty query, no recents) */}
                         {!query.trim() && recentSearches.length === 0 && (
                             <div className="flex flex-col items-center justify-center py-10 px-4">
-                                <Search size={24} className="text-forum-pink/30 mb-3" />
+                                <Search size={24} className="text-primary/30 mb-3" />
                                 <span className="text-[12px] font-mono text-forum-muted/70 text-center">Start typing to search for threads, posts, and users</span>
                             </div>
                         )}

@@ -295,16 +295,16 @@ export default function NewThreadModalAdvanced({ isOpen, onClose, defaultCategor
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/60 "
         onClick={handleClose}
       />
       <div className="relative w-full max-w-3xl hud-panel max-h-[95vh] overflow-y-auto">
         {/* Success overlay */}
         {showSuccess && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center bg-forum-card/95 backdrop-blur-sm rounded">
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-forum-card/95  rounded">
             <div className="text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/15 border-2 border-emerald-500/40 mx-auto mb-4">
-                <Check size={32} className="text-emerald-400" />
+              <div className="flex h-16 w-16 items-center justify-center  bg-emerald-600/30 border-2 border-emerald-600 mx-auto mb-4">
+                <Check size={32} className="text-white" />
               </div>
               <h3 className="text-[16px] font-mono font-bold text-forum-text mb-2">Thread Created!</h3>
               <p className="text-[12px] font-mono text-forum-muted">Redirecting to your thread...</p>
@@ -315,8 +315,8 @@ export default function NewThreadModalAdvanced({ isOpen, onClose, defaultCategor
         {/* Header */}
         <div className="flex items-center justify-between border-b border-forum-border px-6 py-4 bg-forum-card-alt/50">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-forum-pink/10 border border-forum-pink/20">
-              <PenSquare size={18} className="text-forum-pink" />
+            <div className="p-2  bg-primary/10 border border-primary/20">
+              <PenSquare size={18} className="text-primary" />
             </div>
             <div>
               <h2 className="text-[14px] font-bold text-forum-text font-mono">Create New Thread</h2>
@@ -326,13 +326,13 @@ export default function NewThreadModalAdvanced({ isOpen, onClose, defaultCategor
           <div className="flex items-center gap-2">
             {lastSaved && autoSaveEnabled && (
               <div className="flex items-center gap-1.5 text-[9px] text-forum-muted font-mono bg-forum-bg px-2 py-1 rounded border border-forum-border/50">
-                <Save size={10} className="text-emerald-400" />
+                <Save size={10} className="text-white" />
                 <span>Saved {new Date(lastSaved).toLocaleTimeString()}</span>
               </div>
             )}
             <button
               onClick={handleClose}
-              className="transition-forum rounded p-2 text-forum-muted hover:bg-forum-hover hover:text-forum-pink"
+              className="transition-forum rounded p-2 text-forum-muted hover:bg-forum-hover hover:text-primary"
             >
               <X size={18} />
             </button>

@@ -462,7 +462,7 @@ export default function AdminQuickSetupTab({ currentUserId, onRefresh, onLogActi
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-[14px] font-mono font-bold text-forum-text flex items-center gap-2">
-              <Zap size={14} className="text-forum-pink" /> Quick Setup
+              <Zap size={14} className="text-primary" /> Quick Setup
             </h2>
             <p className="text-[10px] font-mono text-forum-muted mt-1">
               Create categories → topics (subcategories) → threads → posts
@@ -473,12 +473,12 @@ export default function AdminQuickSetupTab({ currentUserId, onRefresh, onLogActi
         {/* Templates */}
         <div className="flex flex-wrap gap-2 mb-4">
           <span className="text-[10px] font-mono text-forum-muted">Quick Templates:</span>
-          <button onClick={() => loadTemplate('forum')} className="text-[9px] font-mono text-blue-400 hover:underline">General Forum</button>
-          <button onClick={() => loadTemplate('support')} className="text-[9px] font-mono text-emerald-400 hover:underline">Support Center</button>
-          <button onClick={() => loadTemplate('community')} className="text-[9px] font-mono text-purple-400 hover:underline">Community Hub</button>
+          <button onClick={() => loadTemplate('forum')} className="text-[9px] font-mono text-black hover:underline">General Forum</button>
+          <button onClick={() => loadTemplate('support')} className="text-[9px] font-mono text-black hover:underline">Support Center</button>
+          <button onClick={() => loadTemplate('community')} className="text-[9px] font-mono text-black hover:underline">Community Hub</button>
         </div>
 
-        <button onClick={addCategory} className="transition-forum flex items-center gap-1.5 rounded-md bg-forum-pink px-4 py-2 text-[10px] font-mono font-bold text-white hover:bg-forum-pink/90">
+        <button onClick={addCategory} className="transition-forum flex items-center gap-1.5  bg-primary px-4 py-2 text-[10px] font-mono font-bold text-black hover:bg-primary/90">
           <Plus size={12} /> Add Category
         </button>
       </div>
@@ -500,7 +500,7 @@ export default function AdminQuickSetupTab({ currentUserId, onRefresh, onLogActi
                 value={category.name}
                 onChange={e => updateCategory(category.id, 'name', e.target.value)}
                 placeholder="e.g., General"
-                className="mt-1 w-full rounded-md border border-forum-border bg-forum-bg px-3 py-1.5 text-[11px] font-mono text-forum-text outline-none focus:border-forum-pink"
+                className="mt-1 w-full  border border-forum-border bg-forum-bg px-3 py-1.5 text-[11px] font-mono text-forum-text outline-none focus:border-primary"
               />
             </div>
 
@@ -509,7 +509,7 @@ export default function AdminQuickSetupTab({ currentUserId, onRefresh, onLogActi
               <select
                 value={category.icon}
                 onChange={e => updateCategory(category.id, 'icon', e.target.value)}
-                className="mt-1 w-full rounded-md border border-forum-border bg-forum-bg px-3 py-1.5 text-[11px] font-mono text-forum-text outline-none focus:border-forum-pink"
+                className="mt-1 w-full  border border-forum-border bg-forum-bg px-3 py-1.5 text-[11px] font-mono text-forum-text outline-none focus:border-primary"
               >
                 {ICON_OPTIONS.map(icon => <option key={icon} value={icon}>{icon}</option>)}
               </select>
@@ -522,7 +522,7 @@ export default function AdminQuickSetupTab({ currentUserId, onRefresh, onLogActi
               value={category.description}
               onChange={e => updateCategory(category.id, 'description', e.target.value)}
               placeholder="Brief description of this category"
-              className="mt-1 w-full rounded-md border border-forum-border bg-forum-bg px-3 py-1.5 text-[11px] font-mono text-forum-text outline-none focus:border-forum-pink resize-none h-16"
+              className="mt-1 w-full  border border-forum-border bg-forum-bg px-3 py-1.5 text-[11px] font-mono text-forum-text outline-none focus:border-primary resize-none h-16"
             />
           </div>
 
@@ -553,14 +553,14 @@ export default function AdminQuickSetupTab({ currentUserId, onRefresh, onLogActi
               <h4 className="text-[11px] font-mono font-bold text-forum-text">Topics (Subcategories)</h4>
               <button
                 onClick={() => addTopic(category.id)}
-                className="transition-forum flex items-center gap-1 rounded-md border border-forum-border px-2 py-1 text-[9px] font-mono text-forum-muted hover:text-forum-pink hover:border-forum-pink"
+                className="transition-forum flex items-center gap-1  border border-forum-border px-2 py-1 text-[9px] font-mono text-forum-muted hover:text-primary hover:border-primary"
               >
                 <Plus size={10} /> Add Topic
               </button>
             </div>
 
             {category.topics.map((topic, topicIndex) => (
-              <div key={topic.id} className="bg-forum-hover/30 rounded-md p-3 space-y-3">
+              <div key={topic.id} className="bg-forum-hover/30  p-3 space-y-3">
                 <div className="flex items-start justify-between">
                   <span className="text-[10px] font-mono text-forum-muted">Topic #{topicIndex + 1}</span>
                   <button onClick={() => removeTopic(category.id, topic.id)} className="text-red-400 hover:text-red-300">
@@ -573,13 +573,13 @@ export default function AdminQuickSetupTab({ currentUserId, onRefresh, onLogActi
                     value={topic.name}
                     onChange={e => updateTopic(category.id, topic.id, 'name', e.target.value)}
                     placeholder="Topic name *"
-                    className="w-full rounded-md border border-forum-border bg-forum-bg px-3 py-1.5 text-[10px] font-mono text-forum-text outline-none focus:border-forum-pink"
+                    className="w-full  border border-forum-border bg-forum-bg px-3 py-1.5 text-[10px] font-mono text-forum-text outline-none focus:border-primary"
                   />
                   <input
                     value={topic.description}
                     onChange={e => updateTopic(category.id, topic.id, 'description', e.target.value)}
                     placeholder="Topic description"
-                    className="w-full rounded-md border border-forum-border bg-forum-bg px-3 py-1.5 text-[10px] font-mono text-forum-text outline-none focus:border-forum-pink"
+                    className="w-full  border border-forum-border bg-forum-bg px-3 py-1.5 text-[10px] font-mono text-forum-text outline-none focus:border-primary"
                   />
                 </div>
 
@@ -589,7 +589,7 @@ export default function AdminQuickSetupTab({ currentUserId, onRefresh, onLogActi
                     <span className="text-[9px] font-mono text-forum-muted uppercase">Threads</span>
                     <button
                       onClick={() => addThread(category.id, topic.id)}
-                      className="text-[8px] font-mono text-forum-pink hover:underline"
+                      className="text-[8px] font-mono text-primary hover:underline"
                     >
                       + Add Thread
                     </button>
@@ -608,7 +608,7 @@ export default function AdminQuickSetupTab({ currentUserId, onRefresh, onLogActi
                         value={thread.title}
                         onChange={e => updateThread(category.id, topic.id, thread.id, 'title', e.target.value)}
                         placeholder="Thread title *"
-                        className="w-full rounded border border-forum-border bg-forum-bg px-2 py-1 text-[9px] font-mono text-forum-text outline-none focus:border-forum-pink"
+                        className="w-full rounded border border-forum-border bg-forum-bg px-2 py-1 text-[9px] font-mono text-forum-text outline-none focus:border-primary"
                       />
 
                       <div className="min-h-[120px]">
@@ -625,7 +625,7 @@ export default function AdminQuickSetupTab({ currentUserId, onRefresh, onLogActi
                           value={thread.tags}
                           onChange={e => updateThread(category.id, topic.id, thread.id, 'tags', e.target.value)}
                           placeholder="Tags"
-                          className="flex-1 rounded border border-forum-border bg-forum-bg px-2 py-1 text-[8px] font-mono text-forum-text outline-none focus:border-forum-pink"
+                          className="flex-1 rounded border border-forum-border bg-forum-bg px-2 py-1 text-[8px] font-mono text-forum-text outline-none focus:border-primary"
                         />
                         <label className="flex items-center gap-1 text-[8px] font-mono text-forum-muted cursor-pointer whitespace-nowrap">
                           <input
@@ -664,7 +664,7 @@ export default function AdminQuickSetupTab({ currentUserId, onRefresh, onLogActi
           <button
             onClick={handleCreateAll}
             disabled={isSubmitting}
-            className="transition-forum w-full flex items-center justify-center gap-2 rounded-md bg-forum-pink px-6 py-3 text-[12px] font-mono font-bold text-white hover:bg-forum-pink/90 disabled:opacity-50"
+            className="transition-forum w-full flex items-center justify-center gap-2  bg-primary px-6 py-3 text-[12px] font-mono font-bold text-black hover:bg-primary/90 disabled:opacity-50"
           >
             {isSubmitting ? (
               <>Creating...</>

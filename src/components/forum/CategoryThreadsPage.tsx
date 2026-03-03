@@ -173,12 +173,12 @@ export default function CategoryThreadsPage() {
     return (
       <div className="min-h-screen bg-forum-bg flex items-center justify-center">
         <div className="hud-panel px-10 py-12 text-center">
-          <div className="text-[40px] mb-4"><Construction size={40} className="text-forum-pink mx-auto" /></div>
+          <div className="text-[40px] mb-4"><Construction size={40} className="text-primary mx-auto" /></div>
           <h2 className="text-[16px] font-bold text-forum-text font-mono mb-2">Category Not Found</h2>
           <p className="text-[12px] text-forum-muted font-mono mb-6">The category you're looking for doesn't exist.</p>
           <button
             onClick={() => navigate('/')}
-            className="transition-forum rounded bg-forum-pink px-5 py-2.5 text-[11px] font-mono font-semibold text-white hover:shadow-pink-glow active:scale-95 border border-forum-pink/50"
+            className="transition-forum rounded bg-primary px-5 py-2.5 text-[11px] font-mono font-semibold text-black hover:shadow-brutal-sm active:scale-95 border border-primary/50"
           >
             Back to Forums
           </button>
@@ -210,24 +210,24 @@ export default function CategoryThreadsPage() {
       {/* Breadcrumb */}
       <div className="mx-auto max-w-7xl px-4 lg:px-6 pt-4 pb-2">
         <div className="flex items-center gap-1.5 text-[10px] font-mono text-forum-muted">
-          <HomeIcon size={11} className="text-forum-pink" />
+          <HomeIcon size={11} className="text-primary" />
           <span
             onClick={() => navigate('/')}
-            className="text-forum-text hover:text-forum-pink transition-forum cursor-pointer"
+            className="text-forum-text hover:text-primary transition-forum cursor-pointer"
           >
             Forums
           </span>
           <ChevronRight size={10} />
           <span
             onClick={() => { if (activeTopic) { setSearchParams({}); setCurrentPage(1); } }}
-            className={`${activeTopic ? 'text-forum-text hover:text-forum-pink cursor-pointer' : 'text-forum-pink'} transition-forum`}
+            className={`${activeTopic ? 'text-forum-text hover:text-primary cursor-pointer' : 'text-primary'} transition-forum`}
           >
             {category.name}
           </span>
           {activeTopicData && (
             <>
               <ChevronRight size={10} />
-              <span className="text-forum-pink">{activeTopicData.name}</span>
+              <span className="text-primary">{activeTopicData.name}</span>
             </>
           )}
         </div>
@@ -236,10 +236,10 @@ export default function CategoryThreadsPage() {
       <div className="mx-auto max-w-7xl px-4 py-4 lg:px-6 space-y-4">
         <div className="hud-panel overflow-hidden">
           <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-forum-card to-forum-bg/50" />
+            <div className="absolute inset-0 bg-forum-card to-forum-bg/50" />
             <div className="relative flex items-center justify-between gap-4 px-5 py-4">
               <div className="flex items-center gap-4 min-w-0">
-                <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-forum-bg border border-forum-border">
+                <div className="flex h-14 w-14 items-center justify-center  bg-forum-bg border border-forum-border">
                   <Icon size={26} className="text-forum-text" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -256,7 +256,7 @@ export default function CategoryThreadsPage() {
               <div className="flex items-center gap-4 flex-shrink-0">
                 <button
                   onClick={() => setIsModalOpen(true)}
-                  className="transition-forum flex items-center gap-2 rounded-lg border border-forum-pink/40 bg-transparent px-4 py-2.5 text-[11px] font-mono font-semibold text-forum-pink hover:bg-forum-pink/10 hover:border-forum-pink/60 active:scale-95"
+                  className="transition-forum flex items-center gap-2  border border-primary/40 bg-transparent px-4 py-2.5 text-[11px] font-mono font-semibold text-primary hover:bg-primary/10 hover:border-primary/60 active:scale-95"
                 >
                   <Plus size={16} />
                   <span className="hidden sm:inline">Create Thread</span>
@@ -286,9 +286,9 @@ export default function CategoryThreadsPage() {
         {/* Mod-only notice for important categories */}
         {category.isImportant && (
           <div className="hud-panel px-4 py-3 flex items-center gap-3 border-amber-500/20 bg-amber-500/[0.04]">
-            <Lock size={14} className="text-amber-400 flex-shrink-0" />
+            <Lock size={14} className="text-amber-600 flex-shrink-0" />
             <div>
-              <span className="text-[11px] font-mono font-semibold text-amber-400">
+              <span className="text-[11px] font-mono font-semibold text-amber-600">
                 Moderator-Managed Section
               </span>
               <p className="text-[10px] font-mono text-forum-muted mt-0.5">
@@ -300,9 +300,9 @@ export default function CategoryThreadsPage() {
 
         {/* Category Quick Stats Bar */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="hud-panel px-3 py-2.5 flex items-center gap-2.5 group hover:border-forum-pink/30 transition-forum hover:shadow-[0_0_12px_rgba(255,45,146,0.1)]">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-forum-pink/15 to-forum-pink/5 border border-forum-pink/25 group-hover:border-forum-pink/40 group-hover:badge-glow-pink transition-forum">
-              <Pin size={13} className="text-forum-pink drop-shadow-[0_0_3px_rgba(255,45,146,0.4)]" />
+          <div className="hud-panel px-3 py-2.5 flex items-center gap-2.5 group hover:border-primary/30 transition-forum hover:shadow-[0_0_12px_rgba(255,45,146,0.1)]">
+            <div className="flex h-8 w-8 items-center justify-center  bg-gradient-to-br from-forum-pink/15 to-forum-pink/5 border border-primary/25 group-hover:border-primary/40 group-hover:badge-glow-pink transition-forum">
+              <Pin size={13} className="text-primary drop-shadow-[0_0_3px_rgba(255,45,146,0.4)]" />
             </div>
             <div>
               <div className="text-[13px] font-bold font-mono text-forum-text">{pinnedCount}</div>
@@ -310,8 +310,8 @@ export default function CategoryThreadsPage() {
             </div>
           </div>
           <div className="hud-panel px-3 py-2.5 flex items-center gap-2.5 group hover:border-orange-500/30 transition-forum hover:shadow-[0_0_12px_rgba(249,115,22,0.1)]">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-orange-500/15 to-orange-500/5 border border-orange-500/25 group-hover:border-orange-500/40 transition-forum">
-              <Flame size={13} className="text-orange-400 drop-shadow-[0_0_3px_rgba(249,115,22,0.4)]" />
+            <div className="flex h-8 w-8 items-center justify-center  bg-gradient-to-br from-orange-500/15 to-orange-500/5 border border-orange-500/25 group-hover:border-orange-500/40 transition-forum">
+              <Flame size={13} className="text-orange-700 drop-shadow-[0_0_3px_rgba(249,115,22,0.4)]" />
             </div>
             <div>
               <div className="text-[13px] font-bold font-mono text-forum-text">{hotCount}</div>
@@ -319,8 +319,8 @@ export default function CategoryThreadsPage() {
             </div>
           </div>
           <div className="hud-panel px-3 py-2.5 flex items-center gap-2.5 group hover:border-amber-500/30 transition-forum hover:shadow-[0_0_12px_rgba(245,158,11,0.1)]">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-amber-500/15 to-amber-500/5 border border-amber-500/25 group-hover:border-amber-500/40 transition-forum">
-              <Lock size={13} className="text-amber-400 drop-shadow-[0_0_3px_rgba(245,158,11,0.4)]" />
+            <div className="flex h-8 w-8 items-center justify-center  bg-gradient-to-br from-amber-500/15 to-amber-500/5 border border-amber-500/25 group-hover:border-amber-500/40 transition-forum">
+              <Lock size={13} className="text-amber-600 drop-shadow-[0_0_3px_rgba(245,158,11,0.4)]" />
             </div>
             <div>
               <div className="text-[13px] font-bold font-mono text-forum-text">{lockedCount}</div>
@@ -328,8 +328,8 @@ export default function CategoryThreadsPage() {
             </div>
           </div>
           <div className="hud-panel px-3 py-2.5 flex items-center gap-2.5 group hover:border-cyan-500/30 transition-forum hover:shadow-[0_0_12px_rgba(34,211,238,0.1)]">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-cyan-500/15 to-cyan-500/5 border border-cyan-500/25 group-hover:border-cyan-500/40 transition-forum">
-              <Eye size={13} className="text-cyan-400 drop-shadow-[0_0_3px_rgba(34,211,238,0.4)]" />
+            <div className="flex h-8 w-8 items-center justify-center  bg-gradient-to-br from-cyan-500/15 to-cyan-500/5 border border-cyan-500/25 group-hover:border-cyan-500/40 transition-forum">
+              <Eye size={13} className="text-black drop-shadow-[0_0_3px_rgba(0,0,0,0.4)]" />
             </div>
             <div>
               <div className="text-[13px] font-bold font-mono text-forum-text">
@@ -344,12 +344,12 @@ export default function CategoryThreadsPage() {
         {allTags.length > 0 && (
           <div className="hud-panel px-4 py-3">
             <div className="flex items-center gap-2 flex-wrap">
-              <Hash size={12} className="text-forum-pink flex-shrink-0" />
-              <span className="text-[9px] font-mono font-semibold text-forum-pink uppercase tracking-wider flex-shrink-0">Tags:</span>
+              <Hash size={12} className="text-primary flex-shrink-0" />
+              <span className="text-[9px] font-mono font-semibold text-primary uppercase tracking-wider flex-shrink-0">Tags:</span>
               {allTags.map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-sm border border-forum-pink/10 bg-forum-pink/[0.04] px-2 py-0.5 text-[9px] font-mono font-medium text-forum-pink/70 hover:bg-forum-pink/10 hover:text-forum-pink hover:border-forum-pink/25 transition-forum cursor-pointer"
+                  className=" border border-primary/10 bg-primary/[0.04] px-2 py-0.5 text-[9px] font-mono font-medium text-black hover:bg-primary/10 hover:text-primary hover:border-primary/25 transition-forum cursor-pointer"
                 >
                   #{tag}
                 </span>
@@ -362,13 +362,13 @@ export default function CategoryThreadsPage() {
         {category.topics && category.topics.length > 0 && (
           <div className="hud-panel px-4 py-3">
             <div className="flex items-center gap-2 flex-wrap">
-              <Hash size={12} className="text-forum-pink flex-shrink-0" />
-              <span className="text-[9px] font-mono font-semibold text-forum-pink uppercase tracking-wider flex-shrink-0">Topics:</span>
+              <Hash size={12} className="text-primary flex-shrink-0" />
+              <span className="text-[9px] font-mono font-semibold text-primary uppercase tracking-wider flex-shrink-0">Topics:</span>
               <button
                 onClick={() => { setSearchParams({}); setCurrentPage(1); }}
-                className={`rounded-sm border px-2 py-0.5 text-[9px] font-mono font-medium transition-forum cursor-pointer ${!activeTopic
-                  ? 'border-forum-pink/40 bg-forum-pink/15 text-forum-pink'
-                  : 'border-forum-pink/10 bg-forum-pink/[0.04] text-forum-pink/70 hover:bg-forum-pink/10 hover:text-forum-pink hover:border-forum-pink/25'
+                className={` border px-2 py-0.5 text-[9px] font-mono font-medium transition-forum cursor-pointer ${!activeTopic
+                  ? 'border-primary/40 bg-primary/15 text-primary'
+                  : 'border-primary/10 bg-primary/[0.04] text-primary/70 hover:bg-primary/10 hover:text-primary hover:border-primary/25'
                   }`}
               >
                 All Topics
@@ -384,22 +384,22 @@ export default function CategoryThreadsPage() {
                 
                 if (isHotTopic) {
                   badgeIcon = <Flame size={10} className="animate-pulse" />;
-                  badgeClass = 'text-orange-400';
+                  badgeClass = 'text-orange-700';
                 } else if (isTrendingTopic) {
                   badgeIcon = <TrendingUp size={10} />;
-                  badgeClass = 'text-emerald-400';
+                  badgeClass = 'text-emerald-700';
                 } else if (isNewTopic) {
                   badgeIcon = <Sparkles size={10} className="animate-pulse" />;
-                  badgeClass = 'text-purple-400';
+                  badgeClass = 'text-purple-600';
                 }
                 
                 return (
                   <button
                     key={topic.id}
                     onClick={() => { setSearchParams({ topic: topic.id }); setCurrentPage(1); }}
-                    className={`rounded-sm border px-2.5 py-1.5 text-[9px] font-mono font-medium transition-forum cursor-pointer flex flex-col items-start gap-0.5 ${activeTopic === topic.id
-                      ? 'border-forum-pink/40 bg-forum-pink/15 text-forum-pink'
-                      : 'border-forum-pink/10 bg-forum-pink/[0.04] text-forum-pink/70 hover:bg-forum-pink/10 hover:text-forum-pink hover:border-forum-pink/25'
+                    className={` border px-2.5 py-1.5 text-[9px] font-mono font-medium transition-forum cursor-pointer flex flex-col items-start gap-0.5 ${activeTopic === topic.id
+                      ? 'border-primary/40 bg-primary/15 text-primary'
+                      : 'border-primary/10 bg-primary/[0.04] text-primary/70 hover:bg-primary/10 hover:text-primary hover:border-primary/25'
                       }`}
                   >
                     <div className="flex items-center gap-1.5">
@@ -457,17 +457,17 @@ export default function CategoryThreadsPage() {
               {/* Thread list header */}
               <div className="flex items-center px-4 py-2 border-b border-forum-border/40 bg-forum-bg/30">
                 <div className="flex-1 flex items-center gap-2">
-                  <MessageCircle size={11} className="text-forum-pink/50" />
+                  <MessageCircle size={11} className="text-primary/50" />
                   <span className="text-[9px] font-mono font-semibold uppercase tracking-widest text-forum-muted/70">
                     Threads
                   </span>
                   {activeFilter !== 'all' && (
-                    <span className="rounded bg-forum-pink/10 border border-forum-pink/20 px-1.5 py-[1px] text-[8px] font-mono font-semibold text-forum-pink">
+                    <span className="rounded bg-primary/10 border border-primary/20 px-1.5 py-[1px] text-[8px] font-mono font-semibold text-primary">
                       {activeFilter === 'trending' ? 'Trending' : activeFilter === 'unanswered' ? 'Unanswered' : 'My Threads'}
                     </span>
                   )}
                   {activeTopic && activeTopicData && (
-                    <span className="rounded bg-forum-pink/10 border border-forum-pink/20 px-1.5 py-[1px] text-[8px] font-mono font-semibold text-forum-pink">
+                    <span className="rounded bg-primary/10 border border-primary/20 px-1.5 py-[1px] text-[8px] font-mono font-semibold text-primary">
                       {activeTopicData.name}
                     </span>
                   )}
@@ -490,8 +490,8 @@ export default function CategoryThreadsPage() {
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center px-6 py-20">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-forum-pink/5 border border-forum-pink/10 mb-4">
-                    <SearchX size={28} className="text-forum-pink/40" />
+                  <div className="flex h-16 w-16 items-center justify-center  bg-primary/5 border border-primary/10 mb-4">
+                    <SearchX size={28} className="text-primary/40" />
                   </div>
                   <h3 className="text-[14px] font-bold text-forum-text font-mono mb-1.5">
                     No threads found
@@ -506,7 +506,7 @@ export default function CategoryThreadsPage() {
                   {(searchQuery || activeFilter !== 'all') && (
                     <button
                       onClick={() => { setSearchQuery(''); setActiveFilter('all'); setCurrentPage(1); }}
-                      className="mt-4 transition-forum rounded border border-forum-pink/30 bg-forum-pink/10 px-4 py-2 text-[10px] font-mono font-semibold text-forum-pink hover:bg-forum-pink/20 hover:border-forum-pink/50"
+                      className="mt-4 transition-forum rounded border border-primary/30 bg-primary/10 px-4 py-2 text-[10px] font-mono font-semibold text-primary hover:bg-primary/20 hover:border-primary/50"
                     >
                       Clear Filters
                     </button>
@@ -529,7 +529,7 @@ export default function CategoryThreadsPage() {
                       <select
                         value={pageSize}
                         onChange={(e) => handlePageSizeChange(Number(e.target.value))}
-                        className="bg-forum-card border border-forum-border rounded px-1.5 py-0.5 text-[9px] font-mono text-forum-text focus:outline-none focus:border-forum-pink/40 hover:border-forum-pink/20 transition-forum cursor-pointer appearance-none"
+                        className="bg-forum-card border border-forum-border rounded px-1.5 py-0.5 text-[9px] font-mono text-forum-text focus:outline-none focus:border-primary/40 hover:border-primary/20 transition-forum cursor-pointer appearance-none"
                         style={{ backgroundImage: 'none' }}
                       >
                         {availablePageSizes.map((size) => (
@@ -558,7 +558,7 @@ export default function CategoryThreadsPage() {
             {/* Category Info Card */}
             <div className="hud-panel p-4 space-y-3">
               <h4 className="text-[11px] font-mono font-bold text-forum-text uppercase tracking-wider flex items-center gap-2">
-                <MessageCircle size={12} className="text-forum-pink" />
+                <MessageCircle size={12} className="text-primary" />
                 Category Info
               </h4>
               <div className="space-y-2.5">
@@ -589,7 +589,7 @@ export default function CategoryThreadsPage() {
             {/* Top Contributors in Category */}
             <div className="hud-panel p-4 space-y-3">
               <h4 className="text-[11px] font-mono font-bold text-forum-text uppercase tracking-wider flex items-center gap-2">
-                <Users size={12} className="text-forum-pink" />
+                <Users size={12} className="text-primary" />
                 Top Contributors
               </h4>
               <div className="space-y-2">
@@ -611,12 +611,12 @@ export default function CategoryThreadsPage() {
                       <img
                         src={user.avatar || getUserAvatar('', user.username)}
                         alt={user.username}
-                        className="h-6 w-6 rounded-full object-cover border border-forum-border"
+                        className="h-6 w-6  object-cover border border-forum-border"
                       />
                       <div className="flex-1 min-w-0">
                         <span className="text-[11px] font-mono text-forum-text truncate block">{user.username}</span>
                       </div>
-                      <span className="text-[10px] font-mono text-forum-pink font-bold">{count} threads</span>
+                      <span className="text-[10px] font-mono text-primary font-bold">{count} threads</span>
                     </div>
                   ))}
               </div>
@@ -631,7 +631,7 @@ export default function CategoryThreadsPage() {
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
           <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/60 "
             onClick={() => setIsMobileMenuOpen(false)}
           />
           <div className="absolute right-0 top-0 bottom-0 w-[300px] overflow-y-auto border-l border-forum-border bg-forum-card p-4 space-y-4">

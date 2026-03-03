@@ -27,9 +27,9 @@ export default function ForumRulesPage() {
       {/* Breadcrumb */}
       <div className="mx-auto max-w-7xl px-4 lg:px-6 pt-4 pb-2">
         <div className="flex items-center gap-1.5 text-[10px] font-mono text-forum-muted">
-          <HomeIcon size={11} className="text-forum-pink" />
+          <HomeIcon size={11} className="text-primary" />
           <span
-            className="text-forum-text hover:text-forum-pink transition-forum cursor-pointer"
+            className="text-forum-text hover:text-primary transition-forum cursor-pointer"
             onClick={() => navigate('/')}
           >
             Forums
@@ -45,8 +45,8 @@ export default function ForumRulesPage() {
           <div className="flex-1 min-w-0">
             {/* Page header */}
             <div className="flex items-center gap-2.5 mb-4">
-              <div className="flex h-8 w-8 items-center justify-center rounded-md bg-forum-pink/10 border border-forum-pink/20">
-                <Shield size={14} className="text-forum-pink" />
+              <div className="flex h-8 w-8 items-center justify-center  bg-primary/10 border border-primary/20">
+                <Shield size={14} className="text-primary" />
               </div>
               <div>
                 <h1 className="text-[16px] font-bold text-forum-text font-mono">

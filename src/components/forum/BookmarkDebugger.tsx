@@ -108,39 +108,39 @@ export default function BookmarkDebugger({ threadId }: BookmarkDebuggerProps) {
   if (!threadId) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 z-50 bg-black/90 text-white p-4 rounded-lg max-w-md text-xs font-mono">
-      <div className="font-bold mb-2 text-yellow-400">🔍 Bookmark Debugger</div>
+    <div className="fixed bottom-4 left-4 z-50 bg-black/90 text-black p-4  max-w-md text-xs font-mono">
+      <div className="font-bold mb-2 text-yellow-700">🔍 Bookmark Debugger</div>
       
       <div className="space-y-1 mb-3">
-        <div>Thread ID: <span className="text-green-400">{debugInfo.threadId?.slice(0, 8)}...</span></div>
-        <div>Current User: <span className="text-green-400">{debugInfo.currentUserId?.slice(0, 8)}...</span></div>
-        <div>Auth User: <span className="text-green-400">{debugInfo.authUserId?.slice(0, 8)}...</span></div>
-        <div>Is Bookmarked: <span className={debugInfo.isBookmarked ? 'text-green-400' : 'text-red-400'}>
+        <div>Thread ID: <span className="text-emerald-700">{debugInfo.threadId?.slice(0, 8)}...</span></div>
+        <div>Current User: <span className="text-emerald-700">{debugInfo.currentUserId?.slice(0, 8)}...</span></div>
+        <div>Auth User: <span className="text-emerald-700">{debugInfo.authUserId?.slice(0, 8)}...</span></div>
+        <div>Is Bookmarked: <span className={debugInfo.isBookmarked ? 'text-emerald-700' : 'text-red-600'}>
           {debugInfo.isBookmarked ? 'YES' : 'NO'}
         </span></div>
-        <div>Forum User Exists: <span className={debugInfo.forumUserExists ? 'text-green-400' : 'text-red-400'}>
+        <div>Forum User Exists: <span className={debugInfo.forumUserExists ? 'text-emerald-700' : 'text-red-600'}>
           {debugInfo.forumUserExists ? 'YES' : 'NO'}
         </span></div>
-        <div>DB Bookmark: <span className={debugInfo.dbBookmark ? 'text-green-400' : 'text-red-400'}>
+        <div>DB Bookmark: <span className={debugInfo.dbBookmark ? 'text-emerald-700' : 'text-red-600'}>
           {debugInfo.dbBookmark ? 'EXISTS' : 'NONE'}
         </span></div>
         {debugInfo.dbError && (
-          <div className="text-red-400">DB Error: {debugInfo.dbError}</div>
+          <div className="text-red-600">DB Error: {debugInfo.dbError}</div>
         )}
         {debugInfo.forumUserError && (
-          <div className="text-red-400">User Error: {debugInfo.forumUserError}</div>
+          <div className="text-red-600">User Error: {debugInfo.forumUserError}</div>
         )}
       </div>
 
       <button
         onClick={handleTest}
         disabled={testing}
-        className="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white disabled:opacity-50"
+        className="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-black disabled:opacity-50"
       >
         {testing ? 'Testing...' : 'Test Toggle'}
       </button>
 
-      <div className="mt-2 text-[10px] text-gray-400">
+      <div className="mt-2 text-[10px] text-black">
         Check console for detailed logs
       </div>
     </div>
