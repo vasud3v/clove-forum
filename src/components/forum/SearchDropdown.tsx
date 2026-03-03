@@ -147,36 +147,37 @@ export default function SearchDropdown({
     let flatIndex = -1;
 
     return (
-        <div ref={containerRef}>
+        <div ref={containerRef} className="w-full overflow-visible">
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ opacity: 0, y: -4, scale: 0.98 }}
+                        initial={{ opacity: 0, y: -8, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -4, scale: 0.98 }}
+                        exit={{ opacity: 0, y: -8, scale: 0.95 }}
                         transition={{ duration: 0.15, ease: 'easeOut' }}
-                        className="absolute left-0 right-0 top-full mt-1.5 z-dropdown rounded-lg border border-forum-border bg-forum-card/98 backdrop-blur-xl shadow-2xl shadow-black/30 overflow-hidden"
+                        className="absolute left-0 right-0 top-full mt-2 z-dropdown rounded-lg border border-forum-border/70 bg-forum-card/95 backdrop-blur-lg shadow-2xl shadow-black/40 overflow-hidden min-w-full"
+                        style={{ zIndex: 9999 }}
                     >
                         {/* Recent Searches */}
                         {showRecent && (
-                            <div className="p-3">
-                                <div className="flex items-center justify-between mb-2">
-                                    <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-forum-muted flex items-center gap-1.5">
+                            <div className="p-3 border-b border-forum-border/30">
+                                <div className="flex items-center justify-between mb-2.5">
+                                    <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-forum-muted/80 flex items-center gap-1.5">
                                         <Clock size={10} className="text-forum-pink/60" />
-                                        Recent Searches
+                                        Recent
                                     </span>
                                     <button
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             onClearRecent();
                                         }}
-                                        className="text-[8px] font-mono text-forum-muted hover:text-forum-pink transition-forum flex items-center gap-1"
+                                        className="text-[8px] font-mono text-forum-muted hover:text-forum-pink transition-forum flex items-center gap-1 hover:bg-forum-hover/50 px-1.5 py-1 rounded"
                                     >
                                         <Trash2 size={8} />
                                         Clear
                                     </button>
                                 </div>
-                                <div className="space-y-0.5">
+                                <div className="space-y-1">
                                     {recentSearches.map((term) => {
                                         flatIndex++;
                                         const idx = flatIndex;
@@ -187,13 +188,13 @@ export default function SearchDropdown({
                                                 tabIndex={0}
                                                 onClick={() => onRecentClick(term)}
                                                 onKeyDown={(e) => { if (e.key === 'Enter') onRecentClick(term); }}
-                                                className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-left transition-forum group cursor-pointer ${activeIndex === idx
+                                                className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-left transition-all duration-150 group cursor-pointer ${activeIndex === idx
                                                     ? 'bg-forum-pink/10 text-forum-pink'
-                                                    : 'text-forum-text hover:bg-forum-hover'
+                                                    : 'text-forum-text hover:bg-forum-hover/50'
                                                     }`}
                                             >
-                                                <Clock size={12} className="text-forum-muted flex-shrink-0" />
-                                                <span className="text-[12px] font-mono truncate flex-1">{term}</span>
+                                                <Clock size={12} className="text-forum-muted/60 flex-shrink-0 group-hover:text-forum-pink/60 transition-colors" />
+                                                <span className="text-[12px] font-mono truncate flex-1 text-sm">{term}</span>
                                                 <span
                                                     role="button"
                                                     tabIndex={0}
@@ -202,7 +203,7 @@ export default function SearchDropdown({
                                                         onRemoveRecent(term);
                                                     }}
                                                     onKeyDown={(e) => { if (e.key === 'Enter') { e.stopPropagation(); onRemoveRecent(term); } }}
-                                                    className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 hover:text-red-400 cursor-pointer"
+                                                    className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 hover:text-red-400 cursor-pointer flex-shrink-0"
                                                 >
                                                     <X size={10} />
                                                 </span>
@@ -215,47 +216,48 @@ export default function SearchDropdown({
 
                         {/* Loading */}
                         {showLoading && (
-                            <div className="flex items-center justify-center py-8 gap-2">
+                            <div className="flex items-center justify-center py-10 gap-2">
                                 <Loader2 size={16} className="text-forum-pink animate-spin" />
-                                <span className="text-[11px] font-mono text-forum-muted">Searching...</span>
+                                <span className="text-[11px] font-mono text-forum-muted/70">Searching...</span>
                             </div>
                         )}
 
                         {/* Results */}
                         {showResults && (
-                            <div className="p-2 max-h-[380px] overflow-y-auto">
+                            <div className="p-2 max-h-[400px] overflow-y-auto space-y-0.5">
                                 {/* Threads */}
                                 {threads.length > 0 && (
-                                    <div className="mb-1">
-                                        <div className="px-2 py-1.5">
-                                            <span className="text-[8px] font-mono font-bold uppercase tracking-wider text-forum-muted flex items-center gap-1.5">
-                                                <FileText size={9} className="text-forum-pink/60" />
+                                    <div className="mb-2">
+                                        <div className="px-2 py-1.5 border-b border-forum-border/20">
+                                            <span className="text-[8px] font-mono font-bold uppercase tracking-wider text-forum-muted/70 flex items-center gap-1.5">
+                                                <FileText size={9} className="text-forum-pink/50" />
                                                 Threads
                                             </span>
                                         </div>
-                                        {threads.map((result) => {
-                                            flatIndex++;
-                                            const idx = flatIndex;
-                                            return (
-                                                <button
-                                                    key={result.id}
-                                                    onClick={() => onSelectResult(result.link)}
-                                                    className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-left transition-forum ${activeIndex === idx
-                                                        ? 'bg-forum-pink/10'
-                                                        : 'hover:bg-forum-hover'
-                                                        }`}
-                                                >
-                                                    {result.avatar ? (
-                                                        <img
-                                                            src={result.avatar}
-                                                            alt=""
-                                                            className="h-7 w-7 rounded object-cover border border-forum-border/50 flex-shrink-0"
-                                                        />
-                                                    ) : (
-                                                        <div className="h-7 w-7 rounded border border-forum-border/30 bg-forum-bg flex items-center justify-center flex-shrink-0">
-                                                            <FileText size={12} className="text-forum-pink/40" />
-                                                        </div>
-                                                    )}
+                                        <div className="space-y-0.5">
+                                            {threads.map((result) => {
+                                                flatIndex++;
+                                                const idx = flatIndex;
+                                                return (
+                                                    <button
+                                                        key={result.id}
+                                                        onClick={() => onSelectResult(result.link)}
+                                                        className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-left transition-all duration-150 ${activeIndex === idx
+                                                            ? 'bg-forum-pink/10'
+                                                            : 'hover:bg-forum-hover/50'
+                                                            }`}
+                                                    >
+                                                        {result.avatar ? (
+                                                            <img
+                                                                src={result.avatar}
+                                                                alt=""
+                                                                className="h-7 w-7 rounded object-cover border border-forum-border/40 flex-shrink-0"
+                                                            />
+                                                        ) : (
+                                                            <div className="h-7 w-7 rounded border border-forum-border/30 bg-forum-bg/50 flex items-center justify-center flex-shrink-0">
+                                                                <FileText size={11} className="text-forum-pink/30" />
+                                                            </div>
+                                                        )}
                                                     <div className="flex-1 min-w-0">
                                                         <div className="flex items-center gap-1.5">
                                                             <span className={`text-[12px] font-mono font-medium truncate ${activeIndex === idx ? 'text-forum-pink' : 'text-forum-text'
@@ -263,18 +265,15 @@ export default function SearchDropdown({
                                                                 {result.title}
                                                             </span>
                                                         </div>
-                                                        <div className="flex items-center gap-2 mt-0.5">
+                                                        <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                                                             {result.categoryName && (
-                                                                <span className="text-[8px] font-mono text-forum-pink/60 bg-forum-pink/5 px-1.5 py-[1px] rounded">
+                                                                <span className="text-[8px] font-mono text-forum-pink/50 bg-forum-pink/5 px-1.5 py-[1px] rounded">
                                                                     {result.categoryName}
                                                                 </span>
                                                             )}
-                                                            <span className="text-[9px] font-mono text-forum-muted">
-                                                                {result.subtitle}
-                                                            </span>
                                                             {result.createdAt && (
-                                                                <span className="text-[9px] font-mono text-forum-muted">
-                                                                    · {formatTimeAgo(result.createdAt)}
+                                                                <span className="text-[9px] font-mono text-forum-muted/60">
+                                                                    {formatTimeAgo(result.createdAt)}
                                                                 </span>
                                                             )}
                                                         </div>
@@ -282,53 +281,56 @@ export default function SearchDropdown({
                                                 </button>
                                             );
                                         })}
+                                        </div>
                                     </div>
                                 )}
 
                                 {/* Users */}
                                 {users.length > 0 && (
-                                    <div className="mb-1">
-                                        <div className="px-2 py-1.5">
-                                            <span className="text-[8px] font-mono font-bold uppercase tracking-wider text-forum-muted flex items-center gap-1.5">
-                                                <User size={9} className="text-forum-pink/60" />
+                                    <div className="mb-2">
+                                        <div className="px-2 py-1.5 border-b border-forum-border/20">
+                                            <span className="text-[8px] font-mono font-bold uppercase tracking-wider text-forum-muted/70 flex items-center gap-1.5">
+                                                <User size={9} className="text-forum-pink/50" />
                                                 Users
                                             </span>
                                         </div>
-                                        {users.map((result) => {
-                                            flatIndex++;
-                                            const idx = flatIndex;
-                                            return (
-                                                <button
-                                                    key={result.id}
-                                                    onClick={() => onSelectResult(result.link)}
-                                                    className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-left transition-forum ${activeIndex === idx
-                                                        ? 'bg-forum-pink/10'
-                                                        : 'hover:bg-forum-hover'
-                                                        }`}
-                                                >
-                                                    {result.avatar ? (
-                                                        <img
-                                                            src={result.avatar}
-                                                            alt=""
-                                                            className="h-7 w-7 rounded-md object-cover border border-forum-border/50 flex-shrink-0"
-                                                        />
-                                                    ) : (
-                                                        <div className="h-7 w-7 rounded-md border border-forum-border/30 bg-forum-bg flex items-center justify-center flex-shrink-0">
-                                                            <User size={12} className="text-forum-pink/40" />
+                                        <div className="space-y-0.5">
+                                            {users.map((result) => {
+                                                flatIndex++;
+                                                const idx = flatIndex;
+                                                return (
+                                                    <button
+                                                        key={result.id}
+                                                        onClick={() => onSelectResult(result.link)}
+                                                        className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-left transition-all duration-150 ${activeIndex === idx
+                                                            ? 'bg-forum-pink/10'
+                                                            : 'hover:bg-forum-hover/50'
+                                                            }`}
+                                                    >
+                                                        {result.avatar ? (
+                                                            <img
+                                                                src={result.avatar}
+                                                                alt=""
+                                                                className="h-7 w-7 rounded-md object-cover border border-forum-border/40 flex-shrink-0"
+                                                            />
+                                                        ) : (
+                                                            <div className="h-7 w-7 rounded-md border border-forum-border/30 bg-forum-bg/50 flex items-center justify-center flex-shrink-0">
+                                                                <User size={11} className="text-forum-pink/30" />
+                                                            </div>
+                                                        )}
+                                                        <div className="flex-1 min-w-0">
+                                                            <span className={`text-[12px] font-mono font-medium truncate inline-block ${activeIndex === idx ? 'text-forum-pink' : 'text-forum-text'
+                                                                }`}>
+                                                                {result.title}
+                                                            </span>
+                                                            <div className="text-[9px] font-mono text-forum-muted/60 mt-0.5 truncate">
+                                                                {result.subtitle}
+                                                            </div>
                                                         </div>
-                                                    )}
-                                                    <div className="flex-1 min-w-0">
-                                                        <span className={`text-[12px] font-mono font-medium ${activeIndex === idx ? 'text-forum-pink' : 'text-forum-text'
-                                                            }`}>
-                                                            {result.title}
-                                                        </span>
-                                                        <div className="text-[9px] font-mono text-forum-muted mt-0.5">
-                                                            {result.subtitle}
-                                                        </div>
-                                                    </div>
-                                                </button>
-                                            );
-                                        })}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
                                     </div>
                                 )}
 
@@ -339,9 +341,9 @@ export default function SearchDropdown({
                                     return (
                                         <button
                                             onClick={onViewAll}
-                                            className={`w-full flex items-center justify-center gap-1.5 px-3 py-2.5 mt-1 rounded-md text-[11px] font-mono font-medium transition-forum border border-forum-border/30 ${activeIndex === idx
-                                                ? 'bg-forum-pink/10 text-forum-pink border-forum-pink/20'
-                                                : 'text-forum-muted hover:text-forum-pink hover:bg-forum-pink/5 hover:border-forum-pink/20'
+                                            className={`w-full flex items-center justify-center gap-1.5 px-3 py-2.5 mt-1 rounded-md text-[11px] font-mono font-medium transition-all duration-150 border border-forum-border/30 ${activeIndex === idx
+                                                ? 'bg-forum-pink/10 text-forum-pink border-forum-pink/30'
+                                                : 'text-forum-muted/70 hover:text-forum-pink hover:bg-forum-pink/5 hover:border-forum-pink/30'
                                                 }`}
                                         >
                                             View all results
@@ -354,17 +356,17 @@ export default function SearchDropdown({
 
                         {/* Empty state */}
                         {showEmpty && (
-                            <div className="flex flex-col items-center justify-center py-8">
-                                <Search size={20} className="text-forum-pink/20 mb-2" />
-                                <span className="text-[11px] font-mono text-forum-muted">No results found</span>
+                            <div className="flex flex-col items-center justify-center py-10 px-4">
+                                <Search size={24} className="text-forum-pink/30 mb-3" />
+                                <span className="text-[12px] font-mono text-forum-muted/70 text-center">No results found for your search</span>
                             </div>
                         )}
 
                         {/* Nothing-yet state (empty query, no recents) */}
                         {!query.trim() && recentSearches.length === 0 && (
-                            <div className="flex flex-col items-center justify-center py-8">
-                                <Search size={20} className="text-forum-pink/20 mb-2" />
-                                <span className="text-[11px] font-mono text-forum-muted">Start typing to search...</span>
+                            <div className="flex flex-col items-center justify-center py-10 px-4">
+                                <Search size={24} className="text-forum-pink/30 mb-3" />
+                                <span className="text-[12px] font-mono text-forum-muted/70 text-center">Start typing to search for threads, posts, and users</span>
                             </div>
                         )}
                     </motion.div>

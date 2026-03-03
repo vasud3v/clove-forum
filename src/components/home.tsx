@@ -10,7 +10,7 @@ import PopularTags from '@/components/forum/PopularTags';
 import CategoriesSection from '@/components/forum/CategoriesSection';
 import { useForumContext } from '@/context/ForumContext';
 import { Home as HomeIcon, ChevronRight, Github, Twitter, Heart, Code, BookOpen, Shield, Rss } from 'lucide-react';
-import CloveLogo from '@/components/forum/CloveLogo';
+import ChugliLogo from '@/components/forum/ChugliLogo';
 import MobileBottomNav from '@/components/forum/MobileBottomNav';
 
 function Home() {
@@ -77,13 +77,10 @@ function Home() {
             {/* Brand */}
             <div className="col-span-2 md:col-span-1">
               <div className="flex items-center gap-2 mb-3">
-                <CloveLogo size={28} />
-                <span className="text-[13px] font-mono font-bold text-forum-text">
-                  clo<span className="text-forum-pink">ve</span>
-                </span>
+                <ChugliLogo size={28} />
               </div>
               <p className="text-[10px] font-mono text-forum-muted leading-relaxed mb-3">
-                A vibrant community where people connect, share, and discover. Powered by Clove.
+                A vibrant community where people connect, share, and discover. Powered by Chuglii.
               </p>
               <div className="flex items-center gap-2">
                 <a href="#" className="transition-forum rounded-md border border-forum-border p-1.5 text-forum-muted hover:text-forum-pink hover:border-forum-pink/30 hover:bg-forum-pink/5">
@@ -147,7 +144,7 @@ function Home() {
           {/* Bottom footer */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="text-[9px] font-mono text-forum-muted">
-              © 2024 Clove. All rights reserved.
+              © 2024 Chuglii. All rights reserved.
             </div>
             <div className="flex items-center gap-1 text-[9px] font-mono text-forum-muted">
               Made with <Heart size={10} className="text-forum-pink mx-0.5" /> by the community

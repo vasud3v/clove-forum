@@ -33,7 +33,7 @@ interface ForumSettings {
 
 export default function AdminSettingsTab() {
   const [settings, setSettings] = useState<ForumSettings>({
-    forum_name: 'Clove Forums',
+    forum_name: 'Chuglii Forums',
     forum_description: 'A modern forum community',
     allow_registration: true,
     require_email_verification: false,

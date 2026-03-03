@@ -12,7 +12,7 @@ export interface QuickSearchResult {
     createdAt?: string;
 }
 
-const RECENT_SEARCHES_KEY = 'clove_recent_searches';
+const RECENT_SEARCHES_KEY = 'chuglii_recent_searches';
 const MAX_RECENT = 8;
 const DEBOUNCE_MS = 300;
 

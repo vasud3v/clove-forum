@@ -383,7 +383,7 @@ export default function SearchPage() {
                         Search Forum
                     </h1>
                     <form onSubmit={handleSearchSubmit} className="relative">
-                        <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-forum-muted pointer-events-none" />
+                        <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-forum-muted pointer-events-none" />
                         <input
                             ref={inputRef}
                             type="text"
@@ -391,7 +391,7 @@ export default function SearchPage() {
                             value={pageSearchQuery}
                             onChange={(e) => setPageSearchQuery(e.target.value)}
                             maxLength={200}
-                            className="transition-forum w-full rounded-md border border-forum-border bg-forum-bg py-3 pl-11 pr-10 text-[13px] font-mono text-forum-text placeholder-forum-muted outline-none focus:border-forum-pink focus:shadow-[0_0_0_3px_rgba(255,45,146,0.1)] focus:ring-1 focus:ring-forum-pink/30"
+                            className="transition-all duration-200 w-full rounded-lg border border-forum-border bg-forum-bg/40 hover:bg-forum-bg/60 hover:border-forum-border/80 py-3 pl-11 pr-10 text-[13px] font-mono text-forum-text placeholder-forum-muted/70 outline-none focus:border-forum-pink focus:bg-forum-bg focus:placeholder-forum-muted focus:shadow-lg focus:shadow-forum-pink/20 focus:ring-2 focus:ring-forum-pink/30"
                         />
                         {pageSearchQuery && (
                             <button

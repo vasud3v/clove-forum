@@ -1,7 +1,7 @@
 -- Create forum_settings table
 CREATE TABLE IF NOT EXISTS forum_settings (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  forum_name TEXT NOT NULL DEFAULT 'Clove Forums',
+  forum_name TEXT NOT NULL DEFAULT 'Chuglii Forums',
   forum_description TEXT DEFAULT 'A modern forum community',
   allow_registration BOOLEAN DEFAULT true,
   require_email_verification BOOLEAN DEFAULT false,

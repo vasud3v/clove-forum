@@ -12,7 +12,7 @@ import {
   User,
   CheckCircle,
 } from 'lucide-react';
-import CloveLogo from '@/components/forum/CloveLogo';
+import ChugliLogo from '@/components/forum/ChugliLogo';
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -135,10 +135,7 @@ export default function SignupPage() {
         {/* Logo & Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <CloveLogo size={40} />
-            <span className="text-2xl font-bold tracking-tight text-forum-text font-mono">
-              clo<span className="text-forum-pink text-glow-pink">ve</span>
-            </span>
+            <ChugliLogo size={40} />
           </div>
           <div className="flex items-center justify-center gap-2 text-forum-muted font-mono text-[11px]">
             <Terminal size={12} />

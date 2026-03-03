@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 
-const DRAFT_PREFIX = 'clove_draft_';
+const DRAFT_PREFIX = 'chuglii_draft_';
 const SAVE_DELAY_MS = 3000; // 3 seconds as per spec
 const DRAFT_EXPIRY_DAYS = 7;
 
